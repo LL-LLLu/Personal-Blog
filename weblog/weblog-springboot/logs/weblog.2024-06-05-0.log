@@ -1,0 +1,108 @@
+[TraceId: ] 2024-06-05 21:08:35.667 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - Starting WeblogWebApplication using Java 1.8.0_202 on DESKTOP-ANHP4EB with PID 27268 (E:\IDEA_Projects\weblog\weblog-springboot\weblog-web\target\classes started by qilut in E:\IDEA_Projects\weblog\weblog-springboot)
+[TraceId: ] 2024-06-05 21:08:35.669 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - The following profiles are active: prod
+[TraceId: ] 2024-06-05 21:08:36.074 [main] WARN  org.mybatis.spring.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.luqi.weblog.web]' package. Please check your configuration.
+[TraceId: ] 2024-06-05 21:08:36.364 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+[TraceId: ] 2024-06-05 21:08:36.372 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+[TraceId: ] 2024-06-05 21:08:36.372 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.56]
+[TraceId: ] 2024-06-05 21:08:36.426 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+[TraceId: ] 2024-06-05 21:08:36.426 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 726 ms
+[TraceId: ] 2024-06-05 21:08:36.634 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception; nested exception is org.springframework.boot.autoconfigure.jdbc.DataSourceProperties$DataSourceBeanCreationException: Failed to determine a suitable driver class
+[TraceId: ] 2024-06-05 21:08:36.636 [main] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+[TraceId: ] 2024-06-05 21:08:36.646 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+[TraceId: ] 2024-06-05 21:08:36.656 [main] ERROR o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (the profiles prod are currently active).
+
+[TraceId: ] 2024-06-05 21:14:34.025 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - Starting WeblogWebApplication using Java 1.8.0_202 on DESKTOP-ANHP4EB with PID 11060 (E:\IDEA_Projects\weblog\weblog-springboot\weblog-web\target\classes started by qilut in E:\IDEA_Projects\weblog\weblog-springboot)
+[TraceId: ] 2024-06-05 21:14:34.027 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - The following profiles are active: prod
+[TraceId: ] 2024-06-05 21:14:34.439 [main] WARN  org.mybatis.spring.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.luqi.weblog.web]' package. Please check your configuration.
+[TraceId: ] 2024-06-05 21:14:34.730 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+[TraceId: ] 2024-06-05 21:14:34.735 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+[TraceId: ] 2024-06-05 21:14:34.736 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.56]
+[TraceId: ] 2024-06-05 21:14:34.788 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+[TraceId: ] 2024-06-05 21:14:34.788 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 733 ms
+[TraceId: ] 2024-06-05 21:14:34.997 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception; nested exception is org.springframework.boot.autoconfigure.jdbc.DataSourceProperties$DataSourceBeanCreationException: Failed to determine a suitable driver class
+[TraceId: ] 2024-06-05 21:14:34.998 [main] INFO  org.apache.catalina.core.StandardService - Stopping service [Tomcat]
+[TraceId: ] 2024-06-05 21:14:35.007 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+[TraceId: ] 2024-06-05 21:14:35.016 [main] ERROR o.s.b.diagnostics.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (the profiles prod are currently active).
+
+[TraceId: ] 2024-06-05 21:15:04.127 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - Starting WeblogWebApplication using Java 1.8.0_202 on DESKTOP-ANHP4EB with PID 9172 (E:\IDEA_Projects\weblog\weblog-springboot\weblog-web\target\classes started by qilut in E:\IDEA_Projects\weblog\weblog-springboot)
+[TraceId: ] 2024-06-05 21:15:04.129 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - The following profiles are active: prod
+[TraceId: ] 2024-06-05 21:15:04.542 [main] WARN  org.mybatis.spring.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.luqi.weblog.web]' package. Please check your configuration.
+[TraceId: ] 2024-06-05 21:15:04.833 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+[TraceId: ] 2024-06-05 21:15:04.838 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+[TraceId: ] 2024-06-05 21:15:04.838 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.56]
+[TraceId: ] 2024-06-05 21:15:04.891 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+[TraceId: ] 2024-06-05 21:15:04.891 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 732 ms
+[TraceId: ] 2024-06-05 21:15:05.793 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+[TraceId: ] 2024-06-05 21:15:05.799 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - Started WeblogWebApplication in 2.008 seconds (JVM running for 2.689)
+[TraceId: ] 2024-06-05 21:15:16.601 [http-nio-8080-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+[TraceId: ] 2024-06-05 21:15:16.602 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+[TraceId: ] 2024-06-05 21:15:16.602 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+[TraceId: 30710164-93b1-4471-8219-1eff1cbf0e73] 2024-06-05 21:15:16.672 [http-nio-8080-exec-1] INFO  c.luqi.weblog.common.aspect.ApiOperationLogAspect - ====== Request Started: [Test Interface], Parameter: {"username":"admin","sex":1}, Request Class: TestController, Request Method: test =================================== 
+[TraceId: 30710164-93b1-4471-8219-1eff1cbf0e73] 2024-06-05 21:15:16.679 [http-nio-8080-exec-1] INFO  c.luqi.weblog.common.aspect.ApiOperationLogAspect - ====== Request Terminated: [Test Interface], Time: 17ms, Return: {"username":"admin","sex":1} =================================== 
+[TraceId: ] 2024-06-05 21:18:35.647 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - Starting WeblogWebApplication using Java 1.8.0_202 on DESKTOP-ANHP4EB with PID 27180 (E:\IDEA_Projects\weblog\weblog-springboot\weblog-web\target\classes started by qilut in E:\IDEA_Projects\weblog\weblog-springboot)
+[TraceId: ] 2024-06-05 21:18:35.649 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - The following profiles are active: prod
+[TraceId: ] 2024-06-05 21:18:36.138 [main] WARN  org.mybatis.spring.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.luqi.weblog.web]' package. Please check your configuration.
+[TraceId: ] 2024-06-05 21:18:36.437 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+[TraceId: ] 2024-06-05 21:18:36.442 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+[TraceId: ] 2024-06-05 21:18:36.442 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.56]
+[TraceId: ] 2024-06-05 21:18:36.497 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+[TraceId: ] 2024-06-05 21:18:36.497 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 817 ms
+[TraceId: ] 2024-06-05 21:18:37.433 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+[TraceId: ] 2024-06-05 21:18:37.439 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - Started WeblogWebApplication in 2.123 seconds (JVM running for 2.802)
+[TraceId: ] 2024-06-05 21:19:07.358 [http-nio-8080-exec-2] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+[TraceId: ] 2024-06-05 21:19:07.358 [http-nio-8080-exec-2] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+[TraceId: ] 2024-06-05 21:19:07.359 [http-nio-8080-exec-2] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+[TraceId: 9801d2ef-160b-499a-b6b1-7fc4f34d6481] 2024-06-05 21:19:07.435 [http-nio-8080-exec-2] INFO  c.luqi.weblog.common.aspect.ApiOperationLogAspect - ====== Request Started: [Test Interface], Parameter: {"username":"admin","sex":1}, Request Class: TestController, Request Method: test =================================== 
+[TraceId: 9801d2ef-160b-499a-b6b1-7fc4f34d6481] 2024-06-05 21:19:07.442 [http-nio-8080-exec-2] INFO  c.luqi.weblog.common.aspect.ApiOperationLogAspect - ====== Request Terminated: [Test Interface], Time: 18ms, Return: {"username":"admin","sex":1} =================================== 
+[TraceId: ] 2024-06-05 21:38:10.843 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - Starting WeblogWebApplication using Java 1.8.0_202 on DESKTOP-ANHP4EB with PID 27228 (E:\IDEA_Projects\weblog\weblog-springboot\weblog-web\target\classes started by qilut in E:\IDEA_Projects\weblog\weblog-springboot)
+[TraceId: ] 2024-06-05 21:38:10.845 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - The following profiles are active: prod
+[TraceId: ] 2024-06-05 21:38:11.281 [main] WARN  org.mybatis.spring.mapper.ClassPathMapperScanner - No MyBatis mapper was found in '[com.luqi.weblog.web]' package. Please check your configuration.
+[TraceId: ] 2024-06-05 21:38:11.571 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+[TraceId: ] 2024-06-05 21:38:11.575 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+[TraceId: ] 2024-06-05 21:38:11.576 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.56]
+[TraceId: ] 2024-06-05 21:38:11.629 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+[TraceId: ] 2024-06-05 21:38:11.629 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 755 ms
+[TraceId: ] 2024-06-05 21:38:12.530 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+[TraceId: ] 2024-06-05 21:38:12.536 [main] INFO  com.luqi.weblog.web.WeblogWebApplication - Started WeblogWebApplication in 2.02 seconds (JVM running for 2.742)
+[TraceId: ] 2024-06-05 21:38:42.362 [http-nio-8080-exec-1] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+[TraceId: ] 2024-06-05 21:38:42.362 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+[TraceId: ] 2024-06-05 21:38:42.363 [http-nio-8080-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+[TraceId: ] 2024-06-05 21:38:42.423 [http-nio-8080-exec-1] WARN  o.s.w.s.m.support.DefaultHandlerExceptionResolver - Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Unexpected character ('q' (code 113)): was expecting comma to separate Object entries; nested exception is com.fasterxml.jackson.core.JsonParseException: Unexpected character ('q' (code 113)): was expecting comma to separate Object entries<EOL> at [Source: (PushbackInputStream); line: 5, column: 31]]

@@ -1,0 +1,22 @@
+{
+  "name": "weblog-test-suite",
+  "version": "1.0.0",
+  "description": "Comprehensive test suite for the weblog application",
+  "main": "test-blog-functionality.js",
+  "scripts": {
+    "test": "node test-blog-functionality.js",
+    "test:verbose": "DEBUG=* node test-blog-functionality.js",
+    "install-deps": "npm install"
+  },
+  "dependencies": {
+    "form-data": "^4.0.0"
+  },
+  "keywords": [
+    "weblog",
+    "test",
+    "automation",
+    "api-testing"
+  ],
+  "author": "Weblog Team",
+  "license": "MIT"
+}

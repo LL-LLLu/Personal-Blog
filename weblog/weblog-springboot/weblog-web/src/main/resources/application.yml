@@ -1,0 +1,25 @@
+spring:
+  profiles:
+    # 默认激活 dev 环境
+    active: dev
+    #active: prod # activate the prod environment
+#  jackson:
+#    # if coming in string is null, return nothing
+#    default-property-inclusion: non_null
+#    # set the date and time format
+#    date-format: yyyy-MM-dd HH:mm:ss
+  servlet:
+    multipart:
+      max-file-size: 10MB # 限制单个上传文件的最大大小为 10MB。如果上传的文件大小超过这个值，将会被拒绝上传。
+      max-request-size: 10MB # 限制整个上传请求的最大大小为 10MB。这包括所有上传文件的大小之和。如果请求总大小超过这个值，将会被拒绝。
+jwt:
+  # 签发人
+  issuer: luqi
+  # 秘钥
+  secret: MasdUuyjazZOesrFNY64qeJ3KlzqP3lGTBu9lRC/e8mSMNY6Y96x+quBw0QeC7fEtgaCtXByEzhBvSebxPXf0w==
+  # token 过期时间（单位：分钟） 24*60
+  tokenExpireTime: 1440
+  # token 请求头中的 key 值
+  tokenHeaderKey: Authorization
+  # token 请求头中的 value 值前缀
+  tokenPrefix: Bearer
