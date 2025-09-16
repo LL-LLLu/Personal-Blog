@@ -1,0 +1,55 @@
+package com.luqi.weblog.admin.event;
+
+import lombok.Getter;
+import org.springframework.context.ApplicationEvent;
+
+/**
+ * @author: luqi
+ * @url: www.luqi.com
+ * @date: 2023/11/9 10:05
+ * @description: Article publish event
+ **/
+
+@Getter
+public class PublishArticleEvent extends ApplicationEvent {
+
+    /**
+     * Article ID
+     */
+    private Long articleId;
+
+    /**
+     * Article title
+     */
+    private String title;
+
+    /**
+     * Article content
+     */
+    private String content;
+
+    /**
+     * Article summary
+     */
+    private String summary;
+
+    /**
+     * Cover image
+     */
+    private String cover;
+
+    /**
+     * Creation time
+     */
+    private String createTime;
+
+    public PublishArticleEvent(Object source, Long articleId, String title, String content, String summary, String cover, String createTime) {
+        super(source);
+        this.articleId = articleId;
+        this.title = title;
+        this.content = content;
+        this.summary = summary;
+        this.cover = cover;
+        this.createTime = createTime;
+    }
+}
