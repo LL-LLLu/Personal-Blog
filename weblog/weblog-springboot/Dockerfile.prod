@@ -1,0 +1,68 @@
+# Multi-stage Dockerfile for Production Spring Boot Application
+# Stage 1: Build stage
+FROM maven:3.9.9-eclipse-temurin-8 AS builder
+
+# Set working directory
+WORKDIR /build
+
+# Copy POM files first for better caching
+COPY pom.xml .
+COPY weblog-web/pom.xml weblog-web/
+COPY weblog-module-admin/pom.xml weblog-module-admin/
+COPY weblog-module-common/pom.xml weblog-module-common/
+COPY weblog-module-jwt/pom.xml weblog-module-jwt/
+COPY weblog-module-search/pom.xml weblog-module-search/
+
+# Download dependencies (this layer will be cached unless POM files change)
+RUN mvn dependency:go-offline -B
+
+# Copy source code
+COPY weblog-web/src weblog-web/src
+COPY weblog-module-admin/src weblog-module-admin/src
+COPY weblog-module-common/src weblog-module-common/src
+COPY weblog-module-jwt/src weblog-module-jwt/src
+COPY weblog-module-search/src weblog-module-search/src
+
+# Build the application
+RUN mvn clean package -DskipTests -B
+
+# Stage 2: Runtime stage
+FROM eclipse-temurin:8-jre-alpine
+
+# Add application user for security
+RUN addgroup -g 1001 -S weblog && \
+    adduser -u 1001 -S weblog -G weblog
+
+# Install curl for health checks and set timezone
+RUN apk add --no-cache curl tzdata && \
+    cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo "Asia/Shanghai" > /etc/timezone && \
+    apk del tzdata
+
+# Set working directory
+WORKDIR /app
+
+# Copy JAR file from builder stage
+COPY --from=builder /build/weblog-web/target/weblog-web-*.jar app.jar
+
+# Create logs directory and set permissions
+RUN mkdir -p logs && \
+    chown -R weblog:weblog /app
+
+# Switch to non-root user
+USER weblog
+
+# Set environment variables
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:+UseG1GC -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -Xloggc:logs/gc.log" \
+    SPRING_PROFILES_ACTIVE=prod \
+    TZ=Asia/Shanghai
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# Expose port
+EXPOSE 8080
+
+# Use exec form for proper signal handling
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
