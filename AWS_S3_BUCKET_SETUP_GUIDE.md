@@ -76,21 +76,23 @@ Object Ownership: ACLs disabled (recommended)
 
 **⚠️ Important Security Configuration:**
 
+For public web assets (images, documents):
 ```yaml
 Block Public Access settings for this bucket:
-☑️ Block all public access: UNCHECKED (for web assets)
+☐ Block all public access: UNCHECKED
 
-Individual settings:
-☑️ Block public access to buckets and objects granted through new access control lists (ACLs): CHECKED
-☑️ Block public access to buckets and objects granted through any access control lists (ACLs): CHECKED
-☑️ Block public access to buckets and objects granted through new public bucket or access point policies: UNCHECKED
-☑️ Block public access to buckets and objects granted through any public bucket or access point policies: UNCHECKED
+When you uncheck this, all four options below will be unchecked:
+☐ Block public access to buckets and objects granted through new access control lists (ACLs)
+☐ Block public access to buckets and objects granted through any access control lists (ACLs)
+☐ Block public access to buckets and objects granted through new public bucket or access point policies
+☐ Block public access to buckets and objects granted through any public bucket or access point policies
 ```
 
-**Why this configuration:**
-- Allows public read access to images/assets via bucket policies
-- Prevents ACL-based public access (more secure)
-- Enables controlled public access for web content
+**Acknowledge the warning:**
+- Check: "I acknowledge that the current settings might result in this bucket and the objects within becoming public"
+
+**Alternative (More Secure) - Using CloudFront:**
+If you want better security, keep all blocks enabled and use CloudFront CDN with Origin Access Identity (OAI) to serve content publicly while keeping S3 bucket private.
 
 ### Step 4: Bucket Versioning
 
