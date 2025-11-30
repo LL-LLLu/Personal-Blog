@@ -101,7 +101,7 @@
                 </el-form-item>
                 <el-form-item label="Content" prop="content">
                     <!-- Markdown editor -->
-                    <MdEditor v-model="form.content" language="en-US" @onUploadImg="onUploadImg" editorId="publishArticleEditor"/>
+                    <MdEditor v-model="form.content" :theme="isDark ? 'dark' : 'light'" language="en-US" @onUploadImg="onUploadImg" editorId="publishArticleEditor"/>
                 </el-form-item>
                 <el-form-item label="Cover" prop="cover">
                     <el-upload class="avatar-uploader" action="#" :on-change="handleCoverChange" :auto-upload="false"
@@ -165,7 +165,7 @@
                 </el-form-item>
                 <el-form-item label="Content" prop="content">
                     <!-- Markdown editor -->
-                    <MdEditor language="en-US" v-model="updateArticleForm.content" @onUploadImg="onUploadImg"
+                    <MdEditor language="en-US" :theme="isDark ? 'dark' : 'light'" v-model="updateArticleForm.content" @onUploadImg="onUploadImg"
                         editorId="updateArticleEditor" />
                 </el-form-item>
                 <el-form-item label="Cover" prop="cover">
@@ -213,6 +213,15 @@ import { showMessage, showModel } from '@/composables/util'
 import { MdEditor, en_US } from 'md-editor-v3'
 import 'md-editor-v3/lib/style.css'
 import { useRouter } from 'vue-router'
+import { useDark } from '@vueuse/core'
+
+const isDark = useDark({
+    selector: 'html',
+    attribute: 'class',
+    valueDark: 'dark',
+    valueLight: '',
+    storageKey: 'vueuse-color-scheme'
+})
 
 const router = useRouter()
 
