@@ -1,0 +1,26 @@
+# Docker Data and Logs
+docker/data/
+docker/logs/
+
+# Dependency Directories
+node_modules/
+**/node_modules/
+
+# Build Artifacts
+dist/
+**/dist/
+target/
+**/target/
+
+# IDE Files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# Environment Files
+.env
+*.env
+
+# System Files
+Thumbs.db
