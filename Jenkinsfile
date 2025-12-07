@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        // Define database/minio hosts as 'host.docker.internal' or use the network alias if running inside the same docker network
-        DOCKER_REGISTRY = "my-docker-registry" // Replace with your actual registry if pushing to one
+        // Define registry if needed, or keep local
+        DOCKER_REGISTRY = "" 
     }
 
     stages {
@@ -16,39 +16,41 @@ pipeline {
         stage('Build Backend') {
             steps {
                 script {
-                    // We use a temporary docker container to build the maven project
-                    // This avoids needing to install Maven on the Jenkins server itself
+                    // Build the JAR using a temporary Maven container
+                    // This matches "Step 5: Maven Package" from the guide, but without installing Maven manually
                     sh 'docker run --rm -v "${WORKSPACE}/weblog/weblog-springboot":/usr/src/mymaven -w /usr/src/mymaven maven:3.8-openjdk-8 mvn clean package -DskipTests'
                 }
             }
         }
 
-        stage('Build Frontend') {
+        stage('Deploy to Host') {
             steps {
-                script {
-                    // Similarly, use a Node container to build the frontend
-                    sh 'docker run --rm -v "${WORKSPACE}/blog-vue3":/app -w /app node:16-alpine sh -c "npm install && npm run build"'
-                }
+                // This matches "Step 8: Upload Jar & Restart" from the guide
+                // We use the 'Publish Over SSH' plugin logic via pipeline code
+                sshPublisher(publishers: [
+                    sshPublisherDesc(
+                        configName: 'AWS-Server', // Must match the name you set in Jenkins System Config
+                        transfers: [
+                            sshTransfer(
+                                // Source: The JAR we just built in the workspace
+                                sourceFiles: 'weblog/weblog-springboot/weblog-web/target/weblog-web-0.0.1-SNAPSHOT.jar',
+                                // Remove the long path prefix so it lands in the right place
+                                removePrefix: 'weblog/weblog-springboot/weblog-web/target',
+                                // Destination: The mapped volume folder on the host
+                                remoteDirectory: 'weblog/weblog-springboot/weblog-web/target', 
+                                // Command: Restart the container to pick up the new JAR
+                                execCommand: '''
+                                    cd /home/ubuntu/Personal-Blog/docker
+                                    docker-compose restart backend
+                                '''
+                            )
+                        ],
+                        usePromotionTimestamp: false,
+                        useWorkspaceInPromotion: false,
+                        verbose: true
+                    )
+                ])
             }
-        }
-
-        stage('Build & Deploy Docker Containers') {
-            steps {
-                dir('docker') {
-                    script {
-                        // Tear down old containers and bring up new ones
-                        // --build ensures we use the artifacts we just created
-                        sh 'docker-compose down'
-                        sh 'docker-compose up -d --build'
-                    }
-                }
-            }
-        }
-    }
-    
-    post {
-        always {
-            cleanWs() // Clean up workspace to save disk space
         }
     }
 }
