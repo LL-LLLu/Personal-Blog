@@ -14,31 +14,29 @@ pipeline {
         }
 
         stage('Build Backend') {
-            steps {
-                script {
-                    // Build the JAR using a temporary Maven container
-                    // This matches "Step 5: Maven Package" from the guide, but without installing Maven manually
-                    sh 'docker run --rm -v "${WORKSPACE}/weblog/weblog-springboot":/usr/src/mymaven -w /usr/src/mymaven maven:3.8-openjdk-8 mvn clean package -DskipTests'
+            agent {
+                docker { 
+                    image 'maven:3.8-openjdk-8' 
+                    // Reuse the maven repo to speed up builds
+                    args '-v /root/.m2:/root/.m2' 
                 }
+            }
+            steps {
+                // We are now INSIDE the maven container, with the workspace mounted automatically
+                sh 'mvn -f weblog/weblog-springboot/pom.xml clean package -DskipTests'
             }
         }
 
         stage('Deploy to Host') {
             steps {
-                // This matches "Step 8: Upload Jar & Restart" from the guide
-                // We use the 'Publish Over SSH' plugin logic via pipeline code
                 sshPublisher(publishers: [
                     sshPublisherDesc(
-                        configName: 'AWS-Server', // Must match the name you set in Jenkins System Config
+                        configName: 'AWS-Server',
                         transfers: [
                             sshTransfer(
-                                // Source: The JAR we just built in the workspace
                                 sourceFiles: 'weblog/weblog-springboot/weblog-web/target/weblog-web-0.0.1-SNAPSHOT.jar',
-                                // Remove the long path prefix so it lands in the right place
                                 removePrefix: 'weblog/weblog-springboot/weblog-web/target',
-                                // Destination: The mapped volume folder on the host
                                 remoteDirectory: 'weblog/weblog-springboot/weblog-web/target', 
-                                // Command: Restart the container to pick up the new JAR
                                 execCommand: '''
                                     cd /home/ubuntu/Personal-Blog/docker
                                     docker-compose restart backend
