@@ -1,8 +1,5 @@
 pipeline {
-    // Define a default agent for the entire pipeline.
-    // This can be 'any' to run on the Jenkins controller,
-    // or 'none' if every stage defines its own agent.
-    agent any 
+    agent any
 
     environment {
         // Define registry if needed, or keep local
@@ -17,29 +14,41 @@ pipeline {
         }
 
         stage('Build Backend') {
-            // Define the Docker agent specifically for this stage
             agent {
                 docker { 
                     image 'maven:3.8-openjdk-8' 
-                    // Reuse the maven repo to speed up builds
                     args '-v /root/.m2:/root/.m2' 
                 }
             }
             steps {
-                // We are now INSIDE the maven container, with the workspace mounted automatically
                 sh 'mvn -f weblog/weblog-springboot/pom.xml clean package -DskipTests'
             }
         }
 
+        stage('Build Frontend') {
+            agent {
+                docker {
+                    image 'node:16-alpine'
+                }
+            }
+            steps {
+                script {
+                    dir('blog-vue3') {
+                        sh 'npm install'
+                        sh 'npm run build'
+                    }
+                }
+            }
+        }
+
         stage('Deploy to Host') {
-            // This stage runs on the default agent (e.g., Jenkins controller)
-            // as it needs to access the host's Docker daemon via SSH publisher.
-            agent any 
+            agent any
             steps {
                 sshPublisher(publishers: [
                     sshPublisherDesc(
                         configName: 'AWS-Server',
                         transfers: [
+                            // Backend Deployment
                             sshTransfer(
                                 sourceFiles: 'weblog/weblog-springboot/weblog-web/target/weblog-web-0.0.1-SNAPSHOT.jar',
                                 removePrefix: 'weblog/weblog-springboot/weblog-web/target',
@@ -47,6 +56,18 @@ pipeline {
                                 execCommand: '''
                                     cd /home/ubuntu/Personal-Blog/docker
                                     docker-compose restart backend
+                                '''
+                            ),
+                            // Frontend Deployment
+                            sshTransfer(
+                                sourceFiles: 'blog-vue3/dist/**',
+                                removePrefix: 'blog-vue3/dist',
+                                remoteDirectory: 'blog-vue3/dist',
+                                execCommand: '''
+                                    # Ensure permissions are correct for Nginx
+                                    chmod -R 755 /home/ubuntu/Personal-Blog/blog-vue3/dist
+                                    cd /home/ubuntu/Personal-Blog/docker
+                                    docker-compose restart frontend
                                 '''
                             )
                         ],
