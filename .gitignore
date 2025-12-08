@@ -11,16 +11,26 @@ dist/
 **/dist/
 target/
 **/target/
+weblog/**/target/ # Explicitly ignore target in weblog submodules
 
 # IDE Files
 .idea/
 .vscode/
-*.iml
-.DS_Store
+*.iml # IntelliJ module files
+.DS_Store # Mac system files
+**/.DS_Store # Mac system files anywhere in subdirectories
 
 # Environment Files
 .env
 *.env
 
+# Local AI Tool Settings
+.claude/settings.local.json
+
+# Lucene Index - should be generated, not tracked
+weblog/E:\\\\java_workspace\\\\lucene-index/ # Ignore the whole directory, handling backslashes for git
+weblog/lucene-index/ # Generic ignore for a lucene-index folder
+
 # System Files
 Thumbs.db
+

@@ -1,5 +1,8 @@
 pipeline {
-    agent any
+    // Define a default agent for the entire pipeline.
+    // This can be 'any' to run on the Jenkins controller,
+    // or 'none' if every stage defines its own agent.
+    agent any 
 
     environment {
         // Define registry if needed, or keep local
@@ -14,6 +17,7 @@ pipeline {
         }
 
         stage('Build Backend') {
+            // Define the Docker agent specifically for this stage
             agent {
                 docker { 
                     image 'maven:3.8-openjdk-8' 
@@ -28,6 +32,9 @@ pipeline {
         }
 
         stage('Deploy to Host') {
+            // This stage runs on the default agent (e.g., Jenkins controller)
+            // as it needs to access the host's Docker daemon via SSH publisher.
+            agent any 
             steps {
                 sshPublisher(publishers: [
                     sshPublisherDesc(
