@@ -39,4 +39,9 @@ public class ArticleDO {
     private Boolean isDeleted;
 
     private Long readNum;
+
+    /**
+     * 权重，用于置顶
+     */
+    private Integer weight;
 }
