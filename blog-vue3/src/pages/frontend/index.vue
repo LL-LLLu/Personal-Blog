@@ -10,7 +10,11 @@
                 <!-- Article list with 2-column grid layout -->
                 <div class="grid grid-cols-2 gap-4">
                     <div v-for="(article, index) in articles" :key="index" class="col-span-2 md:col-span-1 animate__animated animate__fadeInUp">
-                        <div class="bg-white hover:scale-[1.03] h-full border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700 transition-transform duration-300">
+                        <div class="relative bg-white hover:scale-[1.03] h-full border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700 transition-transform duration-300">
+                            <!-- Is Top Badge -->
+                            <div v-if="article.isTop" class="absolute inline-flex items-center justify-center w-14 h-7 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
+                                Top
+                            </div>
                             <!-- Article cover image -->
                             <a @click="goArticleDetailPage(article.id)" class="cursor-pointer">
                                 <img class="rounded-t-lg h-48 w-full"

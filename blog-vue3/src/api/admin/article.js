@@ -24,3 +24,8 @@ export function getArticleDetail(id) {
 export function updateArticle(data) {
     return axios.post("/admin/article/update", data)
 }
+
+// Update article isTop
+export function updateArticleIsTop(data) {
+    return axios.post("/admin/article/isTop/update", data)
+}

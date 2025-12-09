@@ -39,6 +39,9 @@ public class FindArticlePageListRspVO  {
      */
     private LocalDateTime createTime;
 
-
+    /**
+     * 是否置顶
+     */
+    private Boolean isTop;
 
 }

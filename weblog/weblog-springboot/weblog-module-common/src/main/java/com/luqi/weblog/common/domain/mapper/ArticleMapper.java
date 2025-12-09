@@ -39,6 +39,7 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
                 .like(StringUtils.isNotBlank(title), ArticleDO::getTitle, title) // like 模块查询
                 .ge(Objects.nonNull(startDate), ArticleDO::getCreateTime, startDate) // 大于等于 startDate
                 .le(Objects.nonNull(endDate), ArticleDO::getCreateTime, endDate)  // 小于等于 endDate
+                .orderByDesc(ArticleDO::getWeight) // 按权重倒序
                 .orderByDesc(ArticleDO::getCreateTime); // 按创建时间倒叙
 
         return selectPage(page, wrapper);

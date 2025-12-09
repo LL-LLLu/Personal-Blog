@@ -39,6 +39,17 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="createTime" label="Publish Time" width="180" />
+                <el-table-column prop="isTop" label="Pinned" width="100">
+                    <template #default="scope">
+                        <el-switch
+                            @change="handleIsTopChange(scope.row)"
+                            v-model="scope.row.isTop"
+                            inline-prompt
+                            :active-icon="Check"
+                            :inactive-icon="Close"
+                        />
+                    </template>
+                </el-table-column>
                 <el-table-column label="Action">
                     <template #default="scope">
                         <el-button size="small" @click="showArticleUpdateEditor(scope.row)">
@@ -203,8 +214,8 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { Search, RefreshRight } from '@element-plus/icons-vue'
-import { getArticlePageList, deleteArticle, publishArticle, getArticleDetail, updateArticle } from '@/api/admin/article'
+import { Search, RefreshRight, Check, Close } from '@element-plus/icons-vue'
+import { getArticlePageList, deleteArticle, publishArticle, getArticleDetail, updateArticle, updateArticleIsTop } from '@/api/admin/article'
 import { uploadFile } from '@/api/admin/file'
 import { getCategorySelectList } from '@/api/admin/category'
 import { searchTags, getTagSelectList } from '@/api/admin/tag'
@@ -319,6 +330,24 @@ const handleSizeChange = (chooseSize) => {
     console.log('Selected page size: ' + chooseSize)
     size.value = chooseSize
     getTableData()
+}
+
+// Handle pin status change
+const handleIsTopChange = (row) => {
+    updateArticleIsTop({id: row.id, isTop: row.isTop}).then((res) => {
+        // Re-request pagination interface to render list data
+        getTableData()
+
+        if (res.success == false) {
+            // Get error message returned from server
+            let message = res.message
+            // Show error message
+            showMessage(message, 'error')
+            return
+        }
+
+        showMessage(row.isTop ? 'Pinned successfully' : "Unpinned")
+    })
 }
 
 // Delete article
