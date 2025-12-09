@@ -1,4 +1,5 @@
 import nprogress from "nprogress"
+import { ElMessage, ElMessageBox } from 'element-plus'
 import 'element-plus/es/components/message-box/style/css'    
 
 // 消息提示

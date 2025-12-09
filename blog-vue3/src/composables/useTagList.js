@@ -118,6 +118,5 @@ export function useTabList() {
         tabChange,
         removeTab,
         handleCloseTab,
-        menuStore
     }
 }

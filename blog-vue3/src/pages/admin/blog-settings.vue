@@ -146,7 +146,7 @@ const csdnSwitchChange = (checked) => {
 // Initialize blog settings data and render to page
 function initBlogSettings() {
     getBlogSettingsDetail().then((e) => {
-        if (e.success = true) {
+        if (e.success === true) {
             // Set form data
             form.name = e.data.name
             form.author = e.data.author
