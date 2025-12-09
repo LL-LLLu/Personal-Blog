@@ -33,6 +33,7 @@ public enum ResponseCodeEnum implements BaseExceptionInterface {
     ARTICLE_NOT_FOUND("20010", "Article does not exist!"),
     CATEGORY_CAN_NOT_DELETE("20011", "This category contains articles. Please delete the corresponding articles before deleting the category!"),
     TAG_CAN_NOT_DELETE("20012", "This tag contains articles. Please delete the corresponding articles before deleting the tag!"),
+    WIKI_NOT_FOUND("20013", "This Wiki does not exist"),
     ;
 
     // Exception code for errors
