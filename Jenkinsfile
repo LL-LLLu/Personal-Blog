@@ -4,6 +4,8 @@ pipeline {
     environment {
         // Define registry if needed, or keep local
         DOCKER_REGISTRY = "" 
+        // Email recipient
+        EMAIL_TO = "qilutx@gmail.com" 
     }
 
     stages {
@@ -13,28 +15,57 @@ pipeline {
             }
         }
 
+        stage('Backend Tests') {
+            agent {
+                docker { 
+                    image 'maven:3.8-openjdk-8' 
+                    args '-v /root/.m2:/root/.m2'
+                }
+            }
+            steps {
+                // Run tests ONLY. If this fails, the pipeline STOPS.
+                // We use -Dmaven.test.failure.ignore=false to ensure build fails on test failure
+                sh 'mvn -f weblog/weblog-springboot/pom.xml test'
+            }
+        }
+
         stage('Build Backend') {
             agent {
                 docker { 
                     image 'maven:3.8-openjdk-8' 
-                    args '-v /root/.m2:/root/.m2' 
+                    args '-v /root/.m2:/root/.m2'
                 }
             }
             steps {
+                // Build the JAR (skip tests here since we just ran them)
                 sh 'mvn -f weblog/weblog-springboot/pom.xml clean package -DskipTests'
             }
         }
 
-        stage('Build Frontend') {
+        stage('Frontend Tests') {
             agent {
-                docker {
-                    image 'node:16-alpine'
-                }
+                docker { image 'node:16-alpine' }
             }
             steps {
                 script {
                     dir('blog-vue3') {
                         sh 'npm install'
+                        // Uncomment if you have frontend tests configured
+                        // sh 'npm run test' 
+                        // Or maybe linting?
+                        // sh 'npm run lint'
+                    }
+                }
+            }
+        }
+
+        stage('Build Frontend') {
+            agent {
+                docker { image 'node:16-alpine' }
+            }
+            steps {
+                script {
+                    dir('blog-vue3') {
                         sh 'npm run build'
                     }
                 }
@@ -64,7 +95,6 @@ pipeline {
                                 removePrefix: 'blog-vue3/dist',
                                 remoteDirectory: 'blog-vue3/dist',
                                 execCommand: '''
-                                    # Ensure permissions are correct for Nginx
                                     chmod -R 755 /home/ubuntu/Personal-Blog/blog-vue3/dist
                                     cd /home/ubuntu/Personal-Blog/docker
                                     docker-compose restart frontend
@@ -77,6 +107,19 @@ pipeline {
                     )
                 ])
             }
+        }
+    }
+
+    post {
+        success {
+            mail to: "${EMAIL_TO}",
+                 subject: "Build Success: ${currentBuild.fullDisplayName}",
+                 body: "Great news! The build and deployment for ${currentBuild.fullDisplayName} was successful.\n\nCheck console output at ${env.BUILD_URL}"
+        }
+        failure {
+            mail to: "${EMAIL_TO}",
+                 subject: "Build Failed: ${currentBuild.fullDisplayName}",
+                 body: "Alert! The build failed for ${currentBuild.fullDisplayName}.\n\nCheck console output at ${env.BUILD_URL}"
         }
     }
 }
