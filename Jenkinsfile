@@ -50,10 +50,8 @@ pipeline {
                 script {
                     dir('blog-vue3') {
                         sh 'npm install'
-                        // Uncomment if you have frontend tests configured
-                        // sh 'npm run test' 
-                        // Or maybe linting?
-                        // sh 'npm run lint'
+                        // Run linting to check for syntax errors
+                        sh 'npm run lint'
                     }
                 }
             }
