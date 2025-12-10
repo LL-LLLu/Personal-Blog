@@ -250,7 +250,6 @@ const props = defineProps({
 
 // Data
 import { getWikiCatalogs, updateWikiCatalogs } from '@/api/admin/wiki'
-import { showMessage } from '@/composables/util'
 
 const catalogs = ref([])
 const currWikiId = ref(null)
