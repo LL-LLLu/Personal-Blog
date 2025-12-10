@@ -7,6 +7,7 @@ import com.luqi.weblog.admin.model.vo.wiki.*;
 import com.luqi.weblog.admin.service.AdminWikiService;
 import com.luqi.weblog.common.domain.dos.WikiCatalogDO;
 import com.luqi.weblog.common.domain.dos.WikiDO;
+import com.luqi.weblog.common.domain.mapper.ArticleMapper;
 import com.luqi.weblog.common.domain.mapper.WikiCatalogMapper;
 import com.luqi.weblog.common.domain.mapper.WikiMapper;
 import com.luqi.weblog.common.enums.ResponseCodeEnum;
@@ -33,9 +34,6 @@ public class AdminWikiServiceImpl implements AdminWikiService {
     private WikiMapper wikiMapper;
     @Autowired
     private WikiCatalogMapper wikiCatalogMapper;
-
-    @Autowired
-    private ArticleMapper articleMapper;
 
     @Autowired
     private ArticleMapper articleMapper;
