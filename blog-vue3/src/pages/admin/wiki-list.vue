@@ -69,7 +69,7 @@
                         </el-tooltip>
                         
                         <el-tooltip class="box-item" effect="dark" content="Edit Catalog" placement="bottom">
-                            <el-button size="small" :icon="Tickets" circle>
+                            <el-button size="small" @click="showWikiCatalogEditDialog(scope.row.id)" :icon="Tickets" circle>
                             </el-button>
                         </el-tooltip>
                         
@@ -143,6 +143,9 @@
                 </el-form-item>
             </el-form>
         </FormDialog>
+
+        <!-- Wiki Catalog Edit Dialog -->
+        <WikiCatalogEditDialog ref="wikiCatalogEditDialogRef" title="Edit Catalog" width="50%" />
     </div>
 </template>
 
@@ -155,11 +158,20 @@ const router = useRouter()
 import moment from 'moment'
 import { getWikiPageList, addWiki, updateWikiIsTop, updateWikiIsPublish, deleteWiki, updateWiki } from '@/api/admin/wiki'
 import FormDialog from '@/components/FormDialog.vue'
+import WikiCatalogEditDialog from '@/components/WikiCatalogEditDialog.vue'
 import { uploadFile } from '@/api/admin/file'
 import { showMessage, showModel } from '@/composables/util'
 
 // Dialog reference
 const formDialogRef = ref(null)
+
+// Wiki Catalog Edit Dialog reference
+const wikiCatalogEditDialogRef = ref(null)
+
+// Show Wiki Catalog Edit Dialog
+const showWikiCatalogEditDialog = (wikiId) => {
+    wikiCatalogEditDialogRef.value.open(wikiId)
+}
 
 // New Wiki button click event
 const addWikiBtnClick = () => {
