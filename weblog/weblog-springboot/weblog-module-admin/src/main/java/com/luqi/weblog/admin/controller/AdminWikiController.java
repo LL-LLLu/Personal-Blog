@@ -81,6 +81,6 @@ public class AdminWikiController {
     @ApiOperationLog(description = "Update Wiki Catalog")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Response updateWikiCatalog(@RequestBody @Validated UpdateWikiCatalogReqVO updateWikiCatalogReqVO) {
-        return adminWikiService.updateWikiCatalog(updateWikiCatalogReqVO);
+        return adminWikiService.updateWikiCatalogs(updateWikiCatalogReqVO);
     }
 }
