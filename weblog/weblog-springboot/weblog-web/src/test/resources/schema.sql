@@ -24,6 +24,7 @@ CREATE TABLE `t_article` (
   `is_deleted` tinyint NOT NULL DEFAULT '0' COMMENT 'Deletion Flag: 0 for not deleted, 1 for deleted',
   `read_num` int unsigned NOT NULL DEFAULT '1' COMMENT 'Read Count',
   `weight` int unsigned NOT NULL DEFAULT '0' COMMENT 'Article Weight',
+  `type` tinyint NOT NULL DEFAULT '1' COMMENT 'Article Type',
   PRIMARY KEY (`id`)
 );
 
