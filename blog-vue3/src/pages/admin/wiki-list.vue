@@ -74,7 +74,7 @@
                         </el-tooltip>
                         
                         <el-tooltip class="box-item" effect="dark" content="Preview" placement="bottom">
-                            <el-button size="small" :icon="View" circle>
+                            <el-button size="small" @click="goWikiDetailPage(scope.row.id)" :icon="View" circle>
                             </el-button>
                         </el-tooltip>
                             
@@ -148,7 +148,10 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 import { Search, RefreshRight, Check, Close, Delete, Edit, Tickets, View, Plus } from '@element-plus/icons-vue'
+
+const router = useRouter()
 import moment from 'moment'
 import { getWikiPageList, addWiki, updateWikiIsTop, updateWikiIsPublish, deleteWiki, updateWiki } from '@/api/admin/wiki'
 import FormDialog from '@/components/FormDialog.vue'
@@ -460,6 +463,11 @@ const handleSizeChange = (chooseSize) => {
     console.log('Selected page size: ' + chooseSize)
     size.value = chooseSize
     getTableData()
+}
+
+// Navigate to wiki detail page
+const goWikiDetailPage = (wikiId) => {
+    router.push('/wiki/' + wikiId)
 }
 </script>
 

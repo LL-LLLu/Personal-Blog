@@ -60,7 +60,7 @@
                                             </el-icon>
                                             Rename
                                         </el-dropdown-item>
-                                        <el-dropdown-item>
+                                        <el-dropdown-item :command="{ id: catalog.id, sort: catalog.sort, action: 'addArticle' }">
                                             <el-icon>
                                                 <Plus />
                                             </el-icon>
