@@ -29,3 +29,13 @@ export function deleteWiki(id) {
 export function updateWiki(data) {
     return axios.post("/admin/wiki/update", data)
 }
+
+// Get wiki catalogs
+export function getWikiCatalogs(id) {
+    return axios.post("/admin/wiki/catalog/list", {id})
+}
+
+// Update wiki catalogs
+export function updateWikiCatalogs(data) {
+    return axios.post("/admin/wiki/catalog/update", data)
+}

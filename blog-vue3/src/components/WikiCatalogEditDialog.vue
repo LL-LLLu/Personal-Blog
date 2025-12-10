@@ -92,7 +92,7 @@
 
                 <!-- Level 2 Catalog -->
                 <ul v-if="catalog.children && catalog.children.length > 0">
-                    <VueDraggable ref="el" v-model="catalog.children">
+                    <VueDraggable ref="el" v-model="catalog.children" @end="onDragEnd">
                         <li v-for="(childCatalog, index2) in catalog.children" :key="index2" 
                         class="flex items-center ps-10 py-2 pe-3 rounded-lg hover:bg-gray-100"
                         >
@@ -139,14 +139,87 @@
                 </ul>
             </h2>
         </div>
-    </el-dialog>
+        </el-dialog>
+
+    <!-- Add Catalog -->
+    <FormDialog ref="addCatalogDialogRef" title="Add Catalog" destroyOnClose @submit="onAddCatalogSubmit">
+        <el-form ref="addCatalogFormRef" :rules="rules" :model="addCatalogForm">
+            <el-form-item label="Title" prop="title" label-width="80px" size="large">
+                <el-input v-model="addCatalogForm.title" placeholder="Please enter catalog title" clearable />
+            </el-form-item>
+        </el-form>
+    </FormDialog>
+
+    <!-- Add Article to Catalog -->
+    <FormDialog ref="addArticle2CatalogDialogRef" title="Add Article" width="80%" confirmText="Add" destroyOnClose @submit="onAddArticle2CatalogSubmit">
+        <div>
+        <!-- Header -->
+        <el-card shadow="never" class="mb-5">
+            <div class="flex items-center">
+                <el-text>Title</el-text>
+                <div class="ml-3 w-52 mr-5"><el-input v-model="searchArticleTitle" placeholder="Enter (fuzzy search)" clearable/></div>
+
+                <el-text>Create Date</el-text>
+                <div class="ml-3 w-30 mr-5">
+                    <el-date-picker v-model="pickDate" type="daterange" range-separator="to" start-placeholder="Start"
+                        end-placeholder="End" size="default" :shortcuts="shortcuts" @change="datepickerChange" />
+                </div>
+
+                <el-button type="primary" class="ml-3" :icon="Search" @click="getTableData">Search</el-button>
+                <el-button class="ml-3" :icon="RefreshRight" @click="reset">Reset</el-button>
+            </div>
+        </el-card>
+
+        <el-card shadow="never">
+            <!-- List -->
+            <el-table :data="tableData" border stripe v-loading="tableLoading" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="45" />
+                <el-table-column prop="id" label="ID" width="50" />
+                <el-table-column prop="title" label="Title" width="380" />
+                <el-table-column prop="cover" label="Cover" width="180">
+                    <template #default="scope">
+                        <el-image style="width: 100px;" :src="scope.row.cover" />
+                    </template>
+                </el-table-column>
+                
+                <el-table-column prop="isPublish" label="Is Publish" width="100">
+                    <template #default="scope">
+                        <el-switch
+                            v-model="scope.row.isPublish"
+                            inline-prompt
+                            :active-icon="Check"
+                            :inactive-icon="Close"
+                            disabled 
+                        />
+                    </template>
+                </el-table-column>
+                <el-table-column prop="createTime" label="Publish Time" />
+            </el-table>
+
+            <!-- Pagination -->
+            <div class="mt-10 flex justify-center">
+                <el-pagination v-model:current-page="current" v-model:page-size="size" :page-sizes="[10, 20, 50]"
+                    :small="false" :background="true" layout="total, sizes, prev, pager, next, jumper" :total="total"
+                    @size-change="handleSizeChange" @current-change="getTableData" />
+            </div>
+
+        </el-card>
+
+        
+    </div>
+    </FormDialog>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { Plus, EditPen, Top, Bottom, DocumentRemove } from '@element-plus/icons-vue'
-import { showModel } from '@/composables/util'
+import { ref, reactive } from 'vue'
+import { Plus, EditPen, Top, Bottom, DocumentRemove, Search, RefreshRight, Check, Close } from '@element-plus/icons-vue'
+import { showModel, showMessage } from '@/composables/util'
 import { VueDraggable } from 'vue-draggable-plus'
+import FormDialog from '@/components/FormDialog.vue'
+import moment from 'moment'
+import { getArticlePageList } from '@/api/admin/article'
+
+// ... existing code ...
 
 // Dialog visibility
 const dialogVisible = ref(false)
@@ -175,52 +248,94 @@ const props = defineProps({
     }
 })
 
-// Mock Data
-const catalogs = ref([
-    {
-        "id": 1894,
-        "articleId": null,
-        "title": "Overview",
-        "sort": 1,
-        "level": 1,
-        "editing": false,
-        "children": [
-            {
-                "id": 1895,
-                "articleId": 19,
-                "title": "Build blog from scratch",
-                "sort": 1,
-                "level": 2,
-                "editing": false
-            },
-            {
-                "id": 1897,
-                "articleId": 20,
-                "title": "Minio Installation",
-                "sort": 2,
-                "level": 2,
-                "editing": false
-            }
-        ]
-    },
-    {
-        "id": 1896,
-        "articleId": null,
-        "title": "Advanced",
-        "sort": 2,
-        "level": 1,
-        "editing": false,
-        "children": [] 
-    }
-])
+// Data
+import { getWikiCatalogs, updateWikiCatalogs } from '@/api/admin/wiki'
+import { showMessage } from '@/composables/util'
+
+const catalogs = ref([])
+const currWikiId = ref(null)
+
+// Get Catalogs
+function getCatalogs() {
+    getWikiCatalogs(currWikiId.value).then(res => {
+        if (res.success) {
+            catalogs.value = res.data
+        }
+    })
+}
+
+// Update Catalogs Data
+function updateWikiCatalogsData() {
+    updateWikiCatalogs({id: currWikiId.value, catalogs: catalogs.value}).then(res => {
+        if (res.success == false) {
+            let message = res.message
+            showMessage(message, 'error')
+        }
+        getCatalogs(currWikiId.value)
+    })
+}
 
 // Open
 const open = (wikiId) => {
     dialogVisible.value = true
-    console.log("Wiki ID: " + wikiId)
+    currWikiId.value = wikiId
+    getCatalogs()
 }
 // Close
 const close = () => dialogVisible.value = false
+
+// Add Catalog Dialog Ref
+const addCatalogDialogRef = ref(null)
+// Add Catalog Form Ref
+const addCatalogFormRef = ref(null)
+// Add Catalog Form Object
+const addCatalogForm = reactive({
+    title: ''
+})
+// Rules
+const rules = {
+    title: [
+        {
+            required: true,
+            message: 'Title is required',
+            trigger: 'blur',
+        },
+    ]
+}
+
+// Temporary ID
+const tmpId = ref(-1)
+
+// Add Catalog Submit
+const onAddCatalogSubmit = () => {
+    addCatalogFormRef.value.validate((valid) => {
+        if (!valid) {
+            console.log('Form validation failed')
+            return false
+        }
+
+        let lastCatalog = catalogs.value[catalogs.value.length - 1] || { sort: 0 }
+        
+        let newCatalog = {
+            id: tmpId.value, 
+            title: addCatalogForm.title,
+            editing: false,
+            level: 1,
+            sort: lastCatalog.sort + 1, 
+            children: []
+        }
+        catalogs.value.push(newCatalog)
+        tmpId.value -= 1
+        addCatalogDialogRef.value.close()
+        addCatalogForm.title = ''
+        updateWikiCatalogsData()
+    })
+}
+
+// Add Article Dialog Ref
+const addArticle2CatalogDialogRef = ref(null)
+// Current Catalog ID
+const currCatalogId = ref(null)
 
 const handleCommand = (command) => {
     if (command.action == 'rename') {
@@ -231,7 +346,124 @@ const handleCommand = (command) => {
         catalogMove(command.id, command.sort, 'up')
     } else if (command.action == 'moveDown') {
         catalogMove(command.id, command.sort, 'down')
+    } else if (command.action == 'addArticle') {
+        currCatalogId.value = command.id
+        getTableData()
+        addArticle2CatalogDialogRef.value.open()
     }
+}
+
+// Article Search Title
+const searchArticleTitle = ref('')
+// Date
+const pickDate = ref('')
+// Query Dates
+const startDate = reactive({})
+const endDate = reactive({})
+
+const datepickerChange = (e) => {
+    startDate.value = moment(e[0]).format('YYYY-MM-DD')
+    endDate.value = moment(e[1]).format('YYYY-MM-DD')
+}
+
+const shortcuts = [
+    {
+        text: 'Last week',
+        value: () => {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+            return [start, end]
+        },
+    },
+    {
+        text: 'Last month',
+        value: () => {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+            return [start, end]
+        },
+    },
+    {
+        text: 'Last 3 months',
+        value: () => {
+            const end = new Date()
+            const start = new Date()
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+            return [start, end]
+        },
+    },
+]
+
+const reset = () => {
+    pickDate.value = ''
+    startDate.value = null
+    endDate.value = null
+    searchArticleTitle.value = ''
+}
+
+// Table Loading
+const tableLoading = ref(false)
+// Table Data
+const tableData = ref([])
+// Pagination
+const current = ref(1)
+const total = ref(0)
+const size = ref(10)
+
+// Get Table Data
+function getTableData() {
+    tableLoading.value = true
+    getArticlePageList({ current: current.value, size: size.value, startDate: startDate.value, endDate: endDate.value, 
+        title: searchArticleTitle.value, type: 1 })
+        .then((res) => {
+            if (res.success == true) {
+                tableData.value = res.data
+                current.value = res.current
+                size.value = res.size
+                total.value = res.total
+            }
+        })
+        .finally(() => tableLoading.value = false)
+}
+
+const handleSizeChange = (chooseSize) => {
+    size.value = chooseSize
+    getTableData()
+}
+
+// Selection
+const selectionArticles = ref([])
+const handleSelectionChange = (articles) => {
+    selectionArticles.value = articles
+}
+
+// Submit Add Article
+const onAddArticle2CatalogSubmit = () => {
+    if (!selectionArticles.value || selectionArticles.value.length === 0) {
+        showMessage('Please select articles to add', 'warning')
+        return
+    }
+
+    for (const catalog of catalogs.value) {
+        if (catalog.id === currCatalogId.value) {
+            for (const selectionArticle of selectionArticles.value) {
+                let newCatalog = {
+                    id: tmpId.value,
+                    articleId: selectionArticle.id,
+                    title: selectionArticle.title,
+                    editing: false,
+                    level: 2,
+                }
+                catalog.children.push(newCatalog)
+                tmpId.value -= 1
+            }
+        }
+    }
+    addArticle2CatalogDialogRef.value.close()
+    selectionArticles.value = []
+    updateWikiCatalogsData()
 }
 
 // Edit Title
@@ -262,13 +494,14 @@ const onEditTitleInputBlur = (catalogId) => {
     let targetCatalog = findCatalogById(catalogs.value, catalogId)
     targetCatalog.editing = false
     targetCatalog.title = targetCatalog.title !== '' ? targetCatalog.title : 'Please enter title'
+    updateWikiCatalogsData()
 }
 
 // Remove Catalog
 const removeCatalog = (catalogId) => {
     showModel('Are you sure you want to remove this catalog?').then(() => {
         deleteCatalog(catalogs.value, catalogId)
-        console.log(catalogs.value)
+        updateWikiCatalogsData()
     }).catch((e) => {
         console.log('Cancelled')
     })
@@ -278,7 +511,7 @@ const removeCatalog = (catalogId) => {
 const removeArticleFromCatalog = (catalogId) => {
     showModel('Are you sure you want to remove this article?').then(() => {
         deleteCatalog(catalogs.value, catalogId)
-        console.log(catalogs.value)
+        updateWikiCatalogsData()
     }).catch((e) => {
         console.log('Cancelled')
     })
@@ -311,6 +544,12 @@ function catalogMove(catalogId, sort, action) {
     sourceCatalog.sort = targetSort
     targetCatalog.sort = sourceSort
     sortCatalogs()
+    updateWikiCatalogsData()
+}
+
+// Drag End
+const onDragEnd = (event) => {
+    updateWikiCatalogsData()
 }
 
 // Get catalog by sort order

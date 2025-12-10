@@ -156,9 +156,10 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         String title = findArticlePageListReqVO.getTitle();
         LocalDate startDate = findArticlePageListReqVO.getStartDate();
         LocalDate endDate = findArticlePageListReqVO.getEndDate();
+        Integer type = findArticlePageListReqVO.getType();
 
         // Execute paginated query
-        Page<ArticleDO> articleDOPage = articleMapper.selectPageList(current, size, title, startDate, endDate);
+        Page<ArticleDO> articleDOPage = articleMapper.selectPageList(current, size, title, startDate, endDate, type);
 
         List<ArticleDO> articleDOS = articleDOPage.getRecords();
 

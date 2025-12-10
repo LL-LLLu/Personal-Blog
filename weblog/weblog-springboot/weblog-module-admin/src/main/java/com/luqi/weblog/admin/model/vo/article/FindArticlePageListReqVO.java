@@ -37,4 +37,9 @@ public class FindArticlePageListReqVO extends BasePageQuery {
      */
     private LocalDate endDate;
 
+    /**
+     * Article type
+     */
+    private Integer type;
+
 }
