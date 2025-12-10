@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import com.luqi.weblog.admin.model.vo.wiki.*;
 import com.luqi.weblog.admin.service.AdminWikiService;
+import com.luqi.weblog.common.domain.dos.ArticleDO;
 import com.luqi.weblog.common.domain.dos.WikiCatalogDO;
 import com.luqi.weblog.common.domain.dos.WikiDO;
 import com.luqi.weblog.common.domain.mapper.ArticleMapper;
@@ -165,7 +166,8 @@ public class AdminWikiServiceImpl implements AdminWikiService {
     }
 
     @Override
-    public Response findWikiCatalogList(Long id) {
+    public Response findWikiCatalogList(FindWikiCatalogListReqVO findWikiCatalogListReqVO) {
+        Long id = findWikiCatalogListReqVO.getId();
         List<WikiCatalogDO> catalogDOS = wikiCatalogMapper.selectList(new LambdaQueryWrapper<WikiCatalogDO>()
                 .eq(WikiCatalogDO::getWikiId, id)
                 .orderByAsc(WikiCatalogDO::getSort));

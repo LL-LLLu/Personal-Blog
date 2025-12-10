@@ -72,8 +72,8 @@ public class AdminWikiController {
     @PostMapping("/catalog/list")
     @ApiOperation(value = "Wiki Catalog List")
     @ApiOperationLog(description = "Wiki Catalog List")
-    public Response findWikiCatalogList(@RequestBody @Validated DeleteWikiReqVO reqVO) { // Reusing DeleteWikiReqVO as it has ID
-        return adminWikiService.findWikiCatalogList(reqVO.getId());
+    public Response findWikiCatalogList(@RequestBody @Validated FindWikiCatalogListReqVO reqVO) {
+        return adminWikiService.findWikiCatalogList(reqVO);
     }
 
     @PostMapping("/catalog/update")
