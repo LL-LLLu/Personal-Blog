@@ -216,7 +216,21 @@ public class AdminWikiServiceImpl implements AdminWikiService {
         Long wikiId = updateWikiCatalogReqVO.getId();
         List<UpdateWikiCatalogItemReqVO> catalogs = updateWikiCatalogReqVO.getCatalogs();
 
-        // 1. Delete old catalogs
+        // 1. Revert old articles to NORMAL
+        List<WikiCatalogDO> oldCatalogs = wikiCatalogMapper.selectByWikiId(wikiId);
+        List<Long> oldArticleIds = oldCatalogs.stream()
+                .filter(catalog -> Objects.nonNull(catalog.getArticleId())
+                        && Objects.equals(catalog.getLevel(), com.luqi.weblog.common.enums.WikiCatalogLevelEnum.TWO.getValue()))
+                .map(WikiCatalogDO::getArticleId)
+                .collect(Collectors.toList());
+
+        if (!CollectionUtils.isEmpty(oldArticleIds)) {
+            articleMapper.updateByIds(ArticleDO.builder()
+                    .type(com.luqi.weblog.common.enums.ArticleTypeEnum.NORMAL.getValue())
+                    .build(), oldArticleIds);
+        }
+
+        // 2. Delete old catalogs
         wikiCatalogMapper.delete(new LambdaQueryWrapper<WikiCatalogDO>().eq(WikiCatalogDO::getWikiId, wikiId));
 
         // 2. Insert new catalogs
