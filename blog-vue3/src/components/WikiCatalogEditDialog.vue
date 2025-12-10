@@ -15,13 +15,13 @@
 
         <!-- Catalog Content -->
         <div id="accordion-flush" data-accordion="collapse"
-            data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
-            data-inactive-classes="text-gray-500 dark:text-gray-400">
+            data-active-classes="bg-white text-gray-900"
+            data-inactive-classes="text-gray-500">
             <h2 id="accordion-flush-heading-1" v-for="(catalog, index) in catalogs" :key="index">
                 <!-- Level 1 Catalog -->
                 <button type="button"
                     class="hover:bg-gray-100 py-3 px-3 rounded-lg flex items-center w-full font-medium rtl:text-right 
-                    text-gray-500 dark:border-gray-700 dark:text-gray-400"
+                    text-gray-500"
                     data-accordion-target="#accordion-flush-body-1" aria-expanded="true"
                     aria-controls="accordion-flush-body-1">
                     <svg data-accordion-icon class="w-3 h-3 mr-2 rotate-180 shrink-0" aria-hidden="true"
