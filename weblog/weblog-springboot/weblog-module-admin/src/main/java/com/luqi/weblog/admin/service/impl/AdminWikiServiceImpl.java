@@ -212,9 +212,9 @@ public class AdminWikiServiceImpl implements AdminWikiService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Response updateWikiCatalog(UpdateWikiCatalogReqVO updateWikiCatalogReqVO) {
+    public Response updateWikiCatalogs(UpdateWikiCatalogReqVO updateWikiCatalogReqVO) {
         Long wikiId = updateWikiCatalogReqVO.getId();
-        List<UpdateWikiCatalogReqVO.CatalogItem> catalogs = updateWikiCatalogReqVO.getCatalogs();
+        List<UpdateWikiCatalogItemReqVO> catalogs = updateWikiCatalogReqVO.getCatalogs();
 
         // 1. Delete old catalogs
         wikiCatalogMapper.delete(new LambdaQueryWrapper<WikiCatalogDO>().eq(WikiCatalogDO::getWikiId, wikiId));
@@ -222,7 +222,7 @@ public class AdminWikiServiceImpl implements AdminWikiService {
         // 2. Insert new catalogs
         if (!CollectionUtils.isEmpty(catalogs)) {
             for (int i = 0; i < catalogs.size(); i++) {
-                UpdateWikiCatalogReqVO.CatalogItem level1 = catalogs.get(i);
+                UpdateWikiCatalogItemReqVO level1 = catalogs.get(i);
                 WikiCatalogDO level1DO = WikiCatalogDO.builder()
                         .wikiId(wikiId)
                         .title(level1.getTitle())
@@ -235,12 +235,18 @@ public class AdminWikiServiceImpl implements AdminWikiService {
                         .build();
                 wikiCatalogMapper.insert(level1DO);
                 
+                // Get Level 1 ID
+                Long catalogId = level1DO.getId();
+
                 if (!CollectionUtils.isEmpty(level1.getChildren())) {
+                    List<WikiCatalogDO> level2Catalogs = Lists.newArrayList();
+                    List<Long> updateArticleIds = Lists.newArrayList();
+
                     for (int j = 0; j < level1.getChildren().size(); j++) {
-                        UpdateWikiCatalogReqVO.CatalogItem level2 = level1.getChildren().get(j);
-                        WikiCatalogDO level2DO = WikiCatalogDO.builder()
+                        UpdateWikiCatalogItemReqVO level2 = level1.getChildren().get(j);
+                        level2Catalogs.add(WikiCatalogDO.builder()
                                 .wikiId(wikiId)
-                                .parentId(level1DO.getId())
+                                .parentId(catalogId)
                                 .title(level2.getTitle())
                                 .level(2)
                                 .sort(j + 1)
@@ -248,8 +254,19 @@ public class AdminWikiServiceImpl implements AdminWikiService {
                                 .createTime(LocalDateTime.now())
                                 .updateTime(LocalDateTime.now())
                                 .isDeleted(false)
-                                .build();
-                        wikiCatalogMapper.insert(level2DO);
+                                .build());
+                        
+                        if (Objects.nonNull(level2.getArticleId())) {
+                            updateArticleIds.add(level2.getArticleId());
+                        }
+                    }
+                    // Batch insert Level 2
+                    wikiCatalogMapper.insertBatchSomeColumn(level2Catalogs);
+                    
+                    // Update Article Type
+                    if (!CollectionUtils.isEmpty(updateArticleIds)) {
+                        articleMapper.updateByIds(ArticleDO.builder()
+                                .type(com.luqi.weblog.common.enums.ArticleTypeEnum.WIKI.getValue()).build(), updateArticleIds);
                     }
                 }
             }

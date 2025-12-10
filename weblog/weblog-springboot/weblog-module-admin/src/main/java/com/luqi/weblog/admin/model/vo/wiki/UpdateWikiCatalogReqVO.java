@@ -14,25 +14,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ApiModel(value = "更新知识库目录 VO")
+@ApiModel(value = "更新知识库目录数据入参 VO")
 public class UpdateWikiCatalogReqVO {
 
+    /**
+     * 知识库 ID
+     */
     @NotNull(message = "知识库 ID 不能为空")
     private Long id;
 
+    /**
+     * 目录
+     */
     @Valid
-    private List<CatalogItem> catalogs;
+    private List<UpdateWikiCatalogItemReqVO> catalogs;
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class CatalogItem {
-        private Long id;
-        private Long articleId;
-        private String title;
-        private Integer level;
-        private Integer sort;
-        private List<CatalogItem> children;
-    }
 }

@@ -18,5 +18,10 @@ public interface AdminWikiService {
      * @return
      */
     Response findWikiCatalogList(FindWikiCatalogListReqVO findWikiCatalogListReqVO);
-    Response updateWikiCatalog(UpdateWikiCatalogReqVO updateWikiCatalogReqVO);
+    /**
+     * 更新知识库目录
+     * @param updateWikiCatalogReqVO
+     * @return
+     */
+    Response updateWikiCatalogs(UpdateWikiCatalogReqVO updateWikiCatalogReqVO);
 }

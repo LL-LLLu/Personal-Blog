@@ -64,6 +64,11 @@ const menus = [
         'path': '/admin/tag/list',
     },
     {
+        'name': 'Wiki Management',
+        'icon': 'Collection',
+        'path': '/admin/wiki/list',
+    },
+    {
         'name': 'Blog Settings',
         'icon': 'Setting',
         'path': '/admin/blog/settings',
