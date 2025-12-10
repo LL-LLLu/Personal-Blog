@@ -1,19 +1,28 @@
 <template>
-    <el-dialog v-model="dialogVisible" :title="title" :width="width"
+  <el-dialog
+    v-model="dialogVisible"
+    :title="title"
+    :width="width"
     :destroy-on-close="destroyOnClose"
-     :draggable="true" :close-on-click-modal="false"
-        :close-on-press-escape="false">
-        <!-- 插槽 -->
-        <slot></slot>
-        <template #footer>
-            <span class="dialog-footer">
-                <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="submit" :loading="btnLoading">
-                    {{ confirmText }}
-                </el-button>
-            </span>
-        </template>
-    </el-dialog>
+    :draggable="true"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+  >
+    <!-- 插槽 -->
+    <slot />
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button
+          type="primary"
+          :loading="btnLoading"
+          @click="submit"
+        >
+          {{ confirmText }}
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>

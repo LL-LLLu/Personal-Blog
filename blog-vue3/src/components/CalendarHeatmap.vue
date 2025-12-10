@@ -1,6 +1,9 @@
 <template>
-    <!-- Calendar heatmap container -->
-    <div id="calendar" class="overflow-x-auto w-full h-60 bg-white dark:bg-gray-800 rounded-lg"></div>
+  <!-- Calendar heatmap container -->
+  <div
+    id="calendar"
+    class="overflow-x-auto w-full h-60 bg-white dark:bg-gray-800 rounded-lg"
+  />
 </template>
 
 <script setup>

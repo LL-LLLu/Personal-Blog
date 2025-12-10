@@ -1,56 +1,97 @@
 <template>
-    <!-- Using grid layout, specifying 2 columns and full screen height -->
-    <div class="grid grid-cols-2 h-screen">
-        <!-- Default span 2 columns, order for arrangement, md for non-mobile (PC) adaptation -->
-        <div class="col-span-2 order-2 p-10 md:col-span-1 md:order-1 bg-slate-900">
-            <!-- Set as flex layout, centered vertically and horizontally on screen, height 100% -->
-            <div
-                class="flex justify-center items-center h-full flex-col animate__animated animate__bounceInLeft animate__fast">
-                <h2 class="font-bold text-4xl mb-7 text-white">Weblog Login</h2>
-                <p class="text-white">A front-end and back-end separated blog developed with Spring Boot + Mybatis Plus + Vue 3.2 + Vite 4.</p>
-                <!-- Set image width to 1/2 of parent element -->
-                <img src="@/assets/developer.png" class="w-1/2">
-            </div>
-        </div>
-        <div class="flex flex-col col-span-2 order-1 md:col-span-1 md:order-2 bg-white dark:bg-gray-800">
-            <!-- Day/Night switch, ml-auto aligns to right -->
-            <label class="switch ml-auto mt-4 mr-4">
-                <input type="checkbox" v-model="isLight" @click="toggleDark()">
-                <span class="slider"></span>
-            </label>
-            
-            <!-- flex-col for vertical arrangement of child elements -->
-            <div
-                class="flex justify-center items-center h-full flex-col animate__animated animate__bounceInRight animate__fast">
-                <!-- Large title, set font weight, size, bottom margin -->
-                <h1 class="font-bold text-4xl mb-5 dark:text-white">Welcome Back</h1>
-                <!-- Set flex layout, content centered vertically and horizontally, text color, and horizontal spacing between child contents -->
-                <div class="flex items-center justify-center mb-7 text-gray-400 space-x-2 dark:text-gray-500">
-                    <!-- Left horizontal line, height 1px, width 16, background color set -->
-                    <span class="h-[1px] w-16 bg-gray-200 dark:bg-gray-700"></span>
-                    <span>Login with username and password</span>
-                    <!-- Right horizontal line -->
-                    <span class="h-[1px] w-16 bg-gray-200 dark:bg-gray-700"></span>
-                </div>
-                <!-- Import Element Plus form component, set width to 5/6 for mobile, 2/5 for PC -->
-                <el-form class="w-5/6 md:w-2/5" ref="formRef" :rules="rules" :model="form">
-                    <el-form-item prop="username">
-                        <!-- Input component -->
-                        <el-input size="large" v-model="form.username" placeholder="Please enter username" :prefix-icon="User" clearable />
-                    </el-form-item>
-                    <el-form-item prop="password">
-                        <!-- Password input component -->
-                        <el-input size="large" type="password" v-model="form.password" placeholder="Please enter password"
-                            :prefix-icon="Lock" clearable show-password />
-                    </el-form-item>
-                    <el-form-item>
-                        <!-- Login button, width set to 100% -->
-                        <el-button class="w-full mt-2" size="large" :loading="loading" type="primary" @click="onSubmit">Login</el-button>
-                    </el-form-item>
-                </el-form>
-            </div>
-        </div>
+  <!-- Using grid layout, specifying 2 columns and full screen height -->
+  <div class="grid grid-cols-2 h-screen">
+    <!-- Default span 2 columns, order for arrangement, md for non-mobile (PC) adaptation -->
+    <div class="col-span-2 order-2 p-10 md:col-span-1 md:order-1 bg-slate-900">
+      <!-- Set as flex layout, centered vertically and horizontally on screen, height 100% -->
+      <div
+        class="flex justify-center items-center h-full flex-col animate__animated animate__bounceInLeft animate__fast"
+      >
+        <h2 class="font-bold text-4xl mb-7 text-white">
+          Weblog Login
+        </h2>
+        <p class="text-white">
+          A front-end and back-end separated blog developed with Spring Boot + Mybatis Plus + Vue 3.2 + Vite 4.
+        </p>
+        <!-- Set image width to 1/2 of parent element -->
+        <img
+          src="@/assets/developer.png"
+          class="w-1/2"
+        >
+      </div>
     </div>
+    <div class="flex flex-col col-span-2 order-1 md:col-span-1 md:order-2 bg-white dark:bg-gray-800">
+      <!-- Day/Night switch, ml-auto aligns to right -->
+      <label class="switch ml-auto mt-4 mr-4">
+        <input
+          v-model="isLight"
+          type="checkbox"
+          @click="toggleDark()"
+        >
+        <span class="slider" />
+      </label>
+            
+      <!-- flex-col for vertical arrangement of child elements -->
+      <div
+        class="flex justify-center items-center h-full flex-col animate__animated animate__bounceInRight animate__fast"
+      >
+        <!-- Large title, set font weight, size, bottom margin -->
+        <h1 class="font-bold text-4xl mb-5 dark:text-white">
+          Welcome Back
+        </h1>
+        <!-- Set flex layout, content centered vertically and horizontally, text color, and horizontal spacing between child contents -->
+        <div class="flex items-center justify-center mb-7 text-gray-400 space-x-2 dark:text-gray-500">
+          <!-- Left horizontal line, height 1px, width 16, background color set -->
+          <span class="h-[1px] w-16 bg-gray-200 dark:bg-gray-700" />
+          <span>Login with username and password</span>
+          <!-- Right horizontal line -->
+          <span class="h-[1px] w-16 bg-gray-200 dark:bg-gray-700" />
+        </div>
+        <!-- Import Element Plus form component, set width to 5/6 for mobile, 2/5 for PC -->
+        <el-form
+          ref="formRef"
+          class="w-5/6 md:w-2/5"
+          :rules="rules"
+          :model="form"
+        >
+          <el-form-item prop="username">
+            <!-- Input component -->
+            <el-input
+              v-model="form.username"
+              size="large"
+              placeholder="Please enter username"
+              :prefix-icon="User"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item prop="password">
+            <!-- Password input component -->
+            <el-input
+              v-model="form.password"
+              size="large"
+              type="password"
+              placeholder="Please enter password"
+              :prefix-icon="Lock"
+              clearable
+              show-password
+            />
+          </el-form-item>
+          <el-form-item>
+            <!-- Login button, width set to 100% -->
+            <el-button
+              class="w-full mt-2"
+              size="large"
+              :loading="loading"
+              type="primary"
+              @click="onSubmit"
+            >
+              Login
+            </el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>

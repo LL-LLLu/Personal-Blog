@@ -1,6 +1,8 @@
 <template>
-    <!-- 显示 d.num 属性的四舍五入取整后的值（若不加四舍五入，滚动时会显示小数点后面的数字） -->
-    <div :class="customClass">{{ d.num.toFixed(0) }}</div>
+  <!-- 显示 d.num 属性的四舍五入取整后的值（若不加四舍五入，滚动时会显示小数点后面的数字） -->
+  <div :class="customClass">
+    {{ d.num.toFixed(0) }}
+  </div>
 </template>
 
 <script setup>

@@ -1,87 +1,169 @@
 <template>
-    <div>
-<!-- Header pagination query conditions, shadow="never" specifies that the card component has no shadow -->
-<el-card shadow="never" class="mb-5">
-            <!-- Flex layout, content vertically centered, with responsive column layout -->
-            <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-4">
-                <div class="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2">
-                    <el-text class="whitespace-nowrap">Category Name</el-text>
-                    <el-input v-model="searchCategoryName" placeholder="Please enter (fuzzy query)" class="w-full md:w-52" />
-                </div>
+  <div>
+    <!-- Header pagination query conditions, shadow="never" specifies that the card component has no shadow -->
+    <el-card
+      shadow="never"
+      class="mb-5"
+    >
+      <!-- Flex layout, content vertically centered, with responsive column layout -->
+      <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-4">
+        <div class="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2">
+          <el-text class="whitespace-nowrap">
+            Category Name
+          </el-text>
+          <el-input
+            v-model="searchCategoryName"
+            placeholder="Please enter (fuzzy query)"
+            class="w-full md:w-52"
+          />
+        </div>
 
-                <div class="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2">
-                    <el-text class="whitespace-nowrap">Creation Date</el-text>
-                    <!-- Date selection component (range selection) -->
-                    <el-date-picker 
-                        v-model="pickDate" 
-                        type="daterange" 
-                        range-separator="to" 
-                        start-placeholder="Start Time"
-                        end-placeholder="End Time" 
-                        size="default" 
-                        :shortcuts="shortcuts" 
-                        @change="datepickerChange"
-                        class="w-full md:w-auto"
-                    />
-                </div>
+        <div class="w-full md:w-auto flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2">
+          <el-text class="whitespace-nowrap">
+            Creation Date
+          </el-text>
+          <!-- Date selection component (range selection) -->
+          <el-date-picker 
+            v-model="pickDate" 
+            type="daterange" 
+            range-separator="to" 
+            start-placeholder="Start Time"
+            end-placeholder="End Time" 
+            size="default" 
+            :shortcuts="shortcuts" 
+            class="w-full md:w-auto"
+            @change="datepickerChange"
+          />
+        </div>
 
-                <div class="w-full md:w-auto flex space-x-2">
-                    <el-button type="primary" :icon="Search" @click="getTableData" class="flex-grow md:flex-grow-0">Search</el-button>
-                    <el-button :icon="RefreshRight" @click="reset" class="flex-grow md:flex-grow-0">Reset</el-button>
-                </div>
-            </div>
-        </el-card>
+        <div class="w-full md:w-auto flex space-x-2">
+          <el-button
+            type="primary"
+            :icon="Search"
+            class="flex-grow md:flex-grow-0"
+            @click="getTableData"
+          >
+            Search
+          </el-button>
+          <el-button
+            :icon="RefreshRight"
+            class="flex-grow md:flex-grow-0"
+            @click="reset"
+          >
+            Reset
+          </el-button>
+        </div>
+      </div>
+    </el-card>
 
-        <el-card shadow="never">
-            <!-- Add button -->
-            <div class="mb-5">
-                <el-button type="primary" @click="addCategoryBtnClick">
-                    <el-icon class="mr-1">
-                        <Plus />
-                    </el-icon>
-                    Add</el-button>
-            </div>
+    <el-card shadow="never">
+      <!-- Add button -->
+      <div class="mb-5">
+        <el-button
+          type="primary"
+          @click="addCategoryBtnClick"
+        >
+          <el-icon class="mr-1">
+            <Plus />
+          </el-icon>
+          Add
+        </el-button>
+      </div>
 
-            <!-- Pagination list -->
-            <el-table :data="tableData" border stripe style="width: 100%" v-loading="tableLoading">
-                <el-table-column prop="name" label="Category Name" width="180" />
-                <el-table-column prop="articlesTotal" label="Article Count" width="120" align="center">
-                    <template #default="scope">
-                        <el-tag type="info" size="small">{{ scope.row.articlesTotal || 0 }}</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="createTime" label="Creation Time" width="180" />
-                <el-table-column label="Operation" >
-                    <template #default="scope">
-                    <el-button type="danger" size="small" @click="deleteCategorySubmit(scope.row)">
-                        <el-icon class="mr-1">
-                            <Delete />
-                        </el-icon>
-                        Delete
-                    </el-button>
-                </template>
-                </el-table-column>
-            </el-table>
+      <!-- Pagination list -->
+      <el-table
+        v-loading="tableLoading"
+        :data="tableData"
+        border
+        stripe
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="name"
+          label="Category Name"
+          width="180"
+        />
+        <el-table-column
+          prop="articlesTotal"
+          label="Article Count"
+          width="120"
+          align="center"
+        >
+          <template #default="scope">
+            <el-tag
+              type="info"
+              size="small"
+            >
+              {{ scope.row.articlesTotal || 0 }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="Creation Time"
+          width="180"
+        />
+        <el-table-column label="Operation">
+          <template #default="scope">
+            <el-button
+              type="danger"
+              size="small"
+              @click="deleteCategorySubmit(scope.row)"
+            >
+              <el-icon class="mr-1">
+                <Delete />
+              </el-icon>
+              Delete
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-            <!-- Pagination -->
-            <div class="mt-10 flex justify-center">
-                <el-pagination v-model:current-page="current" v-model:page-size="size" :page-sizes="[10, 20, 50]"
-                :small="false" :background="true" layout="total, sizes, prev, pager, next, jumper"
-                :total="total" @size-change="handleSizeChange" @current-change="getTableData" />
-            </div>
-
-        </el-card>
+      <!-- Pagination -->
+      <div class="mt-10 flex justify-center">
+        <el-pagination
+          v-model:current-page="current"
+          v-model:page-size="size"
+          :page-sizes="[10, 20, 50]"
+          :small="false"
+          :background="true"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="getTableData"
+        />
+      </div>
+    </el-card>
 
     <!-- Add Category -->
-    <FormDialog ref="formDialogRef" title="Add Article Category" destroyOnClose @submit="onSubmit">
-        <el-form ref="formRef" :rules="rules" :model="form">
-                    <el-form-item label="Category Name" prop="name" label-width="80px" size="large">
-                        <el-input v-model="form.name" placeholder="Please enter the category name" maxlength="20" show-word-limit clearable/>
-                    </el-form-item>
-                </el-form>
+    <FormDialog
+      ref="formDialogRef"
+      title="Add Article Category"
+      destroy-on-close
+      @submit="onSubmit"
+    >
+      <el-form
+        ref="formRef"
+        :rules="rules"
+        :model="form"
+      >
+        <el-form-item
+          label="Category Name"
+          prop="name"
+          label-width="80px"
+          size="large"
+        >
+          <el-input
+            v-model="form.name"
+            placeholder="Please enter the category name"
+            maxlength="20"
+            show-word-limit
+            clearable
+          />
+        </el-form-item>
+      </el-form>
     </FormDialog>
-
-    </div>
+  </div>
 </template>
 
 <script setup>

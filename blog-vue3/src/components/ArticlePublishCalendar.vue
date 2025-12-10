@@ -1,44 +1,50 @@
 <template>
-    <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
-        <!-- Header with stats -->
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center space-x-2">
-                <div class="w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"></div>
-                <h3 class="text-sm font-semibold text-slate-700 dark:text-white">Publishing Activity</h3>
-            </div>
-            <div class="text-xs text-slate-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-2 py-1 rounded-full border dark:border-gray-600">
-                {{ totalArticles }} articles in last 2 months
-            </div>
-        </div>
-
-        <!-- Chart container with modern styling to match weekly page views -->
-        <div class="relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 p-6 rounded-xl shadow-sm">
-            <!-- Calendar chart -->
-            <div class="w-full flex justify-center">
-                <div id="calendar" class="rounded-lg overflow-hidden" style="width: 100%; height: 240px;"></div>
-            </div>
-
-            <!-- Enhanced activity indicator -->
-            <div class="flex items-center justify-between mt-6 text-sm text-gray-600 dark:text-gray-300">
-                <div class="flex items-center space-x-3">
-                    <div class="flex items-center space-x-2">
-                        <span class="legend-label">Less</span>
-                        <div class="legend-dots">
-                            <div class="legend-dot level-0"></div>
-                            <div class="legend-dot level-1"></div>
-                            <div class="legend-dot level-2"></div>
-                            <div class="legend-dot level-3"></div>
-                            <div class="legend-dot level-4"></div>
-                        </div>
-                        <span class="legend-label">More</span>
-                    </div>
-                </div>
-                <div class="font-medium">
-                    <span>{{ streakDays }} day streak</span>
-                </div>
-            </div>
-        </div>
+  <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
+    <!-- Header with stats -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse" />
+        <h3 class="text-sm font-semibold text-slate-700 dark:text-white">
+          Publishing Activity
+        </h3>
+      </div>
+      <div class="text-xs text-slate-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-2 py-1 rounded-full border dark:border-gray-600">
+        {{ totalArticles }} articles in last 2 months
+      </div>
     </div>
+
+    <!-- Chart container with modern styling to match weekly page views -->
+    <div class="relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 p-6 rounded-xl shadow-sm">
+      <!-- Calendar chart -->
+      <div class="w-full flex justify-center">
+        <div
+          id="calendar"
+          class="rounded-lg overflow-hidden"
+          style="width: 100%; height: 240px;"
+        />
+      </div>
+
+      <!-- Enhanced activity indicator -->
+      <div class="flex items-center justify-between mt-6 text-sm text-gray-600 dark:text-gray-300">
+        <div class="flex items-center space-x-3">
+          <div class="flex items-center space-x-2">
+            <span class="legend-label">Less</span>
+            <div class="legend-dots">
+              <div class="legend-dot level-0" />
+              <div class="legend-dot level-1" />
+              <div class="legend-dot level-2" />
+              <div class="legend-dot level-3" />
+              <div class="legend-dot level-4" />
+            </div>
+            <span class="legend-label">More</span>
+          </div>
+        </div>
+        <div class="font-medium">
+          <span>{{ streakDays }} day streak</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>

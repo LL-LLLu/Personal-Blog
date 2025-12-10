@@ -1,252 +1,414 @@
 <template>
-    <Header></Header>
+  <Header />
 
-    <!-- Article title, tags, Meta information -->
-    <div class="bg-white dark:bg-gray-900">
-        <div class="max-w-screen-xl flex flex-col flex-wrap mx-auto px-4 md:px-6 pb-14 pt-10">
-            <!-- Tag collection -->
-            <div v-if="article.tags && article.tags.length > 0" class="mb-5">
-                <span @click="goTagArticleListPage(tag.id, tag.name)" v-for="(tag, index) in article.tags" :key="index"
-                    class="inline-block mb-1 cursor-pointer bg-green-100 text-green-800 text-sm font-medium me-2 
+  <!-- Article title, tags, Meta information -->
+  <div class="bg-white dark:bg-gray-900">
+    <div class="max-w-screen-xl flex flex-col flex-wrap mx-auto px-4 md:px-6 pb-14 pt-10">
+      <!-- Tag collection -->
+      <div
+        v-if="article.tags && article.tags.length > 0"
+        class="mb-5"
+      >
+        <span
+          v-for="(tag, index) in article.tags"
+          :key="index"
+          class="inline-block mb-1 cursor-pointer bg-green-100 text-green-800 text-sm font-medium me-2 
                     px-2.5 py-0.5 rounded-md hover:bg-green-200 hover:text-green-900 
-                    dark:bg-green-900 dark:hover:bg-green-950 dark:text-green-300">
-                    # {{ tag.name }}
-                </span>
-            </div>
+                    dark:bg-green-900 dark:hover:bg-green-950 dark:text-green-300"
+          @click="goTagArticleListPage(tag.id, tag.name)"
+        >
+          # {{ tag.name }}
+        </span>
+      </div>
             
-            <!-- Article title -->
-            <h1 class="font-bold text-4xl md:text-5xl mb-8 dark:text-white">{{ article.title }}</h1>
+      <!-- Article title -->
+      <h1 class="font-bold text-4xl md:text-5xl mb-8 dark:text-white">
+        {{ article.title }}
+      </h1>
 
-            <!-- Meta information -->
-            <div class="flex gap-3 md:gap-6 text-gray-400 items-center text-sm">
-                <!-- Word count -->
-                <div class="flex items-center" data-tooltip-target="word-tooltip-bottom" data-tooltip-placement="bottom">
-                    <svg t="1701512226243" class="w-4 h-4 mr-1 icon" viewBox="0 0 1024 1024" version="1.1"
-                        xmlns="http://www.w3.org/2000/svg" p-id="28617" width="48" height="48">
-                        <path
-                            d="M682.666667 85.333333l213.333333 213.333334v597.674666a42.368 42.368 0 0 1-42.368 42.325334H170.368A42.666667 42.666667 0 0 1 128 896.341333V127.658667C128 104.277333 146.986667 85.333333 170.368 85.333333H682.666667z m-85.333334 256v212.864L512 469.333333l-84.906667 85.333334L426.666667 341.333333H341.333333v341.333334h85.333334l85.333333-85.333334 85.333333 85.333334h85.333334V341.333333h-85.333334z"
-                            p-id="28618" fill="#8a8a8a"></path>
-                    </svg>
-                    {{ article.totalWords }}
-                </div>
-                <!-- Article word count Tooltip -->
-                <div id="word-tooltip-bottom" role="tooltip"
-                    class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                    Total Words
-                    <div class="tooltip-arrow" data-popper-arrow></div>
-                </div>
-
-                <!-- Reading time -->
-                <div class="hidden md:block">
-                    <div class="flex items-center" data-tooltip-target="read-time-tooltip-bottom"
-                        data-tooltip-placement="bottom">
-                        <svg t="1701512553358" class="w-4 h-4 mr-1.5 icon" viewBox="0 0 1024 1024" version="1.1"
-                            xmlns="http://www.w3.org/2000/svg" p-id="37812" width="48" height="48">
-                            <path
-                                d="M513 33.22c-265.1 0-480 214.9-480 480s214.9 480 480 480 480-214.9 480-480-214.9-480-480-480z m208.9 652.59c-11.05 19.13-35.51 25.69-54.64 14.64L474.1 588.93c-13.06-7.54-20.26-21.34-19.99-35.42 0-0.17-0.01-0.34-0.01-0.51V329.95c0-22.09 17.91-40 40-40s40 17.91 40 40v201.23l173.17 99.98c19.12 11.05 25.68 35.51 14.63 54.65z"
-                                fill="#8a8a8a" p-id="37813"></path>
-                        </svg>
-                       {{ article.readTime }}
-                    </div>
-                    <!-- Reading time Tooltip -->
-                    <div id="read-time-tooltip-bottom" role="tooltip"
-                        class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                        Reading Time
-                        <div class="tooltip-arrow" data-popper-arrow></div>
-                    </div>
-                </div>
-
-                <!-- Publish time -->
-                <div class="flex items-center" data-tooltip-target="publish-time-tooltip-bottom"
-                    data-tooltip-placement="bottom">
-                    <svg t="1701513012543" class="w-[18px] h-[18px] mr-1 icon" viewBox="0 0 1024 1024" version="1.1"
-                        xmlns="http://www.w3.org/2000/svg" p-id="41600" width="48" height="48">
-                        <path
-                            d="M725.333333 170.666667h74.709334C864.853333 170.666667 917.333333 223.189333 917.333333 288.096V799.893333C917.333333 864.757333 864.832 917.333333 800.042667 917.333333H223.957333C159.146667 917.333333 106.666667 864.810667 106.666667 799.904V288.106667C106.666667 223.242667 159.168 170.666667 223.957333 170.666667H298.666667v-32a32 32 0 0 1 64 0v32h298.666666v-32a32 32 0 0 1 64 0v32z m0 64v32a32 32 0 0 1-64 0v-32H362.666667v32a32 32 0 0 1-64 0v-32h-74.709334A53.354667 53.354667 0 0 0 170.666667 288.096V799.893333A53.301333 53.301333 0 0 0 223.957333 853.333333h576.085334A53.354667 53.354667 0 0 0 853.333333 799.904V288.106667A53.301333 53.301333 0 0 0 800.042667 234.666667H725.333333z m-10.666666 224a32 32 0 0 1 0 64H309.333333a32 32 0 0 1 0-64h405.333334zM586.666667 618.666667a32 32 0 0 1 0 64H309.333333a32 32 0 0 1 0-64h277.333334z"
-                            fill="#8a8a8a" p-id="41601"></path>
-                    </svg>
-                    {{ article.createTime }}
-                </div>
-                <!-- Publish time Tooltip -->
-                <div id="publish-time-tooltip-bottom" role="tooltip"
-                    class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                    Published Time
-                    <div class="tooltip-arrow" data-popper-arrow></div>
-                </div>
-
-                <!-- Category -->
-                <div class="flex items-center" data-tooltip-target="category-tooltip-bottom"
-                    data-tooltip-placement="bottom">
-                    <svg t="1701513357854" class="w-4 h-4 mr-1.5 icon" viewBox="0 0 1024 1024" version="1.1"
-                        xmlns="http://www.w3.org/2000/svg" p-id="50560" width="48" height="48">
-                        <path
-                            d="M476.7232 112.503467L121.634133 279.825067a68.266667 68.266667 0 0 0 1.6896 124.279466l355.089067 155.648a68.266667 68.266667 0 0 0 54.818133 0l355.089067-155.6992a68.266667 68.266667 0 0 0 1.672533-124.279466l-355.089066-167.253334a68.266667 68.266667 0 0 0-58.197334 0zM150.7328 341.572267l355.089067-167.304534 355.072 167.253334-355.089067 155.6992-355.072-155.648zM860.842667 685.346133a34.133333 34.133333 0 0 1 28.962133 61.781334l-2.4064 1.1264-368.810667 155.682133a34.133333 34.133333 0 0 1-23.671466 1.0752l-2.8672-1.0752-368.7936-155.648a34.133333 34.133333 0 0 1 24.064-63.829333l2.491733 0.938666 355.498667 150.050134 355.5328-150.101334z"
-                            fill="#444444" p-id="50561"></path>
-                        <path
-                            d="M853.333333 512l-341.486933 153.634133L170.666667 512.341333v55.210667c0 13.4656 7.748267 25.6512 19.712 30.9248l286.190933 126.976a78.7968 78.7968 0 0 0 35.2768 8.3968c12.049067 0 24.081067-2.798933 35.293867-8.3968l286.498133-127.249067A33.7408 33.7408 0 0 0 853.333333 567.278933V512z"
-                            fill="#00B386" p-id="50562"></path>
-                    </svg>
-                    <a @click="goCategoryArticleListPage(article.categoryId, article.categoryName)"
-                        class="cursor-pointer mr-1 hover:underline">{{ article.categoryName }}</a>
-                </div>
-                <!-- Category Tooltip -->
-                <div id="category-tooltip-bottom" role="tooltip"
-                    class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                    Category
-                    <div class="tooltip-arrow" data-popper-arrow></div>
-                </div>
-
-                <!-- Read count -->
-                <div class="flex items-center" data-tooltip-target="read-num-tooltip-bottom"
-                    data-tooltip-placement="bottom">
-                    <svg t="1701513523793" class="w-[18px] h-[18px] mr-1 icon" viewBox="0 0 1024 1024" version="1.1"
-                        xmlns="http://www.w3.org/2000/svg" p-id="56112" width="48" height="48">
-                        <path
-                            d="M512 87.806c-234.721 0-424.194 189.474-424.194 424.194s189.474 424.194 424.194 424.194 424.194-189.474 424.194-424.194-189.474-424.194-424.194-424.194zM594.010 825.904c-18.382 12.725-25.452 8.484-12.725-4.242 11.312-12.725 83.425-103.22-29.694-168.263-36.763-21.21-49.49-72.113-49.49-83.425 0-12.725 2.829-18.382-7.069-14.141-8.484 2.829-195.13 91.908-41.007 265.828 9.899 11.312 5.655 14.141-12.725 5.655-419.953-224.822 137.155-579.732 145.639-583.974 8.484-5.655 5.655 2.829-1.414 16.967-12.725 25.452-45.248 164.022 41.007 220.582 87.668 56.56 213.509 172.507-32.522 345.012z"
-                            p-id="56113" fill="#8a8a8a"></path>
-                    </svg>
-                    {{ article.readNum }}
-                </div>
-                <!-- Read count Tooltip -->
-                <div id="read-num-tooltip-bottom" role="tooltip"
-                    class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                    Read Count
-                    <div class="tooltip-arrow" data-popper-arrow></div>
-                </div>
-            </div>
+      <!-- Meta information -->
+      <div class="flex gap-3 md:gap-6 text-gray-400 items-center text-sm">
+        <!-- Word count -->
+        <div
+          class="flex items-center"
+          data-tooltip-target="word-tooltip-bottom"
+          data-tooltip-placement="bottom"
+        >
+          <svg
+            t="1701512226243"
+            class="w-4 h-4 mr-1 icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="28617"
+            width="48"
+            height="48"
+          >
+            <path
+              d="M682.666667 85.333333l213.333333 213.333334v597.674666a42.368 42.368 0 0 1-42.368 42.325334H170.368A42.666667 42.666667 0 0 1 128 896.341333V127.658667C128 104.277333 146.986667 85.333333 170.368 85.333333H682.666667z m-85.333334 256v212.864L512 469.333333l-84.906667 85.333334L426.666667 341.333333H341.333333v341.333334h85.333334l85.333333-85.333334 85.333333 85.333334h85.333334V341.333333h-85.333334z"
+              p-id="28618"
+              fill="#8a8a8a"
+            />
+          </svg>
+          {{ article.totalWords }}
         </div>
+        <!-- Article word count Tooltip -->
+        <div
+          id="word-tooltip-bottom"
+          role="tooltip"
+          class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700"
+        >
+          Total Words
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+
+        <!-- Reading time -->
+        <div class="hidden md:block">
+          <div
+            class="flex items-center"
+            data-tooltip-target="read-time-tooltip-bottom"
+            data-tooltip-placement="bottom"
+          >
+            <svg
+              t="1701512553358"
+              class="w-4 h-4 mr-1.5 icon"
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              p-id="37812"
+              width="48"
+              height="48"
+            >
+              <path
+                d="M513 33.22c-265.1 0-480 214.9-480 480s214.9 480 480 480 480-214.9 480-480-214.9-480-480-480z m208.9 652.59c-11.05 19.13-35.51 25.69-54.64 14.64L474.1 588.93c-13.06-7.54-20.26-21.34-19.99-35.42 0-0.17-0.01-0.34-0.01-0.51V329.95c0-22.09 17.91-40 40-40s40 17.91 40 40v201.23l173.17 99.98c19.12 11.05 25.68 35.51 14.63 54.65z"
+                fill="#8a8a8a"
+                p-id="37813"
+              />
+            </svg>
+            {{ article.readTime }}
+          </div>
+          <!-- Reading time Tooltip -->
+          <div
+            id="read-time-tooltip-bottom"
+            role="tooltip"
+            class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700"
+          >
+            Reading Time
+            <div
+              class="tooltip-arrow"
+              data-popper-arrow
+            />
+          </div>
+        </div>
+
+        <!-- Publish time -->
+        <div
+          class="flex items-center"
+          data-tooltip-target="publish-time-tooltip-bottom"
+          data-tooltip-placement="bottom"
+        >
+          <svg
+            t="1701513012543"
+            class="w-[18px] h-[18px] mr-1 icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="41600"
+            width="48"
+            height="48"
+          >
+            <path
+              d="M725.333333 170.666667h74.709334C864.853333 170.666667 917.333333 223.189333 917.333333 288.096V799.893333C917.333333 864.757333 864.832 917.333333 800.042667 917.333333H223.957333C159.146667 917.333333 106.666667 864.810667 106.666667 799.904V288.106667C106.666667 223.242667 159.168 170.666667 223.957333 170.666667H298.666667v-32a32 32 0 0 1 64 0v32h298.666666v-32a32 32 0 0 1 64 0v32z m0 64v32a32 32 0 0 1-64 0v-32H362.666667v32a32 32 0 0 1-64 0v-32h-74.709334A53.354667 53.354667 0 0 0 170.666667 288.096V799.893333A53.301333 53.301333 0 0 0 223.957333 853.333333h576.085334A53.354667 53.354667 0 0 0 853.333333 799.904V288.106667A53.301333 53.301333 0 0 0 800.042667 234.666667H725.333333z m-10.666666 224a32 32 0 0 1 0 64H309.333333a32 32 0 0 1 0-64h405.333334zM586.666667 618.666667a32 32 0 0 1 0 64H309.333333a32 32 0 0 1 0-64h277.333334z"
+              fill="#8a8a8a"
+              p-id="41601"
+            />
+          </svg>
+          {{ article.createTime }}
+        </div>
+        <!-- Publish time Tooltip -->
+        <div
+          id="publish-time-tooltip-bottom"
+          role="tooltip"
+          class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700"
+        >
+          Published Time
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+
+        <!-- Category -->
+        <div
+          class="flex items-center"
+          data-tooltip-target="category-tooltip-bottom"
+          data-tooltip-placement="bottom"
+        >
+          <svg
+            t="1701513357854"
+            class="w-4 h-4 mr-1.5 icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="50560"
+            width="48"
+            height="48"
+          >
+            <path
+              d="M476.7232 112.503467L121.634133 279.825067a68.266667 68.266667 0 0 0 1.6896 124.279466l355.089067 155.648a68.266667 68.266667 0 0 0 54.818133 0l355.089067-155.6992a68.266667 68.266667 0 0 0 1.672533-124.279466l-355.089066-167.253334a68.266667 68.266667 0 0 0-58.197334 0zM150.7328 341.572267l355.089067-167.304534 355.072 167.253334-355.089067 155.6992-355.072-155.648zM860.842667 685.346133a34.133333 34.133333 0 0 1 28.962133 61.781334l-2.4064 1.1264-368.810667 155.682133a34.133333 34.133333 0 0 1-23.671466 1.0752l-2.8672-1.0752-368.7936-155.648a34.133333 34.133333 0 0 1 24.064-63.829333l2.491733 0.938666 355.498667 150.050134 355.5328-150.101334z"
+              fill="#444444"
+              p-id="50561"
+            />
+            <path
+              d="M853.333333 512l-341.486933 153.634133L170.666667 512.341333v55.210667c0 13.4656 7.748267 25.6512 19.712 30.9248l286.190933 126.976a78.7968 78.7968 0 0 0 35.2768 8.3968c12.049067 0 24.081067-2.798933 35.293867-8.3968l286.498133-127.249067A33.7408 33.7408 0 0 0 853.333333 567.278933V512z"
+              fill="#00B386"
+              p-id="50562"
+            />
+          </svg>
+          <a
+            class="cursor-pointer mr-1 hover:underline"
+            @click="goCategoryArticleListPage(article.categoryId, article.categoryName)"
+          >{{ article.categoryName }}</a>
+        </div>
+        <!-- Category Tooltip -->
+        <div
+          id="category-tooltip-bottom"
+          role="tooltip"
+          class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700"
+        >
+          Category
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+
+        <!-- Read count -->
+        <div
+          class="flex items-center"
+          data-tooltip-target="read-num-tooltip-bottom"
+          data-tooltip-placement="bottom"
+        >
+          <svg
+            t="1701513523793"
+            class="w-[18px] h-[18px] mr-1 icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="56112"
+            width="48"
+            height="48"
+          >
+            <path
+              d="M512 87.806c-234.721 0-424.194 189.474-424.194 424.194s189.474 424.194 424.194 424.194 424.194-189.474 424.194-424.194-189.474-424.194-424.194-424.194zM594.010 825.904c-18.382 12.725-25.452 8.484-12.725-4.242 11.312-12.725 83.425-103.22-29.694-168.263-36.763-21.21-49.49-72.113-49.49-83.425 0-12.725 2.829-18.382-7.069-14.141-8.484 2.829-195.13 91.908-41.007 265.828 9.899 11.312 5.655 14.141-12.725 5.655-419.953-224.822 137.155-579.732 145.639-583.974 8.484-5.655 5.655 2.829-1.414 16.967-12.725 25.452-45.248 164.022 41.007 220.582 87.668 56.56 213.509 172.507-32.522 345.012z"
+              p-id="56113"
+              fill="#8a8a8a"
+            />
+          </svg>
+          {{ article.readNum }}
+        </div>
+        <!-- Read count Tooltip -->
+        <div
+          id="read-num-tooltip-bottom"
+          role="tooltip"
+          class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded shadow-sm opacity-0 tooltip dark:bg-gray-700"
+        >
+          Read Count
+          <div
+            class="tooltip-arrow"
+            data-popper-arrow
+          />
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Main content area -->
-    <main class="container max-w-screen-xl mx-auto px-4 md:px-6 py-4">
-        <!-- grid table layout, divided into 4 columns -->
-        <div class="grid grid-cols-4 gap-7">
-            <!-- Left sidebar, occupies 3 columns -->
-            <div class="col-span-4 md:col-span-3 mb-3">
-                <!-- Article card parent container -->
-                <div
-                    class="w-full p-5 mb-3 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700">
-
-                    <!-- Article -->
-                    <article>
-                        <!-- Article content -->
-                        <div :class="{ 'dark': isDark }">
-                            <div ref="articleContentRef" class="mt-5 article-content" v-viewer v-html="article.content"></div>
-                        </div>
-
-                        <!-- Previous/Next articles -->
-                        <nav class="flex flex-row mt-7">
-                            <!-- basis-1/2 used to occupy half the flex layout space -->
-                            <div class="basis-1/2">
-                                <!-- h-full specifies full height -->
-                                <a v-if="article.preArticle"
-                                    @click="router.push('/article/' + article.preArticle.articleId)"
-                                    class="cursor-pointer flex flex-col h-full p-4 mr-3 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:border-gray-800 hover:bg-gray-50 hover:text-gray-800 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-all duration-200">
-                                    <div>
-                                        <svg class="inline w-3.5 h-3.5 mr-2 mb-1" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"></path>
-                                        </svg>
-                                        Prev
-                                    </div>
-                                    <div>{{ article.preArticle.articleTitle }}</div>
-                                </a>
-                            </div>
-
-                            <div class="basis-1/2">
-                                <!-- text-right specifies right-aligned text display -->
-                                <a v-if="article.nextArticle"
-                                    @click="router.push('/article/' + article.nextArticle.articleId)"
-                                    class="cursor-pointer flex flex-col h-full text-right p-4 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:border-gray-800 hover:bg-gray-50 hover:text-gray-800 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-all duration-200">
-                                    <div>
-                                        Next
-                                        <svg class="inline w-3.5 h-3.5 ml-2 mb-1" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"></path>
-                                        </svg>
-                                    </div>
-                                    <div>{{ article.nextArticle.articleTitle }}</div>
-                                </a>
-                            </div>
-                        </nav>
-                    </article>
-
-
-
-                </div>
+  <!-- Main content area -->
+  <main class="container max-w-screen-xl mx-auto px-4 md:px-6 py-4">
+    <!-- grid table layout, divided into 4 columns -->
+    <div class="grid grid-cols-4 gap-7">
+      <!-- Left sidebar, occupies 3 columns -->
+      <div class="col-span-4 md:col-span-3 mb-3">
+        <!-- Article card parent container -->
+        <div
+          class="w-full p-5 mb-3 bg-white border border-gray-200 rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        >
+          <!-- Article -->
+          <article>
+            <!-- Article content -->
+            <div :class="{ 'dark': isDark }">
+              <div
+                ref="articleContentRef"
+                v-viewer
+                class="mt-5 article-content"
+                v-html="article.content"
+              />
             </div>
 
-            <!-- Right sidebar, occupies one column -->
-            <aside class="col-span-4 md:col-span-1">
-                <div>
-                    <!-- Blogger info -->
-                    <UserInfoCard></UserInfoCard>
+            <!-- Previous/Next articles -->
+            <nav class="flex flex-row mt-7">
+              <!-- basis-1/2 used to occupy half the flex layout space -->
+              <div class="basis-1/2">
+                <!-- h-full specifies full height -->
+                <a
+                  v-if="article.preArticle"
+                  class="cursor-pointer flex flex-col h-full p-4 mr-3 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:border-gray-800 hover:bg-gray-50 hover:text-gray-800 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-all duration-200"
+                  @click="router.push('/article/' + article.preArticle.articleId)"
+                >
+                  <div>
+                    <svg
+                      class="inline w-3.5 h-3.5 mr-2 mb-1"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 14 10"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 5H1m0 0 4 4M1 5l4-4"
+                      />
+                    </svg>
+                    Prev
+                  </div>
+                  <div>{{ article.preArticle.articleTitle }}</div>
+                </a>
+              </div>
 
-                    <!-- Categories -->
-                    <CategoryListCard></CategoryListCard>
-
-                    <!-- Tags -->
-                    <TagListCard></TagListCard>
-                </div>
-                
-                <!-- Article table of contents -->
-                <Toc></Toc>
-
-            </aside>
+              <div class="basis-1/2">
+                <!-- text-right specifies right-aligned text display -->
+                <a
+                  v-if="article.nextArticle"
+                  class="cursor-pointer flex flex-col h-full text-right p-4 text-base font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:border-gray-800 hover:bg-gray-50 hover:text-gray-800 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white transition-all duration-200"
+                  @click="router.push('/article/' + article.nextArticle.articleId)"
+                >
+                  <div>
+                    Next
+                    <svg
+                      class="inline w-3.5 h-3.5 ml-2 mb-1"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 14 10"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M1 5h12m0 0L9 1m4 4L9 9"
+                      />
+                    </svg>
+                  </div>
+                  <div>{{ article.nextArticle.articleTitle }}</div>
+                </a>
+              </div>
+            </nav>
+          </article>
         </div>
-    </main>
+      </div>
 
-    <!-- Back to top -->
-    <ScrollToTopButton></ScrollToTopButton>
+      <!-- Right sidebar, occupies one column -->
+      <aside class="col-span-4 md:col-span-1">
+        <div>
+          <!-- Blogger info -->
+          <UserInfoCard />
 
-    <!-- Mobile User Info Popup Button -->
-    <button @click="showUserInfoModal = true" 
-        class="md:hidden fixed bottom-6 right-6 z-40 bg-gradient-to-r from-blue-500 to-indigo-600 
+          <!-- Categories -->
+          <CategoryListCard />
+
+          <!-- Tags -->
+          <TagListCard />
+        </div>
+                
+        <!-- Article table of contents -->
+        <Toc />
+      </aside>
+    </div>
+  </main>
+
+  <!-- Back to top -->
+  <ScrollToTopButton />
+
+  <!-- Mobile User Info Popup Button -->
+  <button
+    class="md:hidden fixed bottom-6 right-6 z-40 bg-gradient-to-r from-blue-500 to-indigo-600 
         hover:from-blue-600 hover:to-indigo-700 text-white p-4 rounded-full shadow-lg 
-        hover:shadow-xl transform hover:scale-110 transition-all duration-300 ease-out"
-        aria-label="Show user info">
-        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-        </svg>
-    </button>
+        hover:shadow-xl transform hover:scale-110 transition-all duration-300 ease-out" 
+    aria-label="Show user info"
+    @click="showUserInfoModal = true"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+        clip-rule="evenodd"
+      />
+    </svg>
+  </button>
 
-    <!-- Mobile User Info Modal -->
-    <div v-if="showUserInfoModal" 
-        class="md:hidden fixed inset-0 z-50 overflow-y-auto" 
-        aria-labelledby="modal-title" 
-        role="dialog" 
-        aria-modal="true">
-        <!-- Background overlay -->
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
-                @click="showUserInfoModal = false"></div>
+  <!-- Mobile User Info Modal -->
+  <div
+    v-if="showUserInfoModal" 
+    class="md:hidden fixed inset-0 z-50 overflow-y-auto" 
+    aria-labelledby="modal-title" 
+    role="dialog" 
+    aria-modal="true"
+  >
+    <!-- Background overlay -->
+    <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <div
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+        @click="showUserInfoModal = false"
+      />
 
-            <!-- Modal panel -->
-            <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl 
-                transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6 dark:bg-gray-800">
-                <!-- Close button -->
-                <div class="absolute top-4 right-4">
-                    <button @click="showUserInfoModal = false" 
-                        class="bg-white dark:bg-gray-800 rounded-full p-2 inline-flex items-center justify-center 
+      <!-- Modal panel -->
+      <div
+        class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl 
+                transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6 dark:bg-gray-800"
+      >
+        <!-- Close button -->
+        <div class="absolute top-4 right-4">
+          <button
+            class="bg-white dark:bg-gray-800 rounded-full p-2 inline-flex items-center justify-center 
                         text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 
-                        focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
-                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-                
-                <!-- User Info Content -->
-                <div class="mt-4">
-                    <UserInfoCard></UserInfoCard>
-                </div>
-            </div>
+                        focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" 
+            @click="showUserInfoModal = false"
+          >
+            <svg
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
         </div>
+                
+        <!-- User Info Content -->
+        <div class="mt-4">
+          <UserInfoCard />
+        </div>
+      </div>
     </div>
+  </div>
 
-    <Footer></Footer>
+  <Footer />
 </template>
 <script setup>
 import Header from '@/layouts/frontend/components/Header.vue'

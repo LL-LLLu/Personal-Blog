@@ -1,41 +1,42 @@
 <template>
-    <!-- Outer container -->
-    <el-container class="bg-gray-50 dark:bg-gray-900 min-h-screen">
-    
-        <!-- Left sidebar -->
-        <el-aside :width='menuStore.menuWidth' class="transition-all duration-300">
-            <AdminMenu></AdminMenu>
-        </el-aside>
+  <!-- Outer container -->
+  <el-container class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <!-- Left sidebar -->
+    <el-aside
+      :width="menuStore.menuWidth"
+      class="transition-all duration-300"
+    >
+      <AdminMenu />
+    </el-aside>
         
-        <!-- Right main content area -->
-        <el-container>
-            <!-- Top bar container -->
-            <el-header>
-                <AdminHeader></AdminHeader>
-            </el-header>
+    <!-- Right main content area -->
+    <el-container>
+      <!-- Top bar container -->
+      <el-header>
+        <AdminHeader />
+      </el-header>
             
-            <el-main class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-300">
-                <!-- Tab navigation bar -->
-                <AdminTagList></AdminTagList>
+      <el-main class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-300">
+        <!-- Tab navigation bar -->
+        <AdminTagList />
 
-                <!-- Main content (dynamically display different pages based on route) -->
-                <router-view v-slot="{ Component }">
-                    <Transition name="fade">
-                        <!-- max specifies caching at most 10 components -->
-                        <KeepAlive :max="10">
-                            <component :is="Component"></component>
-                        </KeepAlive>
-                    </Transition>
-
-                </router-view>
-            </el-main>
+        <!-- Main content (dynamically display different pages based on route) -->
+        <router-view v-slot="{ Component }">
+          <Transition name="fade">
+            <!-- max specifies caching at most 10 components -->
+            <KeepAlive :max="10">
+              <component :is="Component" />
+            </KeepAlive>
+          </Transition>
+        </router-view>
+      </el-main>
             
-            <!-- Bottom bar container -->
-            <el-footer>
-                <AdminFooter></AdminFooter>
-            </el-footer>
-        </el-container>
+      <!-- Bottom bar container -->
+      <el-footer>
+        <AdminFooter />
+      </el-footer>
     </el-container>
+  </el-container>
 </template>
 
 <script setup>

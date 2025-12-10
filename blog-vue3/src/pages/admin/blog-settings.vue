@@ -1,76 +1,183 @@
 <template>
-    <div>
-        <!-- Card component, shadow="never" specifies that the card component has no shadow -->
-        <el-card shadow="never">
-            <el-form ref="formRef" :model="form" label-width="160px" :rules="rules">
-                <el-form-item label="Blog Name" prop="name">
-                    <el-input v-model="form.name" clearable />
-                </el-form-item>
-                <el-form-item label="Author Name" prop="author">
-                    <el-input v-model="form.author" clearable />
-                </el-form-item>
-                <el-form-item label="Blog LOGO" prop="logo">
-                    <el-upload class="avatar-uploader" action="#" :on-change="handleLogoChange" :auto-upload="false"
-                        :show-file-list="false">
-                        <img v-if="form.logo" :src="form.logo" class="avatar" />
-                        <el-icon v-else class="avatar-uploader-icon">
-                            <Plus />
-                        </el-icon>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item label="Author Avatar" prop="avatar">
-                    <el-upload class="avatar-uploader" action="#" :on-change="handleAvatarChange" :auto-upload="false"
-                        :show-file-list="false">
-                        <img v-if="form.avatar" :src="form.avatar" class="avatar" />
-                        <el-icon v-else class="avatar-uploader-icon">
-                            <Plus />
-                        </el-icon>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item label="Introduction" prop="introduction">
-                    <el-input v-model="form.introduction" type="textarea" />
-                </el-form-item>
-                <!-- Enable GitHub access -->
-                <el-form-item label="Enable GitHub Access">
-                    <el-switch v-model="isGithubChecked" inline-prompt :active-icon="Check" :inactive-icon="Close"
-                        @change="githubSwitchChange" />
-                </el-form-item>
-                <el-form-item label="GitHub Homepage URL" v-if="isGithubChecked">
-                    <el-input v-model="form.githubHomepage" clearable placeholder="Enter GitHub homepage URL" />
-                </el-form-item>
+  <div>
+    <!-- Card component, shadow="never" specifies that the card component has no shadow -->
+    <el-card shadow="never">
+      <el-form
+        ref="formRef"
+        :model="form"
+        label-width="160px"
+        :rules="rules"
+      >
+        <el-form-item
+          label="Blog Name"
+          prop="name"
+        >
+          <el-input
+            v-model="form.name"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item
+          label="Author Name"
+          prop="author"
+        >
+          <el-input
+            v-model="form.author"
+            clearable
+          />
+        </el-form-item>
+        <el-form-item
+          label="Blog LOGO"
+          prop="logo"
+        >
+          <el-upload
+            class="avatar-uploader"
+            action="#"
+            :on-change="handleLogoChange"
+            :auto-upload="false"
+            :show-file-list="false"
+          >
+            <img
+              v-if="form.logo"
+              :src="form.logo"
+              class="avatar"
+            >
+            <el-icon
+              v-else
+              class="avatar-uploader-icon"
+            >
+              <Plus />
+            </el-icon>
+          </el-upload>
+        </el-form-item>
+        <el-form-item
+          label="Author Avatar"
+          prop="avatar"
+        >
+          <el-upload
+            class="avatar-uploader"
+            action="#"
+            :on-change="handleAvatarChange"
+            :auto-upload="false"
+            :show-file-list="false"
+          >
+            <img
+              v-if="form.avatar"
+              :src="form.avatar"
+              class="avatar"
+            >
+            <el-icon
+              v-else
+              class="avatar-uploader-icon"
+            >
+              <Plus />
+            </el-icon>
+          </el-upload>
+        </el-form-item>
+        <el-form-item
+          label="Introduction"
+          prop="introduction"
+        >
+          <el-input
+            v-model="form.introduction"
+            type="textarea"
+          />
+        </el-form-item>
+        <!-- Enable GitHub access -->
+        <el-form-item label="Enable GitHub Access">
+          <el-switch
+            v-model="isGithubChecked"
+            inline-prompt
+            :active-icon="Check"
+            :inactive-icon="Close"
+            @change="githubSwitchChange"
+          />
+        </el-form-item>
+        <el-form-item
+          v-if="isGithubChecked"
+          label="GitHub Homepage URL"
+        >
+          <el-input
+            v-model="form.githubHomepage"
+            clearable
+            placeholder="Enter GitHub homepage URL"
+          />
+        </el-form-item>
 
-                <!-- Enable Gitee access -->
-                <el-form-item label="Enable Gitee Access">
-                    <el-switch v-model="isGiteeChecked" inline-prompt :active-icon="Check" :inactive-icon="Close"
-                        @change="giteeSwitchChange" />
-                </el-form-item>
-                <el-form-item label="Gitee Homepage URL" v-if="isGiteeChecked">
-                    <el-input v-model="form.giteeHomepage" clearable placeholder="Enter Gitee homepage URL" />
-                </el-form-item>
+        <!-- Enable Gitee access -->
+        <el-form-item label="Enable Gitee Access">
+          <el-switch
+            v-model="isGiteeChecked"
+            inline-prompt
+            :active-icon="Check"
+            :inactive-icon="Close"
+            @change="giteeSwitchChange"
+          />
+        </el-form-item>
+        <el-form-item
+          v-if="isGiteeChecked"
+          label="Gitee Homepage URL"
+        >
+          <el-input
+            v-model="form.giteeHomepage"
+            clearable
+            placeholder="Enter Gitee homepage URL"
+          />
+        </el-form-item>
 
-                <!-- Enable Zhihu access -->
-                <el-form-item label="Enable Zhihu Access">
-                    <el-switch v-model="isZhihuChecked" inline-prompt :active-icon="Check" :inactive-icon="Close"
-                        @change="zhihuSwitchChange" />
-                </el-form-item>
-                <el-form-item label="Zhihu Homepage URL" v-if="isZhihuChecked">
-                    <el-input v-model="form.zhihuHomepage" clearable placeholder="Enter Zhihu homepage URL" />
-                </el-form-item>
+        <!-- Enable Zhihu access -->
+        <el-form-item label="Enable Zhihu Access">
+          <el-switch
+            v-model="isZhihuChecked"
+            inline-prompt
+            :active-icon="Check"
+            :inactive-icon="Close"
+            @change="zhihuSwitchChange"
+          />
+        </el-form-item>
+        <el-form-item
+          v-if="isZhihuChecked"
+          label="Zhihu Homepage URL"
+        >
+          <el-input
+            v-model="form.zhihuHomepage"
+            clearable
+            placeholder="Enter Zhihu homepage URL"
+          />
+        </el-form-item>
 
-                <!-- Enable CSDN access -->
-                <el-form-item label="Enable CSDN Access">
-                    <el-switch v-model="isCSDNChecked" inline-prompt :active-icon="Check" :inactive-icon="Close"
-                        @change="csdnSwitchChange" />
-                </el-form-item>
-                <el-form-item label="CSDN Homepage URL" v-if="isCSDNChecked">
-                    <el-input v-model="form.csdnHomepage" clearable placeholder="Enter CSDN homepage URL" />
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" :loading="btnLoading" @click="onSubmit">Save</el-button>
-                </el-form-item>
-            </el-form>
-        </el-card>
-    </div>
+        <!-- Enable CSDN access -->
+        <el-form-item label="Enable CSDN Access">
+          <el-switch
+            v-model="isCSDNChecked"
+            inline-prompt
+            :active-icon="Check"
+            :inactive-icon="Close"
+            @change="csdnSwitchChange"
+          />
+        </el-form-item>
+        <el-form-item
+          v-if="isCSDNChecked"
+          label="CSDN Homepage URL"
+        >
+          <el-input
+            v-model="form.csdnHomepage"
+            clearable
+            placeholder="Enter CSDN homepage URL"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            :loading="btnLoading"
+            @click="onSubmit"
+          >
+            Save
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
 </template>
 
 <script setup>
