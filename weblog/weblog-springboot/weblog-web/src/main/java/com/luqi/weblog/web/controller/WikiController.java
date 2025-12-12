@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.luqi.weblog.web.model.vo.wiki.FindWikiCatalogListReqVO;
+
 @RestController
 @RequestMapping("/wiki")
 @Api(tags = "Wiki Module")
@@ -25,7 +27,7 @@ public class WikiController {
     @ApiOperation(value = "Get all wikis")
     @ApiOperationLog(description = "Get all wikis")
     public Response findWikiList() {
-        return wikiService.findAllWiki();
+        return wikiService.findWikiList();
     }
 
     @PostMapping("/detail")
@@ -33,5 +35,12 @@ public class WikiController {
     @ApiOperationLog(description = "Get wiki detail")
     public Response findWikiDetail(@RequestBody @Validated FindWikiDetailReqVO findWikiDetailReqVO) {
         return wikiService.findWikiDetail(findWikiDetailReqVO);
+    }
+
+    @PostMapping("/catalog/list")
+    @ApiOperation(value = "Get wiki catalog list")
+    @ApiOperationLog(description = "Get wiki catalog list")
+    public Response findWikiCatalogList(@RequestBody @Validated FindWikiCatalogListReqVO findWikiCatalogListReqVO) {
+        return wikiService.findWikiCatalogList(findWikiCatalogListReqVO);
     }
 }

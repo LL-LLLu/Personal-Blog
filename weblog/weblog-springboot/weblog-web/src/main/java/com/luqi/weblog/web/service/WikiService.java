@@ -3,12 +3,14 @@ package com.luqi.weblog.web.service;
 import com.luqi.weblog.common.utils.Response;
 import com.luqi.weblog.web.model.vo.wiki.FindWikiDetailReqVO;
 
+import com.luqi.weblog.web.model.vo.wiki.FindWikiCatalogListReqVO;
+
 public interface WikiService {
     /**
      * Get all wikis
      * @return
      */
-    Response findAllWiki();
+    Response findWikiList();
 
     /**
      * Get wiki detail
@@ -16,4 +18,11 @@ public interface WikiService {
      * @return
      */
     Response findWikiDetail(FindWikiDetailReqVO findWikiDetailReqVO);
+
+    /**
+     * Get wiki catalog list
+     * @param findWikiCatalogListReqVO
+     * @return
+     */
+    Response findWikiCatalogList(FindWikiCatalogListReqVO findWikiCatalogListReqVO);
 }

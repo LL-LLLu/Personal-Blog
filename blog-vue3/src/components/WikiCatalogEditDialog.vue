@@ -81,8 +81,7 @@
             class="hover:bg-gray-200 rounded py-2 px-2"
             @click.stop
           >
-            <el-dropdown @command="handleCommand">
-              <span class="el-dropdown-link flex items-center">
+                                    <el-dropdown trigger="click" @command="handleCommand">              <span class="el-dropdown-link flex items-center">
                 <svg
                   class="icon w-5 h-5 outline-none"
                   viewBox="0 0 1024 1024"

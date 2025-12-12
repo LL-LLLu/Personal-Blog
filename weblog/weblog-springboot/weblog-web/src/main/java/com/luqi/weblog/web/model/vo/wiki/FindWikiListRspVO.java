@@ -11,9 +11,17 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FindWikiListRspVO {
     private Long id;
-    private String title;
     private String cover;
+    private String title;
     private String summary;
+
+    /**
+     * Is Top
+     */
     private Boolean isTop;
-    private Long firstArticleId; // ID of the first article to link to
+
+    /**
+     * First Article ID
+     */
+    private Long firstArticleId;
 }

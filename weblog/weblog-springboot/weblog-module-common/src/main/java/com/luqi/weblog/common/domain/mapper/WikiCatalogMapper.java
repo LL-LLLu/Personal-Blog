@@ -6,7 +6,24 @@ import com.luqi.weblog.common.domain.dos.WikiCatalogDO;
 
 import java.util.List;
 
+import com.luqi.weblog.common.enums.WikiCatalogLevelEnum;
+
 public interface WikiCatalogMapper extends InsertBatchMapper<WikiCatalogDO> {
+
+    /**
+     * Query first article in wiki catalog
+     * @param wikiId
+     * @return
+     */
+    default WikiCatalogDO selectFirstArticleId(Long wikiId) {
+        return selectOne(Wrappers.<WikiCatalogDO>lambdaQuery()
+                .eq(WikiCatalogDO::getWikiId, wikiId) 
+                .eq(WikiCatalogDO::getLevel, WikiCatalogLevelEnum.TWO.getValue()) 
+                .isNotNull(WikiCatalogDO::getArticleId) 
+                .orderByAsc(WikiCatalogDO::getId) 
+                .last("LIMIT 1") 
+        );
+    }
 
     /**
      * 根据某个知识库下所有目录

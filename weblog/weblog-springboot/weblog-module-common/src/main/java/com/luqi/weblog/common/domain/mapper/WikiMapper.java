@@ -42,5 +42,15 @@ public interface WikiMapper extends BaseMapper<WikiDO> {
         return selectOne(Wrappers.<WikiDO>lambdaQuery()
                 .orderByDesc(WikiDO::getWeight)
                 .last("LIMIT 1"));
+    /**
+     * Query published wikis
+     * @return
+     */
+    default java.util.List<WikiDO> selectPublished() {
+        return selectList(Wrappers.<WikiDO>lambdaQuery()
+                .eq(WikiDO::getIsPublish, true) 
+                .orderByDesc(WikiDO::getWeight) 
+                .orderByDesc(WikiDO::getCreateTime) 
+        );
     }
 }
