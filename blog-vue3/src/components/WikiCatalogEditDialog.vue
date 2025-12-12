@@ -36,8 +36,8 @@
         <!-- Level 1 Catalog -->
         <button
           type="button"
-          class="hover:bg-gray-100 py-3 px-3 rounded-lg flex items-center w-full font-medium rtl:text-right 
-                    text-gray-500"
+          class="hover:bg-gray-100 dark:hover:bg-gray-700 py-3 px-3 rounded-lg flex items-center w-full font-medium rtl:text-right 
+                    text-gray-500 dark:text-gray-300"
           :data-accordion-target="'#accordion-flush-body-' + catalog.id"
           aria-expanded="true"
           :aria-controls="'accordion-flush-body-' + catalog.id"
@@ -170,7 +170,7 @@
             <li
               v-for="(childCatalog, index2) in catalog.children"
               :key="index2" 
-              class="flex items-center ps-10 py-2 pe-3 rounded-lg hover:bg-gray-100"
+              class="flex items-center ps-10 py-2 pe-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300"
             >
               <!-- Level 2 Title -->
               <span class="w-full">
