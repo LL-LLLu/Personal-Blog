@@ -1,13 +1,13 @@
 <template>
   <el-dialog
-    v-model="dialogVisible"
-    :title="title"
-    :width="width"
-    :destroy-on-close="destroyOnClose"
-    :draggable="true"
-    :close-on-click-modal="false"
-    :close-on-press-escape="false"
-  >
+      v-model="dialogVisible"
+      :title="title"
+      :width="width"
+      :destroy-on-close="destroyOnClose"
+       :draggable="true" :close-on-click-modal="false"
+          :close-on-press-escape="false"
+      :class="{ 'dark-mode-dialog': isDark }"
+    >
     <!-- Add Catalog Button -->
     <div class="mb-5">
       <el-button
@@ -30,7 +30,7 @@
     >
       <h2
         v-for="(catalog, index) in catalogs"
-        id="accordion-flush-heading-1"
+        :id="'accordion-flush-heading-' + catalog.id"
         :key="index"
       >
         <!-- Level 1 Catalog -->
@@ -38,9 +38,9 @@
           type="button"
           class="hover:bg-gray-100 py-3 px-3 rounded-lg flex items-center w-full font-medium rtl:text-right 
                     text-gray-500"
-          data-accordion-target="#accordion-flush-body-1"
+          :data-accordion-target="'#accordion-flush-body-' + catalog.id"
           aria-expanded="true"
-          aria-controls="accordion-flush-body-1"
+          :aria-controls="'accordion-flush-body-' + catalog.id"
         >
           <svg
             data-accordion-icon
@@ -158,7 +158,10 @@
         </button>
 
         <!-- Level 2 Catalog -->
-        <ul v-if="catalog.children && catalog.children.length > 0">
+        <ul
+          :id="'accordion-flush-body-' + catalog.id"
+          v-if="catalog.children && catalog.children.length > 0"
+        >
           <VueDraggable
             ref="el"
             v-model="catalog.children"
@@ -426,6 +429,10 @@ import { VueDraggable } from 'vue-draggable-plus'
 import FormDialog from '@/components/FormDialog.vue'
 import moment from 'moment'
 import { getArticlePageList } from '@/api/admin/article'
+import { useDark } from '@vueuse/core'
+
+// Dark mode functionality
+const isDark = useDark({ storageKey: 'vueuse-color-scheme' })
 
 // Dialog visibility
 const dialogVisible = ref(false)
@@ -790,3 +797,18 @@ defineExpose({
 })
 
 </script>
+
+<style scoped>
+.dark-mode-dialog .el-input__wrapper {
+  background-color: var(--el-fill-color-blank) !important;
+}
+.dark-mode-dialog .el-input__inner {
+  color: var(--el-text-color-regular) !important;
+}
+.dark-mode-dialog .el-input__inner::placeholder {
+  color: var(--el-text-color-placeholder) !important;
+}
+.dark-mode-dialog .el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 1px var(--el-color-primary) inset;
+}
+</style>
