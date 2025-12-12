@@ -7,9 +7,16 @@
             <!-- Left sidebar: Catalog -->
             <div class="col-span-12 md:col-span-3 sticky top-[80px]">
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sticky top-[80px]">
-                    <div class="font-bold text-lg mb-4 border-b pb-2 dark:border-gray-700 dark:text-white">Contents</div>
+                    <div 
+                        class="font-bold text-lg mb-4 border-b pb-2 dark:border-gray-700 dark:text-white cursor-pointer hover:text-blue-500 transition-colors" 
+                        @click="goWikiHome"
+                    >
+                        {{ wikiInfo?.title || 'Contents' }}
+                    </div>
                     <!-- Catalog Tree -->
                     <el-tree
+                        ref="treeRef"
+                        node-key="id"
                         style="max-width: 600px"
                         :data="catalogs"
                         :props="defaultProps"
@@ -65,8 +72,8 @@
 <script setup>
 import Header from '@/layouts/frontend/components/Header.vue'
 import Footer from '@/layouts/frontend/components/Footer.vue'
-import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted, watch, nextTick } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { getWikiCatalogs } from '@/api/admin/wiki' // Reuse the API we made
 import { getArticleDetail } from '@/api/frontend/article' // Reuse frontend article API
 import { getWikiDetail } from '@/api/frontend/wiki' // Need to create this
@@ -74,9 +81,11 @@ import hljs from 'highlight.js'
 import 'highlight.js/styles/github.css' // Or any other style
 
 const route = useRoute()
+const router = useRouter()
 const wikiId = route.params.wikiId
 
 const catalogs = ref([])
+const treeRef = ref(null)
 const defaultProps = {
   children: 'children',
   label: 'title',
@@ -102,31 +111,83 @@ const fetchCatalogs = () => {
             // Transform data for el-tree if necessary, or just use it directly if it matches
             // The API returns { id, title, level, sort, children: [...] } which fits el-tree
             catalogs.value = res.data
+            
+            // If URL has articleId, highlight the node
+            if (route.query.articleId) {
+                const catalogId = findCatalogIdByArticleId(catalogs.value, route.query.articleId)
+                if (catalogId) {
+                    nextTick(() => {
+                        treeRef.value.setCurrentKey(catalogId)
+                    })
+                }
+            }
         }
     })
+}
+
+// Find catalog ID by Article ID
+const findCatalogIdByArticleId = (catalogs, articleId) => {
+    for (const catalog of catalogs) {
+        if (catalog.articleId == articleId) {
+            return catalog.id
+        }
+        if (catalog.children && catalog.children.length > 0) {
+            const id = findCatalogIdByArticleId(catalog.children, articleId)
+            if (id) return id
+        }
+    }
+    return null
+}
+
+// Navigate to Wiki Home (Overview)
+const goWikiHome = () => {
+    router.push({ path: '/wiki/' + wikiId })
+    // Clear selection in tree
+    if (treeRef.value) {
+        treeRef.value.setCurrentKey(null)
+    }
 }
 
 // Handle Catalog Click
 const handleNodeClick = (data) => {
     // Only fetch article if it's a Level 2 item (article) and has an articleId
     if (data.level === 2 && data.articleId) {
-        getArticleDetail(data.articleId).then(res => {
-            if (res.success) {
-                article.value = res.data
-                // Highlight code blocks
-                setTimeout(() => {
-                    document.querySelectorAll('pre code').forEach((el) => {
-                        hljs.highlightElement(el);
-                    });
-                }, 100)
-            }
-        })
+        // Update URL, triggering watch
+        router.push({ query: { ...route.query, articleId: data.articleId } })
     }
 }
+
+// Fetch Article Content
+const fetchArticle = (articleId) => {
+    getArticleDetail(articleId).then(res => {
+        if (res.success) {
+            article.value = res.data
+            // Highlight code blocks
+            setTimeout(() => {
+                document.querySelectorAll('pre code').forEach((el) => {
+                    hljs.highlightElement(el);
+                });
+            }, 100)
+        }
+    })
+}
+
+// Watch for articleId changes in URL
+watch(() => route.query.articleId, (newArticleId) => {
+    if (newArticleId) {
+        fetchArticle(newArticleId)
+    } else {
+        article.value = null
+    }
+})
 
 onMounted(() => {
     fetchWikiInfo()
     fetchCatalogs()
+    // Initial load if articleId exists
+    if (route.query.articleId) {
+        fetchArticle(route.query.articleId)
+    }
 })
 </script>
 
