@@ -6,8 +6,8 @@
         <div class="grid grid-cols-12 gap-8 items-start">
             <!-- Left sidebar: Catalog -->
             <div class="col-span-12 md:col-span-3 sticky top-[80px]">
-                <div class="bg-white rounded-lg shadow-md p-4 sticky top-[80px]">
-                    <div class="font-bold text-lg mb-4 border-b pb-2">Contents</div>
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sticky top-[80px]">
+                    <div class="font-bold text-lg mb-4 border-b pb-2 dark:border-gray-700 dark:text-white">Contents</div>
                     <!-- Catalog Tree -->
                     <el-tree
                         style="max-width: 600px"
@@ -28,19 +28,19 @@
             </div>
 
             <!-- Right content: Article Detail -->
-            <div class="col-span-12 md:col-span-9 bg-white rounded-lg shadow-md p-6">
+            <div class="col-span-12 md:col-span-9 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
                 <!-- If an article is selected, show content -->
                 <div v-if="article">
                      <!-- Title -->
-                    <h1 class="text-3xl font-bold mb-4">{{ article.title }}</h1>
+                    <h1 class="text-3xl font-bold mb-4 dark:text-white">{{ article.title }}</h1>
                     <!-- Meta info -->
-                    <div class="flex items-center text-gray-500 text-sm mb-6 space-x-4">
+                    <div class="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-6 space-x-4">
                         <span><el-icon class="mr-1"><Calendar /></el-icon> Posted on {{ article.createTime }}</span>
                         <span><el-icon class="mr-1"><View /></el-icon> {{ article.readNum }} Views</span>
                     </div>
                     
                     <!-- Content -->
-                    <div class="article-content" v-viewer>
+                    <div class="article-content dark:text-gray-300" v-viewer>
                         <div v-html="article.content"></div>
                     </div>
                 </div>
@@ -48,8 +48,8 @@
                 <div v-else class="text-center py-20">
                      <div v-if="wikiInfo">
                         <img :src="wikiInfo.cover" class="mx-auto rounded-lg shadow-md max-w-[400px] mb-8" />
-                        <h2 class="text-2xl font-bold mb-4">{{ wikiInfo.title }}</h2>
-                        <p class="text-gray-600">{{ wikiInfo.summary }}</p>
+                        <h2 class="text-2xl font-bold mb-4 dark:text-white">{{ wikiInfo.title }}</h2>
+                        <p class="text-gray-600 dark:text-gray-400">{{ wikiInfo.summary }}</p>
                     </div>
                     <div v-else>
                         <el-empty description="Select an article from the catalog to read" />
@@ -159,4 +159,9 @@ onMounted(() => {
     overflow-x: auto;
 }
 /* Dark mode styles can be added here */
+.dark .el-tree {
+    --el-tree-node-hover-bg-color: #374151; /* gray-700 */
+    background: transparent;
+    color: #e5e7eb; /* gray-200 */
+}
 </style>
