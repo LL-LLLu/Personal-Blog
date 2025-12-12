@@ -2,7 +2,7 @@ package com.luqi.weblog.web.controller;
 
 import com.luqi.weblog.common.aspect.ApiOperationLog;
 import com.luqi.weblog.common.utils.Response;
-import com.luqi.weblog.web.model.vo.wiki.FindWikiArticlePreNextReqVO;
+import com.luqi.weblog.web.model.vo.wiki.FindWikiDetailReqVO;
 import com.luqi.weblog.web.service.WikiService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,23 +22,16 @@ public class WikiController {
     private WikiService wikiService;
 
     @PostMapping("/list")
-    @ApiOperation(value = "Get Wiki List")
-    @ApiOperationLog(description = "Get Wiki List")
+    @ApiOperation(value = "Get all wikis")
+    @ApiOperationLog(description = "Get all wikis")
     public Response findWikiList() {
-        return wikiService.findWikiList();
+        return wikiService.findAllWiki();
     }
 
-    @PostMapping("/catalog/list")
-    @ApiOperation(value = "Get Wiki Catalog")
-    @ApiOperationLog(description = "Get Wiki Catalog")
-    public Response findWikiCatalogList(@RequestBody @Validated FindWikiArticlePreNextReqVO reqVO) { // Using for ID
-        return wikiService.findWikiCatalogList(reqVO.getId());
-    }
-
-    @PostMapping("/article/preNext")
-    @ApiOperation(value = "Get Wiki Pre/Next Article")
-    @ApiOperationLog(description = "Get Wiki Pre/Next Article")
-    public Response findWikiArticlePreNext(@RequestBody @Validated FindWikiArticlePreNextReqVO reqVO) {
-        return wikiService.findWikiArticlePreNext(reqVO);
+    @PostMapping("/detail")
+    @ApiOperation(value = "Get wiki detail")
+    @ApiOperationLog(description = "Get wiki detail")
+    public Response findWikiDetail(@RequestBody @Validated FindWikiDetailReqVO findWikiDetailReqVO) {
+        return wikiService.findWikiDetail(findWikiDetailReqVO);
     }
 }
