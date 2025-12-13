@@ -1173,6 +1173,15 @@ watch(isDrawerExpand, (newText, oldText) => {
     }
 })
 
+// Watch catalogs prop to re-initialize accordions when data loads
+watch(() => props.catalogs, (newVal) => {
+    if (newVal && newVal.length > 0) {
+        nextTick(() => {
+            initAccordions()
+        })
+    }
+})
+
 // Navigate to article detail page
 const goWikiArticleDetailPage = (articleId) => {
     isDrawerExpand.value = false

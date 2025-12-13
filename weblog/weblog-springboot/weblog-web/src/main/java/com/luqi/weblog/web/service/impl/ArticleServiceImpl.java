@@ -176,7 +176,7 @@ public class ArticleServiceImpl implements ArticleService {
         // DO 转 VO
         FindArticleDetailRspVO vo = FindArticleDetailRspVO.builder()
                 .title(articleDO.getTitle())
-                .createTime(articleDO.getCreateTime())
+                .createTime(Constants.DATE_TIME_FORMATTER.format(articleDO.getCreateTime()))
                 .content(MarkdownHelper.convertMarkdown2Html(content))
                 .readNum(articleDO.getReadNum())
                 .totalWords(totalWords)
