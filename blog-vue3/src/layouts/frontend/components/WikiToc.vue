@@ -1,115 +1,92 @@
 <template>
-  <!-- text-sm/[30px] means small text size, line height is 30px -->
-  <div
-    v-if="titles && titles.length > 0"
-    class="sticky text-sm/[30px] w-full mb-3 transition-all"
-    :class="[currScrollY > 0 ? 'top-0' : 'top-[5.5rem]']"
-  >
-    <!-- Table of contents title -->
-    <h2 class="flex items-center mb-2 font-bold text-gray-900 uppercase dark:text-gray-400">
-      文章目录
-    </h2>
-    <div
-      class="toc-wrapper"
-      :class="[isDark ? 'dark' : '']"
-    >
-      <ul class="toc">
-        <!-- Second level headings -->
-        <li
-          v-for="(h2, index) in titles"
-          :key="index"
-          class="pl-5"
-          :class="[h2.index == activeHeadingIndex ? 'active text-sky-600 border-l-2 border-sky-600 font-bold' : 'text-gray-500 font-normal']"
+    <!-- text-sm/[30px] 表示文字小号，行高为 30px -->
+    <div v-if="titles && titles.length > 0"
+        class="sticky text-sm/[30px] w-full mb-3 transition-all"
+        :class="[currScrollY > 0 ? 'top-0' : 'top-[5.5rem]']"
         >
-          <span
-            class="cursor-pointer hover:text-sky-600"
-            @click="scrollToView(h2.offsetTop)"
-          >{{ h2.text }}</span>
-          <!-- Third level headings -->
-          <ul v-if="h2.children && h2.children.length > 0">
-            <li
-              v-for="(h3, index2) in h2.children"
-              :key="index2"
-              class="pl-5"
-              :class="[h3.index == activeHeadingIndex ? 'active text-sky-600 border-l-2 border-sky-600 font-bold' : 'text-gray-500 font-normal']"
-            >
-              <span
-                class="cursor-pointer hover:text-sky-600"
-                @click="scrollToView(h3.offsetTop)"
-              >{{ h3.text }}</span>
-            </li>
-          </ul>
-        </li>
-      </ul>
+        <!-- 目录标题 -->
+        <h2 class="flex items-center mb-2 font-bold text-gray-900 uppercase dark:text-gray-400">
+            文章目录
+        </h2>
+        <div class="toc-wrapper" :class="[isDark ? 'dark' : '']">
+            <ul class="toc">
+                <!-- 二级标题 -->
+                <li v-for="(h2, index) in titles" :key="index">
+                    <span @click="scrollToView(h2.offsetTop)" class="pl-5 hover:text-sky-600" :class="[h2.index == activeHeadingIndex ? 'active py-1 text-sky-600 border-l-2 border-sky-600 font-bold' : 'text-gray-500 font-normal']">{{ h2.text }}</span>
+                    <!-- 三级标题 -->
+                    <ul v-if="h2.children && h2.children.length > 0">
+                        <li v-for="(h3, index2) in h2.children" :key="index2">
+                            <span @click="scrollToView(h3.offsetTop)" class="pl-10 hover:text-sky-600" :class="[h3.index == activeHeadingIndex ? 'active py-1 text-sky-600 border-l-2 border-sky-600 font-bold' : 'text-gray-500 font-normal']">{{ h3.text }}</span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useDark } from '@vueuse/core'
 
-// Reactive table of contents data
-const titles = ref([])
-
-// Whether it's dark mode
+// 是否是暗黑模式
 const isDark = useDark()
 
-// Current Y-axis scroll offset
-const currScrollY = ref(0)
-
+// 响应式的目录数据
+const titles = ref([])
 onMounted(() => {
-    // Get parent div through .article-content style
+    // 通过 .artilce-content 样式来获取父级 div
     const container = document.querySelector('.article-content')
 
-    // If container not found, return
-    if (!container) return
-
-    // Use MutationObserver to monitor DOM changes
+    // Use MutationObserver 监视 DOM 的变化
     const observer = new MutationObserver(mutationsList => {
         for (let mutation of mutationsList) {
             if (mutation.type === 'childList') {
-                // Clear table of contents cache data first
+                // 先清空目录缓存数据
                 titles.value = []
-                // Listen to all image loading events
+                // 计算目录数据
+                initTocData(container)
+
+                // 监听所有图片的加载事件
                 const images = container.querySelectorAll('img');
                 images.forEach(img => {
                     img.addEventListener('load', () => {
-                        // Recalculate title offsetTop after image loading is complete
+                        // 图片加载完成后重新计算标题的 offsetTop
                         initTocData(container)
                     })
                 })
 
-                // Add scroll event listener
+                // 添加滚动事件监听
                 window.addEventListener('scroll', handleContentScroll);
             }
         }
     })
 
-    // Configure to monitor changes in child nodes
+    // 配置监视子节点的变化
     const config = { childList: true, subtree: true }
-    // Start observing content changes in the article div
+    // 开始观察正文 div 的内容变化
     observer.observe(container, config)
 })
 
-// Record the index of the currently selected heading
+// 记录当前被选中的标题下标
 const activeHeadingIndex = ref(-1)
-// Handle scroll events
+// 当前 Y 轴滚动的偏移量
+const currScrollY = ref(0)
+// 处理滚动事件
 function handleContentScroll() {
-    // Current scroll position
+    // 当前的滚动位置
     let scrollY = window.scrollY
     currScrollY.value = scrollY
-    
-    // Loop through table of contents
+    // 循环目录
     titles.value.forEach(title => {
-        // Get offset of each heading
+        // 获取每个标题的 offset
         let offsetTop = title.offsetTop
-        // If current position is greater than or equal to heading position, mark as selected and record the selected heading index
+        // 如果当前位置大于等于标题位置，则标记选中，记录被选中标题的下标
         if (scrollY >= offsetTop) {
             activeHeadingIndex.value = title.index
         }
 
-        // Handle level 3 headings, same logic
+        // 处理3级标题, 同样的逻辑
         let children = title.children
         if (children && children.length > 0) {
             children.forEach(child => {
@@ -122,47 +99,45 @@ function handleContentScroll() {
     })
 }
 
-// Remove scroll listener
+// 移除滚动监听
 onBeforeUnmount(() => window.removeEventListener('scroll', handleContentScroll))
 
-// Scroll to specified position
+// 滚动到指定的位置
 function scrollToView(offsetTop) {
     window.scrollTo({ top: offsetTop, behavior: "smooth" });
 }
 
-// Initialize heading data
+// 初始化标题数据
 function initTocData(container) {
-    // Only extract level 2 and level 3 headings
+    // 只提取二级、三级标题
     let levels = ['h2', 'h3']
     let headings = container.querySelectorAll(levels)
 
-    console.log(headings)
-
-    // Store assembled table of contents heading data
+    // 存放组装后的目录标题数据
     let titlesArr = []
 
-    // Index
+    // 下标
     let index = 1
     headings.forEach(heading => {
-        // Heading level, h2 -> level 2; h3 -> level 3
+        // 标题等级， h2 -> 级别 2 ； h3 -> 级别3
         let headingLevel = parseInt(heading.tagName.substring(1))
-        // Heading text
+        // 标题文字
         let headingText = heading.innerText
-        // Heading position (distance from top)
+        // 标题的位置（距离顶部的距离）
         let offsetTop = heading.offsetTop - 95
 
-        if (headingLevel === 2) { // Level 2 heading
+        if (headingLevel === 2) { // 二级标题
             titlesArr.push({
                 index,
                 level: headingLevel,
                 text: headingText,
                 offsetTop,
-                children: [] // Child headings under level 2 heading
+                children: [] // 二级标题下的子标题
             })
-        } else { // Level 3 heading
-            // Parent heading
+        } else { // 三级标题
+            // 父级标题
             let parentHeading = titlesArr[titlesArr.length - 1]
-            // Set children of parent heading
+            // 设置父级标题的 children
             parentHeading.children.push({
                 index,
                 level: headingLevel,
@@ -170,24 +145,38 @@ function initTocData(container) {
                 offsetTop
             })
         }
-        // Index +1
+        // 下标 +1
         index++
     })
 
-    // Set data
+    // 设置数据
     titles.value = titlesArr
 }
 </script>
 
 <style scoped>
-/* Table of contents border line */
-.toc {
-    border-left: 2px solid #e5e7eb;
+::v-deep(.toc-wrapper) {
     position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 75vh;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    scroll-behavior: smooth;
 }
 
-/* Dark mode table of contents styles */
-:deep(.dark .toc:before) {
+::v-deep(.toc:before) {
+    content: " ";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    width: 2px;
+    background: #eaecef;
+}
+
+::v-deep(.dark .toc:before) {
     content: " ";
     position: absolute;
     top: 0;
@@ -198,15 +187,15 @@ function initTocData(container) {
     background: #30363d;
 }
 
-:deep(.dark .toc li span) {
+::v-deep(.dark .toc li span) {
     color: #9e9e9e;
 }
 
-:deep(.dark .toc li .active) {
+::v-deep(.dark .toc li .active) {
     color: rgb(2 132 199 / 1);
 }
 
-:deep(.dark .toc li span:hover) {
+::v-deep(.dark .toc li span:hover) {
     color: rgb(2 132 199 / 1);
 }
 </style>
