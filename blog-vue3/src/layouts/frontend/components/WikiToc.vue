@@ -62,6 +62,9 @@ onMounted(() => {
     // Get parent div through .article-content style
     const container = document.querySelector('.article-content')
 
+    // If container not found, return
+    if (!container) return
+
     // Use MutationObserver to monitor DOM changes
     const observer = new MutationObserver(mutationsList => {
         for (let mutation of mutationsList) {

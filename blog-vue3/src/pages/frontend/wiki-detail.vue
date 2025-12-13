@@ -117,7 +117,7 @@
 
             <!-- Right sidebar: TOC -->
             <div class="fixed z-20 top-[60px] bottom-0 right-[max(0px,calc(50%-50rem))] w-[19.5rem] py-10 overflow-y-auto hidden xl:block">
-                <WikiToc />
+                <WikiToc v-if="article" />
             </div>
         </main>
 
