@@ -1011,7 +1011,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink"
               class="hover:bg-gray-100 flex items-center justify-between w-full py-3 px-3 rounded-lg 
                             font-medium rtl:text-right text-gray-600 dark:text-gray-400 gap-3 dark:hover:bg-gray-800"
               :data-accordion-target="'#drawer-accordion-flush-body-' + catalog.id"
-              :aria-expanded="[catalog.children.some(item => item.articleId == route.query.articleId) ? true : false]"
+              :aria-expanded="[catalog.children && catalog.children.some(item => item.articleId == route.query.articleId) ? true : false]"
               :aria-controls="'drawer-accordion-flush-body-' + catalog.id"
             >
               <!-- Level 1 Catalog Title -->
