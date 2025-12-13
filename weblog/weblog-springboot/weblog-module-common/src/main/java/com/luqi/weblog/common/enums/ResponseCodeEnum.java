@@ -37,6 +37,7 @@ public enum ResponseCodeEnum implements BaseExceptionInterface {
     COMMENT_CONTAIN_SENSITIVE_WORD("20015", "Comment contains sensitive words, please edit and resubmit"),
     COMMENT_WAIT_EXAMINE("20016", "Comment submitted, waiting for admin approval"),
     COMMENT_NOT_FOUND("20017", "Comment does not exist"),
+    COMMENT_STATUS_NOT_WAIT_EXAMINE("20018", "This comment is not in pending review status"),
     ;
 
     // Exception code for errors

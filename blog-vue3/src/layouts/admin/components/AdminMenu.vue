@@ -88,6 +88,11 @@ const menus = [
         'path': '/admin/wiki/list',
     },
     {
+        'name': 'Comment Management',
+        'icon': 'ChatDotSquare',
+        'path': '/admin/comment/list',
+    },
+    {
         'name': 'Blog Settings',
         'icon': 'Setting',
         'path': '/admin/blog/settings',

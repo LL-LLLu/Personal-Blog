@@ -1,6 +1,7 @@
 package com.luqi.weblog.admin.service;
 
 import com.luqi.weblog.admin.model.vo.comment.DeleteCommentReqVO;
+import com.luqi.weblog.admin.model.vo.comment.ExamineCommentReqVO;
 import com.luqi.weblog.admin.model.vo.comment.FindCommentPageListReqVO;
 import com.luqi.weblog.common.utils.Response;
 
@@ -22,5 +23,12 @@ public interface AdminCommentService {
      * @return
      */
     Response deleteComment(DeleteCommentReqVO deleteCommentReqVO);
+
+    /**
+     * Examine comment
+     * @param examineCommentReqVO
+     * @return
+     */
+    Response examine(ExamineCommentReqVO examineCommentReqVO);
 
 }
