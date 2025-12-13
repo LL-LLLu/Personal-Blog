@@ -12,8 +12,11 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Builder
 public class FindWikiArticlePreNextReqVO {
-    @NotNull(message = "Wiki ID cannot be null")
+
+    @NotNull(message = "知识库 ID 不能为空")
     private Long id;
-    @NotNull(message = "Article ID cannot be null")
+
+    @NotNull(message = "文章 ID 不能为空")
     private Long articleId;
+
 }

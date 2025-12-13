@@ -1,5 +1,6 @@
 package com.luqi.weblog.web.model.vo.wiki;
 
+import com.luqi.weblog.web.model.vo.article.FindPreNextArticleRspVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,15 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class FindWikiArticlePreNextRspVO {
+    /**
+     * 上一篇文章
+     */
     private FindPreNextArticleRspVO preArticle;
+    /**
+     * 下一篇文章
+     */
     private FindPreNextArticleRspVO nextArticle;
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class FindPreNextArticleRspVO {
-        private Long articleId;
-        private String articleTitle;
-    }
 }

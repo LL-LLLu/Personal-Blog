@@ -1,6 +1,6 @@
 import axios from "@/axios";
 
-// Get wiki list (frontend)
+// Get wiki list
 export function getWikiList() {
     return axios.post("/wiki/list")
 }

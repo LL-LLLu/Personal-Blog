@@ -43,4 +43,11 @@ public class WikiController {
     public Response findWikiCatalogList(@RequestBody @Validated FindWikiCatalogListReqVO findWikiCatalogListReqVO) {
         return wikiService.findWikiCatalogList(findWikiCatalogListReqVO);
     }
+
+    @PostMapping("/article/preNext")
+    @ApiOperation(value = "Get wiki article pre next")
+    @ApiOperationLog(description = "Get wiki article pre next")
+    public Response findArticlePreNext(@RequestBody FindWikiArticlePreNextReqVO findWikiArticlePreNextReqVO) {
+        return wikiService.findArticlePreNext(findWikiArticlePreNextReqVO);
+    }
 }

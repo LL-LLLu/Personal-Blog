@@ -25,4 +25,11 @@ public interface WikiService {
      * @return
      */
     Response findWikiCatalogList(FindWikiCatalogListReqVO findWikiCatalogListReqVO);
+
+    /**
+     * 获取上下页
+     * @param findWikiArticlePreNextReqVO
+     * @return
+     */
+    Response findArticlePreNext(FindWikiArticlePreNextReqVO findWikiArticlePreNextReqVO);
 }

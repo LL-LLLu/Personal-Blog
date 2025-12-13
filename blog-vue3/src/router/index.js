@@ -6,6 +6,7 @@ import TagList from '@/pages/frontend/tag-list.vue'
 import TagArticleList from '@/pages/frontend/tag-article-list.vue'
 import ArticleDetail from '@/pages/frontend/article-detail.vue'
 import WikiDetail from '@/pages/frontend/wiki-detail.vue'
+import WikiList from '@/pages/frontend/wiki-list.vue'
 import NotFound from '@/pages/frontend/404.vue'
 import Login from '@/pages/admin/login.vue'
 import AdminIndex from '@/pages/admin/index.vue'
@@ -66,6 +67,13 @@ const routes = [
         component: ArticleDetail,
         meta: {
             title: 'Weblog Article Detail Page'
+        }
+    },
+    {
+        path: '/wiki/list', // Wiki list page
+        component: WikiList,
+        meta: {
+            title: 'Weblog Wiki List Page'
         }
     },
     {

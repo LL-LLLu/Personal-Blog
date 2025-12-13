@@ -291,6 +291,13 @@
             </li>
             <li>
               <a
+                :class="[currPath == '/wiki/list' || currPath.includes('/wiki/') ? 'text-gray-900 border-b-2 border-gray-800 pb-1 font-semibold' : 'text-gray-600']"
+                class="block py-2 pl-3 pr-4 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-white md:dark:hover:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 transition-colors duration-200 cursor-pointer"
+                @click="router.push('/wiki/list')"
+              >Wiki</a>
+            </li>
+            <li>
+              <a
                 :class="[currPath == '/archive/list' ? 'text-gray-900 border-b-2 border-gray-800 pb-1 font-semibold' : 'text-gray-600']"
                 class="block py-2 pl-3 pr-4 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-900 md:p-0 dark:text-white md:dark:hover:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 transition-colors duration-200 cursor-pointer"
                 @click="router.push('/archive/list')"

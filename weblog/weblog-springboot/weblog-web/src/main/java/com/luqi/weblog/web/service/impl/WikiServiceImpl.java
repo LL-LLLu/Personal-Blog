@@ -26,6 +26,10 @@ import com.luqi.weblog.web.model.vo.wiki.FindWikiCatalogListReqVO;
 import com.luqi.weblog.web.model.vo.wiki.FindWikiCatalogListRspVO;
 import java.util.Comparator;
 
+import com.luqi.weblog.web.model.vo.article.FindPreNextArticleRspVO;
+import com.luqi.weblog.web.model.vo.wiki.FindWikiArticlePreNextReqVO;
+import com.luqi.weblog.web.model.vo.wiki.FindWikiArticlePreNextRspVO;
+
 @Service
 @Slf4j
 public class WikiServiceImpl implements WikiService {
@@ -138,5 +142,45 @@ public class WikiServiceImpl implements WikiService {
         }
 
         return Response.success(vos);
+    }
+
+    /**
+     * 获取上下页
+     *
+     * @param findWikiArticlePreNextReqVO
+     * @return
+     */
+    @Override
+    public Response findArticlePreNext(FindWikiArticlePreNextReqVO findWikiArticlePreNextReqVO) {
+        // 知识库 ID
+        Long wikiId = findWikiArticlePreNextReqVO.getId();
+        // 文章 ID
+        Long articleId = findWikiArticlePreNextReqVO.getArticleId();
+
+        FindWikiArticlePreNextRspVO vo = new FindWikiArticlePreNextRspVO();
+        // 获取当前文章所属知识库的目录
+        WikiCatalogDO wikiCatalogDO = wikiCatalogMapper.selectByWikiIdAndArticleId(wikiId, articleId);
+
+        // 构建上一篇文章 VO
+        WikiCatalogDO preArticleDO = wikiCatalogMapper.selectPreArticle(wikiId, wikiCatalogDO.getId());
+        if (Objects.nonNull(preArticleDO)) {
+            FindPreNextArticleRspVO preArticleVO = FindPreNextArticleRspVO.builder()
+                    .articleId(preArticleDO.getArticleId())
+                    .articleTitle(preArticleDO.getTitle())
+                    .build();
+            vo.setPreArticle(preArticleVO);
+        }
+
+        // 构建下一篇文章 VO
+        WikiCatalogDO nextArticleDO = wikiCatalogMapper.selectNextArticle(wikiId, wikiCatalogDO.getId());
+        if (Objects.nonNull(nextArticleDO)) {
+            FindPreNextArticleRspVO nextArticleVO = FindPreNextArticleRspVO.builder()
+                    .articleId(nextArticleDO.getArticleId())
+                    .articleTitle(nextArticleDO.getTitle())
+                    .build();
+            vo.setNextArticle(nextArticleVO);
+        }
+
+        return Response.success(vo);
     }
 }
