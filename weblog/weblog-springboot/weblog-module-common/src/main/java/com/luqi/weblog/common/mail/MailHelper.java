@@ -2,6 +2,7 @@ package com.luqi.weblog.common.mail;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -14,6 +15,7 @@ import javax.mail.internet.MimeMessage;
  **/
 @Component
 @Slf4j
+@ConditionalOnProperty(prefix = "spring.mail", name = "host")
 public class MailHelper {
 
     @Autowired

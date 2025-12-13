@@ -27,7 +27,7 @@ public class PublishCommentSubscriber implements ApplicationListener<PublishComm
     private CommentMapper commentMapper;
     @Autowired
     private BlogSettingsMapper blogSettingsMapper;
-    @Autowired
+    @Autowired(required = false)
     private MailHelper mailHelper;
 
     @Override
@@ -41,6 +41,12 @@ public class PublishCommentSubscriber implements ApplicationListener<PublishComm
 
         log.info("==> threadName: {}", threadName);
         log.info("==> 评论发布事件消费成功，commentId: {}", commentId);
+
+        // 如果邮件服务未配置，跳过邮件发送
+        if (mailHelper == null) {
+            log.warn("==> 邮件服务未配置，跳过邮件通知");
+            return;
+        }
 
         CommentDO commentDO = commentMapper.selectById(commentId);
         Long replyCommentId = commentDO.getReplyCommentId();
