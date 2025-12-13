@@ -43,4 +43,19 @@ public class BlogSettingsDO {
     private String giteeHomepage;
 
     private String zhihuHomepage;
+
+    /**
+     * 博主邮箱地址
+     */
+    private String mail;
+
+    /**
+     * 是否开启评论敏感词过滤
+     */
+    private Boolean isCommentSensiWordOpen;
+
+    /**
+     * 是否开启评论审核
+     */
+    private Boolean isCommentExamineOpen;
 }

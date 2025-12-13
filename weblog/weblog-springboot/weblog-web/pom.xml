@@ -96,7 +96,11 @@
             <artifactId>commonmark-ext-task-list-items</artifactId>
         </dependency>
 
-
+        <!-- 敏感词过滤 -->
+        <dependency>
+            <groupId>io.github.toolgood</groupId>
+            <artifactId>toolgood-words</artifactId>
+        </dependency>
 
     </dependencies>
 
