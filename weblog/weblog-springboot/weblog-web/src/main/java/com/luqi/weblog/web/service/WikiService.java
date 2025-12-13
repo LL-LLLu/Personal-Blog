@@ -2,8 +2,8 @@ package com.luqi.weblog.web.service;
 
 import com.luqi.weblog.common.utils.Response;
 import com.luqi.weblog.web.model.vo.wiki.FindWikiDetailReqVO;
-
 import com.luqi.weblog.web.model.vo.wiki.FindWikiCatalogListReqVO;
+import com.luqi.weblog.web.model.vo.wiki.FindWikiArticlePreNextReqVO;
 
 public interface WikiService {
     /**

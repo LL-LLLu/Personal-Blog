@@ -3,6 +3,8 @@ package com.luqi.weblog.web.controller;
 import com.luqi.weblog.common.aspect.ApiOperationLog;
 import com.luqi.weblog.common.utils.Response;
 import com.luqi.weblog.web.model.vo.wiki.FindWikiDetailReqVO;
+import com.luqi.weblog.web.model.vo.wiki.FindWikiCatalogListReqVO;
+import com.luqi.weblog.web.model.vo.wiki.FindWikiArticlePreNextReqVO;
 import com.luqi.weblog.web.service.WikiService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.luqi.weblog.web.model.vo.wiki.FindWikiCatalogListReqVO;
 
 @RestController
 @RequestMapping("/wiki")
