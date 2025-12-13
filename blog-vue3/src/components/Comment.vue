@@ -1,6 +1,6 @@
 <template>
     <div class="mt-14">
-        <h2 class="flex justify-center items-center mb-7 text-gray-500">全部评论<span>({{ total }})</span></h2>
+        <h2 class="flex justify-center items-center mb-7 text-gray-500">All Comments<span>({{ total }})</span></h2>
         <!-- 卡片 -->
         <div :class="props.customeCss">
             <!-- 评论发布表单 -->
@@ -23,51 +23,51 @@
                             <div class="flex basis-1/3">
                                 <span
                                     class="inline-flex border-e-0 items-center px-3 text-xs text-gray-900 bg-gray-100 border rounded-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                    昵称
+                                    Nickname
                                 </span>
                                 <input v-model="commentStore.userInfo.nickname"
                                     data-tooltip-target="nickname-tooltip-click" data-tooltip-trigger="click"
                                     type="text" id="nickname-input"
                                     class="rounded-none rounded-e-lg border text-gray-900 focus:ring-sky-500 focus:border-sky-500 block flex-1 min-w-0 w-full text-xs border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500"
-                                    placeholder="必填">
-                                <!-- 昵称 Tooltip -->
+                                    placeholder="Required">
+                                <!-- Nickname Tooltip -->
                                 <div id="nickname-tooltip-click" role="tooltip"
                                     class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                    请填写昵称
+                                    Please enter nickname
                                     <div class="tooltip-arrow" data-popper-arrow></div>
                                 </div>
                             </div>
                             <div class="flex basis-1/3">
                                 <span
                                     class="inline-flex border-e-0 items-center px-3 text-xs text-gray-900 bg-gray-100 border rounded-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                    邮箱
+                                    Email
                                 </span>
                                 <input v-model="commentStore.userInfo.mail" @blur="onEmailInputBlur"
                                     data-tooltip-target="mail-tooltip-click" data-tooltip-trigger="click" type="email"
                                     id="mail-input"
                                     class="rounded-none rounded-e-lg border text-gray-900 focus:ring-sky-500 focus:border-sky-500 block flex-1 min-w-0 w-full text-xs border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500"
-                                    placeholder="必填">
-                                <!-- 邮箱 Tooltip -->
+                                    placeholder="Required">
+                                <!-- Email Tooltip -->
                                 <div id="mail-tooltip-click" role="tooltip"
                                     class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                    回复将发送到您的邮箱，头像来自 Gravatar
+                                    Replies will be sent to your email, avatar from Gravatar
                                     <div class="tooltip-arrow" data-popper-arrow></div>
                                 </div>
                             </div>
                             <div class="flex basis-1/3">
                                 <span
                                     class="inline-flex border-e-0 items-center px-3 text-xs text-gray-900 bg-gray-100 border rounded-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                    网址
+                                    Website
                                 </span>
                                 <input v-model="commentStore.userInfo.website"
                                     data-tooltip-target="website-tooltip-click" data-tooltip-trigger="click"
                                     type="text" id="website-input"
                                     class="rounded-none rounded-e-lg border text-gray-900 focus:ring-sky-500 focus:border-sky-500 block flex-1 min-w-0 w-full text-xs border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500"
-                                    placeholder="选填">
-                                <!-- 网址 Tooltip -->
+                                    placeholder="Optional">
+                                <!-- Website Tooltip -->
                                 <div id="website-tooltip-click" role="tooltip"
                                     class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                    点击头像可访问您的网站（选填）
+                                    Click avatar to visit your website (optional)
                                     <div class="tooltip-arrow" data-popper-arrow></div>
                                 </div>
                             </div>
@@ -77,15 +77,15 @@
                         <div
                             class="w-full mt-4 mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                             <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
-                                <label for="comment" class="sr-only">您的评论</label>
+                                <label for="comment" class="sr-only">Your comment</label>
                                 <textarea id="comment" rows="4" v-model="commentForm.content"
                                     class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
-                                    placeholder="留下友善的评论吧..." required></textarea>
+                                    placeholder="Leave a friendly comment..." required></textarea>
                             </div>
                             <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
                                 <div @click="onPublishCommentClick"
                                     class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-sky-600 rounded-lg focus:ring-4 focus:ring-sky-200 dark:focus:ring-sky-900 hover:bg-sky-700 cursor-pointer">
-                                    发送
+                                    Send
                                 </div>
                                 <div class="flex ps-0 space-x-1 rtl:space-x-reverse sm:ps-2">
                                     <!-- 表情 -->
@@ -161,10 +161,10 @@
                         <div class="flex items-center text-xs text-gray-400">
                             <!-- 发布时间 -->
                             <div>{{ comment.createTime }}</div>
-                            <!-- 回复按钮 -->
+                            <!-- Reply button -->
                             <div class="text-gray-400 cursor-pointer ml-4 hover:text-sky-600"
                                 @click="showReplyForm(index, comment.nickname, comment.id, comment.id)">
-                                回复
+                                Reply
                             </div>
                         </div>
                     </div>
@@ -202,8 +202,8 @@
                             <!-- 昵称 -->
                             <div class="text-xs text-[#FB7299] font-bold">
                                 {{ childComment.nickname }}
-                                <!-- 【回复 @xxx】 -->
-                                <span v-if="childComment.replyNickname" class="text-gray-400 font-normal ml-1 mr-1">回复
+                                <!-- Reply to @xxx -->
+                                <span v-if="childComment.replyNickname" class="text-gray-400 font-normal ml-1 mr-1">replied to
                                     <span class="text-sky-600 font-normal text-sm">@{{ childComment.replyNickname }}</span>
                                     <span class="text-gray-400"> :</span>
                                 </span>
@@ -215,10 +215,10 @@
                         <div class="ml-9 mt-1 flex items-center text-xs text-gray-400">
                             <!-- 发布时间 -->
                             <div>{{ childComment.createTime }}</div>
-                            <!-- 回复按钮 -->
+                            <!-- Reply button -->
                             <div class="text-gray-400 cursor-pointer ml-4 hover:text-sky-600"
                                 @click="showReplyForm(index, childComment.nickname, childComment.id, comment.id)">
-                                回复
+                                Reply
                             </div>
                         </div>
                     </div>
@@ -243,51 +243,51 @@
                                 <div class="flex basis-1/3">
                                     <span
                                         class="inline-flex border-e-0 items-center px-3 text-xs text-gray-900 bg-gray-100 border rounded-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                        昵称
+                                        Nickname
                                     </span>
                                     <input v-model="commentStore.userInfo.nickname"
                                         data-tooltip-target="nickname-tooltip-click2" data-tooltip-trigger="click"
                                         type="text"
                                         class="rounded-none rounded-e-lg border text-gray-900 focus:ring-sky-500 focus:border-sky-500 block flex-1 min-w-0 w-full text-xs border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500"
-                                        placeholder="必填">
-                                    <!-- 昵称 Tooltip -->
+                                        placeholder="Required">
+                                    <!-- Nickname Tooltip -->
                                     <div id="nickname-tooltip-click2" role="tooltip"
                                         class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        请填写昵称
+                                        Please enter nickname
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
                                 </div>
                                 <div class="flex basis-1/3">
                                     <span
                                         class="inline-flex border-e-0 items-center px-3 text-xs text-gray-900 bg-gray-100 border rounded-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                        邮箱
+                                        Email
                                     </span>
                                     <input v-model="commentStore.userInfo.mail" @blur="onEmailInputBlur"
                                         data-tooltip-target="mail-tooltip-click2" data-tooltip-trigger="click"
                                         type="email"
                                         class="rounded-none rounded-e-lg border text-gray-900 focus:ring-sky-500 focus:border-sky-500 block flex-1 min-w-0 w-full text-xs border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500"
-                                        placeholder="必填">
-                                    <!-- 邮箱 Tooltip -->
+                                        placeholder="Required">
+                                    <!-- Email Tooltip -->
                                     <div id="mail-tooltip-click2" role="tooltip"
                                         class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        回复将发送到您的邮箱，头像来自 Gravatar
+                                        Replies will be sent to your email, avatar from Gravatar
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
                                 </div>
                                 <div class="flex basis-1/3">
                                     <span
                                         class="inline-flex border-e-0 items-center px-3 text-xs text-gray-900 bg-gray-100 border rounded-e-0 border-gray-300 rounded-s-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-                                        网址
+                                        Website
                                     </span>
                                     <input v-model="commentStore.userInfo.website"
                                         data-tooltip-target="website-tooltip-click2" data-tooltip-trigger="click"
                                         type="text"
                                         class="rounded-none rounded-e-lg border text-gray-900 focus:ring-sky-500 focus:border-sky-500 block flex-1 min-w-0 w-full text-xs border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-sky-500 dark:focus:border-sky-500"
-                                        placeholder="选填">
-                                    <!-- 网址 Tooltip -->
+                                        placeholder="Optional">
+                                    <!-- Website Tooltip -->
                                     <div id="website-tooltip-click2" role="tooltip"
                                         class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white bg-gray-900 rounded-md shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        点击头像可访问您的网站（选填）
+                                        Click avatar to visit your website (optional)
                                         <div class="tooltip-arrow" data-popper-arrow></div>
                                     </div>
                                 </div>
@@ -295,7 +295,7 @@
                             <div
                                 class="w-full mb-4 mt-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
                                 <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
-                                    <label for="reply-comment" class="sr-only">您的回复</label>
+                                    <label for="reply-comment" class="sr-only">Your reply</label>
                                     <textarea id="reply-comment" rows="4" v-model="replyContent"
                                         class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400"
                                         :placeholder="replyPlaceholderText" required></textarea>
@@ -303,7 +303,7 @@
                                 <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
                                     <div @click="onReplyContentSubmit"
                                         class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-sky-600 rounded-lg focus:ring-4 focus:ring-sky-200 dark:focus:ring-sky-900 hover:bg-sky-700 cursor-pointer">
-                                        发送
+                                        Send
                                     </div>
                                     <div class="flex ps-0 space-x-1 rtl:space-x-reverse sm:ps-2">
                                         <!-- 表情 -->
@@ -338,8 +338,8 @@
                 </form>
             </div>
             </template>
-            <!-- 没有评论的提示文字 -->
-            <div v-else class="flex items-center mt-10 mb-10 justify-center text-gray-400">还没有任何评论哟~</div>
+            <!-- No comments message -->
+            <div v-else class="flex items-center mt-10 mb-10 justify-center text-gray-400">No comments yet</div>
         </div>
     </div>
 </template>
@@ -404,8 +404,8 @@ initFormCommentUserInfo()
 // 回复内容（与主评论分开）
 const replyContent = ref('')
 
-// 回复文本框占位符
-const replyPlaceholderText = ref('留下友善的评论吧...')
+// Reply textarea placeholder
+const replyPlaceholderText = ref('Leave a friendly comment...')
 
 // 表情
 const emojis = ref(['😃', '😁', '😅', '😂', '😍', '😜', '😝', '🤑', '🥵', '🥰', '😙', '😎',
@@ -468,8 +468,8 @@ const showReplyForm = (index, nickname, replyCommentId, parentCommentId) => {
     let comment = comments.value[index]
     // 展示回复表单
     comment.isShowReplyForm = true
-    // 设置回复占位符文本
-    replyPlaceholderText.value = '回复 @' + nickname + ':'
+    // Set reply placeholder text
+    replyPlaceholderText.value = 'Reply to @' + nickname + ':'
     // 清空之前的回复内容
     replyContent.value = ''
 
@@ -486,30 +486,30 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 // 一级评论发布点击事件
 const onPublishCommentClick = () => {
     initFormCommentUserInfo()
-    // 校验
+    // Validation
     if (commentForm.nickname.length === 0) {
-        showMessage('请填写昵称', 'warning')
+        showMessage('Please enter nickname', 'warning')
         return
     }
     if (commentForm.mail.length === 0 || !emailRegex.test(commentForm.mail)) {
-        showMessage('邮箱格式不正确', 'warning')
+        showMessage('Invalid email format', 'warning')
         return
     }
     if (commentForm.content.length === 0) {
-        showMessage('请填写评论内容', 'warning')
+        showMessage('Please enter comment content', 'warning')
         return
     }
 
     publishComment(commentForm).then(res => {
         if (!res.success) {
-            // 获取服务端返回的错误消息
+            // Get error message from server
             let message = res.message
-            // 提示错误消息
+            // Show error message
             showMessage(message, 'error')
             return
         }
 
-        showMessage('评论发布成功')
+        showMessage('Comment published successfully')
         // 将表单对象中的 content 评论内容置空
         commentForm.content = ''
         // 重新渲染表单列表
@@ -517,38 +517,38 @@ const onPublishCommentClick = () => {
     })
 }
 
-// 评论回复发送事件
+// Reply comment submit event
 const onReplyContentSubmit = () => {
     initFormCommentUserInfo()
-    // 校验
+    // Validation
     if (commentForm.nickname.length === 0) {
-        showMessage('请填写昵称', 'warning')
+        showMessage('Please enter nickname', 'warning')
         return
     }
     if (commentForm.mail.length === 0 || !emailRegex.test(commentForm.mail)) {
-        showMessage('邮箱格式不正确', 'warning')
+        showMessage('Invalid email format', 'warning')
         return
     }
     if (replyContent.value.length === 0) {
-        showMessage('请填写回复内容', 'warning')
+        showMessage('Please enter reply content', 'warning')
         return
     }
-    // 评论回复内容
+    // Reply content
     commentForm.content = replyContent.value
     commentForm.replyCommentId = currReplyCommentId.value
     commentForm.parentCommentId = currParentCommentId.value
 
-    // 请求接口
+    // Call API
     publishComment(commentForm).then(res => {
         if (!res.success) {
-            // 获取服务端返回的错误消息
+            // Get error message from server
             let message = res.message
-            // 提示错误消息
+            // Show error message
             showMessage(message, 'error')
             return
         }
 
-        showMessage('回复评论成功')
+        showMessage('Reply submitted successfully')
         // 将评论回复的内容置空
         replyContent.value = ''
         commentForm.content = ''

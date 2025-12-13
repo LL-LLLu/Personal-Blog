@@ -332,7 +332,7 @@
           </article>
         </div>
 
-        <!-- 评论组件 -->
+        <!-- Comment component -->
         <Comment />
       </div>
 
