@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import com.luqi.weblog.web.model.vo.tag.FindTagListRspVO;
 
 @Data
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public class FindArticleDetailRspVO {
     private String categoryName;
     private Long readNum;
     private List<Long> tagIds;
-    private List<String> tags;
+    private List<FindTagListRspVO> tags;
     private Integer totalWords;
     private String readTime;
     private FindPreNextArticleRspVO preArticle;
