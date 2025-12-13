@@ -1075,7 +1075,7 @@ import { useDark, useToggle } from '@vueuse/core'
 const props = defineProps({
     catalogs: {
         type: Array,
-        default: []
+        default: () => []
     }
 })
 
