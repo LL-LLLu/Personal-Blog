@@ -8,6 +8,10 @@
         label-width="160px"
         :rules="rules"
       >
+        <el-form-item>
+          <h2 class="font-bold text-base mb-1">Basic Settings</h2>
+        </el-form-item>
+
         <el-form-item
           label="Blog Name"
           prop="name"
@@ -27,7 +31,7 @@
           />
         </el-form-item>
         <el-form-item
-          label="Blog LOGO"
+          label="Blog Logo"
           prop="logo"
         >
           <el-upload
@@ -83,6 +87,14 @@
             type="textarea"
           />
         </el-form-item>
+
+        <!-- Divider -->
+        <el-divider />
+
+        <el-form-item>
+          <h2 class="font-bold text-base mb-1">Third-party Platform Settings</h2>
+        </el-form-item>
+
         <!-- Enable GitHub access -->
         <el-form-item label="Enable GitHub Access">
           <el-switch
@@ -166,6 +178,47 @@
             placeholder="Enter CSDN homepage URL"
           />
         </el-form-item>
+
+        <!-- Divider -->
+        <el-divider />
+
+        <el-form-item>
+          <h2 class="font-bold text-base mb-1">Comment Settings</h2>
+        </el-form-item>
+        <el-form-item label="Sensitive Word Filter">
+          <el-switch
+            v-model="form.isCommentSensiWordOpen"
+            inline-prompt
+            :active-icon="Check"
+            :inactive-icon="Close"
+            @change="sensiWordSwitchChange"
+          />
+          <div class="flex items-center ml-3">
+            <el-icon class="mr-2" color="#909399"><InfoFilled /></el-icon>
+            <el-text class="mx-1" type="info" size="small">When enabled, the system automatically filters sensitive words in every comment</el-text>
+          </div>
+        </el-form-item>
+        <el-form-item label="Enable Review">
+          <el-switch
+            v-model="form.isCommentExamineOpen"
+            inline-prompt
+            :active-icon="Check"
+            :inactive-icon="Close"
+            @change="examineSwitchChange"
+          />
+          <div class="flex items-center ml-3">
+            <el-icon class="mr-2" color="#909399"><InfoFilled /></el-icon>
+            <el-text class="mx-1" type="info" size="small">When enabled, comments need to be approved by the admin before being displayed</el-text>
+          </div>
+        </el-form-item>
+        <el-form-item label="Admin Email">
+          <el-input v-model="form.mail" clearable placeholder="Enter admin email address" />
+          <div class="flex items-center">
+            <el-icon class="mr-2" color="#909399"><InfoFilled /></el-icon>
+            <el-text class="mx-1" type="info" size="small">Used to send email notifications to the admin when new comments are posted</el-text>
+          </div>
+        </el-form-item>
+
         <el-form-item>
           <el-button
             type="primary"
@@ -182,7 +235,7 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
-import { Check, Close } from '@element-plus/icons-vue'
+import { Check, Close, InfoFilled } from '@element-plus/icons-vue'
 import { getBlogSettingsDetail, updateBlogSettings } from '@/api/admin/blogsettings'
 import { uploadFile } from '@/api/admin/file'
 import { showMessage } from '@/composables/util'
@@ -211,13 +264,16 @@ const form = reactive({
     giteeHomepage: '',
     zhihuHomepage: '',
     csdnHomepage: '',
+    isCommentSensiWordOpen: true, // Whether to enable comment sensitive word filtering
+    isCommentExamineOpen: false, // Whether to enable comment review
+    mail: '' // Admin email
 })
 
 // Form validation rules
 const rules = {
     name: [{ required: true, message: 'Please enter blog name', trigger: 'blur' }],
     author: [{ required: true, message: 'Please enter author name', trigger: 'blur' }],
-    logo: [{ required: true, message: 'Please upload blog LOGO', trigger: 'blur' }],
+    logo: [{ required: true, message: 'Please upload blog logo', trigger: 'blur' }],
     avatar: [{ required: true, message: 'Please upload author avatar', trigger: 'blur' }],
     introduction: [{ required: true, message: 'Please enter introduction', trigger: 'blur' }],
 }
@@ -250,6 +306,11 @@ const csdnSwitchChange = (checked) => {
     }
 }
 
+// Comment sensitive word filter switch change event
+const sensiWordSwitchChange = (checked) => form.isCommentSensiWordOpen = checked
+// Comment review switch change event
+const examineSwitchChange = (checked) => form.isCommentExamineOpen = checked
+
 // Initialize blog settings data and render to page
 function initBlogSettings() {
     getBlogSettingsDetail().then((e) => {
@@ -281,6 +342,11 @@ function initBlogSettings() {
                 isCSDNChecked.value = true
                 form.csdnHomepage = e.data.csdnHomepage
             }
+
+            // Comment settings
+            form.isCommentSensiWordOpen = e.data.isCommentSensiWordOpen
+            form.isCommentExamineOpen = e.data.isCommentExamineOpen
+            form.mail = e.data.mail
         }
     })
 }
@@ -290,7 +356,7 @@ initBlogSettings()
 const handleLogoChange = (file) => {
     // Form object
     let formData = new FormData()
-    // Add file field and pass the file 
+    // Add file field and pass the file
     formData.append('file', file.raw)
     uploadFile(formData).then((e) => {
         // Response failed, show error message
@@ -310,7 +376,7 @@ const handleLogoChange = (file) => {
 const handleAvatarChange = (file) => {
     // Form object
     let formData = new FormData()
-    // Add file field and pass the file 
+    // Add file field and pass the file
     formData.append('file', file.raw)
     uploadFile(formData).then((e) => {
         // Response failed, show error message
@@ -345,7 +411,7 @@ const onSubmit = () => {
                 showMessage(message, 'error')
                 return
             }
-            
+
             // Re-render page information
             initBlogSettings()
             showMessage('Save successful')
