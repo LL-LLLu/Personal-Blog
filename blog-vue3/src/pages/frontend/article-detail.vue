@@ -331,6 +331,9 @@
             </nav>
           </article>
         </div>
+
+        <!-- 评论组件 -->
+        <Comment />
       </div>
 
       <!-- Right sidebar, occupies one column -->
@@ -438,6 +441,7 @@ import TagListCard from '@/layouts/frontend/components/TagListCard.vue'
 import CategoryListCard from '@/layouts/frontend/components/CategoryListCard.vue'
 import ScrollToTopButton from '@/layouts/frontend/components/ScrollToTopButton.vue'
 import Toc from '@/layouts/frontend/components/Toc.vue'
+import Comment from '@/components/Comment.vue'
 import { getArticleDetail } from '@/api/frontend/article'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
