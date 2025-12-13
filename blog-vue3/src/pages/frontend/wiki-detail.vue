@@ -217,6 +217,9 @@
                                 </a>
                             </div>
                         </nav>
+
+                        <!-- 评论组件 -->
+                        <Comment customeCss=""></Comment>
                     </article>
                 </div>
             </div>
@@ -240,6 +243,7 @@ import { useRoute, useRouter } from 'vue-router'
 import WikiHeader from '@/layouts/frontend/components/WikiHeader.vue'
 import WikiFooter from '@/layouts/frontend/components/WikiFooter.vue'
 import WikiToc from '@/layouts/frontend/components/WikiToc.vue'
+import Comment from '@/components/Comment.vue'
 import { getArticleDetail } from '@/api/frontend/article'
 import { useDark } from '@vueuse/core'
 import { getWikiArticlePreNext, getWikiCatalogs } from '@/api/frontend/wiki'
