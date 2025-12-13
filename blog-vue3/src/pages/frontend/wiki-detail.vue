@@ -47,7 +47,7 @@
                     </div>
                     <!-- 点击收缩、展开 -->
                     <div class="hidden md:inline-block 2xl:hidden transition-all duration-300" @click="shrinkAndExpand">
-                        <div id="left-toc-sidebar" class="left-toc-sidebar top-[5.5rem]">
+                        <div id="left-toc-sidebar" class="left-toc-sidebar">
                             <span id="left-toc-sidebar-arrow"
                                 class="arrow start flex items-center justify-center -rotate-90"
                                 :class="[isExpand ? '-rotate-90' : 'rotate-90']">
@@ -788,18 +788,20 @@ const shrinkAndExpand = () => {
 
 /* 收缩、展开箭头样式 */
 .left-toc-sidebar {
-    position: fixed;
-    bottom: 0;
+    position: relative;
     z-index: 100;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 2rem;
+    height: 2rem;
     font-size: 2rem;
-    transition: left .3s ease;
+    border-radius: 0.25rem;
+    transition: background .2s ease;
 }
 
 .left-toc-sidebar:hover {
-    background: rgba(127, 127, 127, .05);
+    background: rgba(127, 127, 127, .1);
     cursor: pointer;
 }
 
