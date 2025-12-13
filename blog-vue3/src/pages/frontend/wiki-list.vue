@@ -10,34 +10,36 @@
 
                 <!-- grid 表格布局，分为 12 列 -->
                 <div class="grid grid-cols-12 gap-7">
-                    <div v-if="wikis && wikis.length > 0" v-for="(wiki, index) in wikis" :key="index" class="col-span-12 md:col-span-6 lg:col-span-4 animate__animated animate__fadeInUp">
-                        <div 
-                            class="relative bg-white h-full border border-gray-200 rounded-lg hover:scale-[1.03] dark:bg-gray-800 dark:border-gray-700">
-                            <!-- 知识库封面 -->
-                            <a class="cursor-pointer" @click="goWikiDetail(wiki.id, wiki.firstArticleId)">
-                                <img class="rounded-t-lg h-36 w-full"
-                                :src="wiki.cover" />
-                            </a>
-                            <div class="p-5">
-                                <!-- 知识库标题 -->
+                    <template v-if="wikis && wikis.length > 0">
+                        <div v-for="(wiki, index) in wikis" :key="index" class="col-span-12 md:col-span-6 lg:col-span-4 animate__animated animate__fadeInUp">
+                            <div 
+                                class="relative bg-white h-full border border-gray-200 rounded-lg hover:scale-[1.03] dark:bg-gray-800 dark:border-gray-700">
+                                <!-- 知识库封面 -->
                                 <a class="cursor-pointer" @click="goWikiDetail(wiki.id, wiki.firstArticleId)">
-                                    <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                                        <span
-                                            class="hover:border-gray-600 hover:border-b-2 dark:hover:border-gray-400">{{ wiki.title }}</span>
-                                    </h2>
+                                    <img class="rounded-t-lg h-36 w-full"
+                                    :src="wiki.cover" />
                                 </a>
-                                <!-- 知识库摘要 -->
-                                <p class="font-normal text-gray-500 dark:text-gray-400">
-                                    {{ wiki.summary }}
-                                </p>
-                            </div>
+                                <div class="p-5">
+                                    <!-- 知识库标题 -->
+                                    <a class="cursor-pointer" @click="goWikiDetail(wiki.id, wiki.firstArticleId)">
+                                        <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                            <span
+                                                class="hover:border-gray-600 hover:border-b-2 dark:hover:border-gray-400">{{ wiki.title }}</span>
+                                        </h2>
+                                    </a>
+                                    <!-- 知识库摘要 -->
+                                    <p class="font-normal text-gray-500 dark:text-gray-400">
+                                        {{ wiki.summary }}
+                                    </p>
+                                </div>
 
-                            <!-- 是否置顶 -->
-                            <div v-if="wiki.isTop" class="absolute inline-flex items-center justify-center w-14 h-7 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
-                                置顶
+                                <!-- 是否置顶 -->
+                                <div v-if="wiki.isTop" class="absolute inline-flex items-center justify-center w-14 h-7 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
+                                    置顶
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </template>
                 </div>
             </div>
 
