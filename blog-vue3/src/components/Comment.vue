@@ -119,7 +119,8 @@
             </form>
 
             <!-- 评论列表 -->
-            <div v-if="comments && comments.length > 0" v-for="(comment, index) in comments" :key="index">
+            <template v-if="comments && comments.length > 0">
+            <div v-for="(comment, index) in comments" :key="index">
 
                 <!-- 边界线 -->
                 <div v-if="index > 0" class="border-t ml-12 mt-5 border-gray-100 dark:border-gray-700"></div>
@@ -336,6 +337,7 @@
                     </div>
                 </form>
             </div>
+            </template>
             <!-- 没有评论的提示文字 -->
             <div v-else class="flex items-center mt-10 mb-10 justify-center text-gray-400">还没有任何评论哟~</div>
         </div>
@@ -383,7 +385,7 @@ const commentForm = reactive({
 })
 
 // 监听路由
-watch(route, (newRoute, oldRoute) => {
+watch(route, () => {
     // 设置评论表单中的路由路径
     commentForm.routerUrl = route.query.articleId ? (route.path + '?articleId=' + route.query.articleId) : route.path
     // 重新渲染评论数据
