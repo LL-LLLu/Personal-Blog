@@ -12,7 +12,7 @@
                     <!-- 知识库目录 -->
                     <div class="grow transition-all duration-300" :class="[isExpand ? 'block' : 'hidden 2xl:block']">
                         <div id="accordion-flush" data-accordion="collapse"
-                        data-active-classes="bg-white dark:bg-[#0d1117] dark:text-gray-300" data-inactive-classes=""
+                        data-active-classes="bg-white dark:bg-gray-900 dark:text-gray-300" data-inactive-classes=""
                         class="last:pb-[170px]">
                         <div v-for="(catalog, index) in catalogs" :key="index">
                             <h2 :id="'accordion-flush-heading-' + catalog.id">
@@ -402,7 +402,7 @@ const shrinkAndExpand = () => {
 
 /* 暗黑主题的背景色 */
 .dark .main {
-    background-color: #0d1117;
+    background-color: rgb(17 24 39 / 1); /* gray-900 */
 }
 
 /* h1, h2, h3, h4, h5, h6 标题样式 */
@@ -514,9 +514,9 @@ const shrinkAndExpand = () => {
 ::v-deep(.dark .article-content blockquote) {
     quotes: none;
     --tw-bg-opacity: 1;
-    background-color: #0d1117;
+    background-color: rgb(31 41 55 / 1); /* gray-800 */
     border-left: 2.3px solid #555;
-    color: #666;
+    color: #9e9e9e;
     font-size: 16px;
     margin-bottom: 20px;
     padding: 0.25rem 0 0.25rem 1rem;

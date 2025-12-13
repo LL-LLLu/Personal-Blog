@@ -1,6 +1,6 @@
 <template>
   <header class="sticky top-0 z-30">
-    <nav class="bg-white border-gray-200 border-b dark:border-gray-800 dark:bg-[#0d1117]">
+    <nav class="bg-white border-gray-200 border-b dark:border-gray-800 dark:bg-gray-900">
       <div class="max-w-screen-2xl flex flex-wrap items-center justify-between mx-auto p-4">
         <div class="flex items-center">
           <!-- Mobile Wiki Catalog Toggle -->
@@ -988,7 +988,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink"
   <!-- Wiki Catalog Drawer -->
   <div
     id="wiki-catalog-drawer"
-    class="block lg:hidden top-[4.3rem] fixed left-0 z-20 h-screen p-4 overflow-y-auto transition-transform -translate-x-full bg-white w-80 dark:bg-[#0d1117]"
+    class="block lg:hidden top-[4.3rem] fixed left-0 z-20 h-screen p-4 overflow-y-auto transition-transform -translate-x-full bg-white w-80 dark:bg-gray-900"
     tabindex="-1"
     aria-labelledby="drawer-label"
   >
@@ -997,7 +997,7 @@ xmlns:xlink="http://www.w3.org/1999/xlink"
       <div
         id="drawer-accordion-flush"
         data-accordion="collapse"
-        data-active-classes="bg-white dark:bg-[#0d1117] dark:text-gray-300"
+        data-active-classes="bg-white dark:bg-gray-900 dark:text-gray-300"
         data-inactive-classes=""
         class="last:pb-[170px]"
       >

@@ -184,7 +184,7 @@ function initTocData(container) {
     left: 0;
     z-index: -1;
     width: 2px;
-    background: #30363d;
+    background: rgb(55 65 81 / 1); /* gray-700 */
 }
 
 ::v-deep(.dark .toc li span) {
