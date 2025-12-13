@@ -1143,23 +1143,31 @@ const toggleDark = useToggle(isDark)
 
 // Initialize flowbite components
 onMounted(() => {
-    initCollapses();
-    initDropdowns();
-    initModals();
+    try {
+        initCollapses();
+        initDropdowns();
+        initModals();
 
-    // Initialize search modal
-    const $modalElement = document.querySelector('#search-modal');
-    searchModal.value = new Modal($modalElement, modalOptions, instanceOptions);
+        // Initialize search modal
+        const $modalElement = document.querySelector('#search-modal');
+        if ($modalElement) {
+            searchModal.value = new Modal($modalElement, modalOptions, instanceOptions);
+        }
 
-    // Register keyboard event listener
-    window.addEventListener('keydown', handleKeyDown);
+        // Register keyboard event listener
+        window.addEventListener('keydown', handleKeyDown);
 
-    // Initialize Wiki Catalog Drawer
-    const $drawerElement = document.getElementById('wiki-catalog-drawer');
-    wikiDrawer.value = new Drawer($drawerElement, drawerOptions, instanceOptionsDrawer);
-    
-    // Initialize Accordions
-    initAccordions();
+        // Initialize Wiki Catalog Drawer
+        const $drawerElement = document.getElementById('wiki-catalog-drawer');
+        if ($drawerElement) {
+            wikiDrawer.value = new Drawer($drawerElement, drawerOptions, instanceOptionsDrawer);
+        }
+        
+        // Initialize Accordions
+        initAccordions();
+    } catch (e) {
+        console.error('Error initializing WikiHeader components:', e);
+    }
 })
 
 // Watch isDrawerExpand variable
