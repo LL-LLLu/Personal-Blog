@@ -9,3 +9,8 @@ export function getWikiList() {
 export function getWikiDetail(id) {
     return axios.post("/wiki/detail", {id})
 }
+
+// Get wiki article pre/next
+export function getWikiArticlePreNext(data) {
+    return axios.post("/wiki/article/preNext", data)
+}

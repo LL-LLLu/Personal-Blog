@@ -94,4 +94,10 @@ const goWikiDetail = (wikiId, firstArticleId) => {
         router.push({ path: '/wiki/' + wikiId })
     }
 }
+
+// 跳转文章详情页 (Adding this alias for clarity as requested in instructions, though goWikiDetail handles it)
+const goWikiArticleDetailPage = (wikiId, articleId) => {
+    console.log('跳转' + wikiId + ',' + articleId)
+    router.push({path: '/wiki/' + wikiId, query: {articleId}})
+}
 </script>
