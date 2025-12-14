@@ -960,7 +960,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, onBeforeUnmount, watch } from 'vue'
+import { onMounted, ref, onBeforeUnmount, watch, computed } from 'vue'
 import { initCollapses, initDropdowns, initModals, Modal } from 'flowbite'
 import { useBlogSettingsStore } from '@/stores/blogsettings'
 import { useUserStore } from '@/stores/user'
@@ -1046,16 +1046,12 @@ const blogSettingsStore = useBlogSettingsStore()
 
 // Check if user is logged in
 const userStore = useUserStore()
-// Get userInfo object property names array
-const keys = Object.keys(userStore.userInfo)
-// If greater than zero, user is logged in
-const isLogined = ref(keys.length > 0)
+// Use computed to reactively check if user is logged in based on store
+const isLogined = computed(() => Object.keys(userStore.userInfo).length > 0)
 
 // Logout
 const logout = () => {
     userStore.logout()
-    // Mark as not logged in
-    isLogined.value = false
     showMessage('Logout successful')
 }
 
