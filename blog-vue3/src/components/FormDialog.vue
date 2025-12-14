@@ -61,10 +61,10 @@ const open = () => dialogVisible.value = true
 const close = () => dialogVisible.value = false
 
 // 对外暴露一个 submit 方法
-const emit  = defineEmits(['submit'])
+const emit  = defineEmits(['onSubmit'])
 const submit = () => {
     console.log('FormDialog submit button clicked!')
-    emit('submit')
+    emit('onSubmit')
 }
 
 // 对外暴露方法

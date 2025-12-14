@@ -154,63 +154,64 @@
       </div>
     </div>
 
-    <!-- Change Password -->
-    <FormDialog
-      ref="formDialogRef"
-      title="Change Password"
-      destroyOnClose
-      @submit="onSubmit"
-    >
-      <el-form
-        ref="formRef"
-        :rules="rules"
-        :model="form"
-      >
-        <el-form-item
-          label="Username"
-          prop="username"
-          label-width="120px"
-          size="large"
-        >
-          <!-- Input component -->
-          <el-input
-            v-model="form.username"
-            placeholder="Please Enter your Username"
-            clearable
-            disabled
-          />
-        </el-form-item>
-        <el-form-item
-          label="New Password"
-          prop="password"
-          label-width="120px"
-          size="large"
-        >
-          <el-input
-            v-model="form.password"
-            type="password"
-            placeholder="Please Enter new Password"
-            clearable
-            show-password
-          />
-        </el-form-item>
-        <el-form-item
-          label="Confirm Password"
-          prop="rePassword"
-          label-width="120px"
-          size="large"
-        >
-          <el-input
-            v-model="form.rePassword"
-            type="password"
-            placeholder="Please Confirm new Password"
-            clearable
-            show-password
-          />
-        </el-form-item>
-      </el-form>
     </FormDialog>
   </el-affix>
+  <!-- Change Password -->
+  <FormDialog
+    ref="formDialogRef"
+    title="Change Password"
+    destroyOnClose
+    @onSubmit="onSubmit"
+  >
+    <el-form
+      ref="formRef"
+      :rules="rules"
+      :model="form"
+    >
+      <el-form-item
+        label="Username"
+        prop="username"
+        label-width="120px"
+        size="large"
+      >
+        <!-- Input component -->
+        <el-input
+          v-model="form.username"
+          placeholder="Please Enter your Username"
+          clearable
+          disabled
+        />
+      </el-form-item>
+      <el-form-item
+        label="New Password"
+        prop="password"
+        label-width="120px"
+        size="large"
+      >
+        <el-input
+          v-model="form.password"
+          type="password"
+          placeholder="Please Enter new Password"
+          clearable
+          show-password
+        />
+      </el-form-item>
+      <el-form-item
+        label="Confirm Password"
+        prop="rePassword"
+        label-width="120px"
+        size="large"
+      >
+        <el-input
+          v-model="form.rePassword"
+          type="password"
+          placeholder="Please Confirm new Password"
+          clearable
+          show-password
+        />
+      </el-form-item>
+    </el-form>
+  </FormDialog>
 </template>
 
 <script setup>
