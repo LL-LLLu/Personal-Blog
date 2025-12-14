@@ -332,9 +332,12 @@
           </article>
         </div>
 
-        <!-- Comment component -->
-        <Comment />
-      </div>
+            <!-- Comment -->
+            <Comment
+              custome-css=""
+              :article-id="articleId"
+            />
+          </div>
 
       <!-- Right sidebar, occupies one column -->
       <aside class="col-span-4 md:col-span-1">
