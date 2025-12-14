@@ -195,7 +195,7 @@
           />
         </el-form-item>
         <el-form-item
-          label="Confirm new Password"
+          label="Confirm Password"
           prop="rePassword"
           label-width="120px"
           size="large"
@@ -275,7 +275,7 @@ const handleMenuWidth = () => {
 const handleRefresh = () => location.reload()
 
 // Dialog reference
-const formDialogRef = ref(false)
+const formDialogRef = ref(null)
 
 // Dropdown menu event handler
 const handleCommand = (command) => {
@@ -350,6 +350,7 @@ const rules = {
 }
 
 const onSubmit = () => {
+    console.log('AdminHeader onSubmit called!')
     // First validate form fields
     formRef.value.validate((valid) => {
         if (!valid) {
