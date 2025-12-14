@@ -1,47 +1,55 @@
 <template>
-  <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
+  <div class="p-6 bg-white rounded-2xl border border-gray-100 shadow-lg dark:bg-gray-800 dark:border-gray-700 transition-all duration-300 hover:shadow-xl">
     <!-- Header with stats -->
-    <div class="flex items-center justify-between mb-4">
-      <div class="flex items-center space-x-2">
-        <div class="w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse" />
-        <h3 class="text-sm font-semibold text-slate-700 dark:text-white">
-          Publishing Activity
-        </h3>
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 flex items-center justify-center bg-indigo-50 dark:bg-indigo-900/30 rounded-full">
+          <svg class="w-5 h-5 text-indigo-500 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-gray-800 dark:text-white leading-tight">
+            Publishing Activity
+          </h3>
+          <p class="text-xs text-gray-500 dark:text-gray-400 font-medium mt-0.5">
+            {{ totalArticles }} articles in last 6 months
+          </p>
+        </div>
       </div>
-      <div class="text-xs text-slate-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-2 py-1 rounded-full border dark:border-gray-600">
-        {{ totalArticles }} articles in last 4 months
+      
+      <div class="flex flex-col items-end">
+         <div class="flex items-center space-x-1.5 bg-green-50 dark:bg-green-900/20 px-3 py-1.5 rounded-lg border border-green-100 dark:border-green-900/30">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+            </span>
+            <span class="text-sm font-bold text-green-700 dark:text-green-400">{{ streakDays }} day streak</span>
+         </div>
       </div>
     </div>
 
-    <!-- Chart container with modern styling to match weekly page views -->
-    <div class="relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 p-6 rounded-xl shadow-sm">
+    <!-- Chart container -->
+    <div class="relative w-full overflow-hidden">
       <!-- Calendar chart -->
       <div class="w-full flex justify-center">
         <div
           id="calendar"
-          class="rounded-lg overflow-hidden"
-          style="width: 100%; height: 240px;"
+          class="w-full h-[200px]"
         />
       </div>
 
-      <!-- Enhanced activity indicator -->
-      <div class="flex items-center justify-between mt-6 text-sm text-gray-600 dark:text-gray-300">
-        <div class="flex items-center space-x-3">
-          <div class="flex items-center space-x-2">
-            <span class="legend-label">Less</span>
-            <div class="legend-dots">
-              <div class="legend-dot level-0" />
-              <div class="legend-dot level-1" />
-              <div class="legend-dot level-2" />
-              <div class="legend-dot level-3" />
-              <div class="legend-dot level-4" />
-            </div>
-            <span class="legend-label">More</span>
-          </div>
+      <!-- Modern Legend -->
+      <div class="flex items-center justify-end mt-4 space-x-4">
+        <span class="text-xs font-medium text-gray-400 dark:text-gray-500">Less</span>
+        <div class="flex items-center space-x-1">
+          <div class="w-3 h-3 rounded-sm bg-gray-100 dark:bg-gray-700/50"></div>
+          <div class="w-3 h-3 rounded-sm bg-indigo-100 dark:bg-indigo-900/40"></div>
+          <div class="w-3 h-3 rounded-sm bg-indigo-300 dark:bg-indigo-700"></div>
+          <div class="w-3 h-3 rounded-sm bg-indigo-500 dark:bg-indigo-500"></div>
+          <div class="w-3 h-3 rounded-sm bg-indigo-700 dark:bg-indigo-400"></div>
         </div>
-        <div class="font-medium">
-          <span>{{ streakDays }} day streak</span>
-        </div>
+        <span class="text-xs font-medium text-gray-400 dark:text-gray-500">More</span>
       </div>
     </div>
   </div>
@@ -68,10 +76,10 @@ const isDark = useDark({
 
 // Current date
 const currentDate = new Date();
-// 3 months ago for start
-const startDateObj = subMonths(currentDate, 3)
-// 1 month ahead for end
-const endDateObj = addMonths(currentDate, 1)
+// 5 months ago for start (showing ~6 months total)
+const startDateObj = subMonths(currentDate, 5)
+// End of current month
+const endDateObj = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
 
 // Formatted start and end dates
 const startDate = format(startDateObj, 'yyyy-MM-dd')
@@ -94,11 +102,30 @@ const streakDays = computed(() => {
     // Calculate current streak (simplified logic)
     const dates = Object.keys(props.value).sort().reverse()
     let streak = 0
-    for (const date of dates) {
-        if (props.value[date] > 0) {
+    // Check if today has activity, if not, check yesterday to start streak
+    const todayStr = format(new Date(), 'yyyy-MM-dd')
+    
+    // If no activity today, we can still have a streak if there was activity yesterday
+    // But for "current streak", it usually implies consecutive days up to now.
+    // Let's iterate backwards.
+    
+    // Simple check: strict consecutive days
+    // Convert to set for O(1) lookup
+    const activeDates = new Set(dates.filter(d => props.value[d] > 0))
+    
+    let checkDate = new Date()
+    while (true) {
+        const checkStr = format(checkDate, 'yyyy-MM-dd')
+        if (activeDates.has(checkStr)) {
             streak++
+            checkDate.setDate(checkDate.getDate() - 1)
         } else {
-            break
+             // If it's today and no activity, try yesterday (maybe user hasn't posted yet today)
+             if (checkStr === todayStr && streak === 0) {
+                 checkDate.setDate(checkDate.getDate() - 1)
+                 continue
+             }
+             break
         }
     }
     return streak
@@ -129,57 +156,59 @@ function initCalendar() {
     }
 
     // Initialize with responsive width
-    var myChart = echarts.init(chartDom);
+    var myChart = echarts.init(chartDom, null, { renderer: 'svg' });
     chartInstance = myChart; // Store the instance
 
     // Use reactive dark mode state
     const isDarkMode = isDark.value;
+
+    // Modern color palette
+    // Light mode: Grey -> Indigo Fade
+    const lightColors = ['#f3f4f6', '#e0e7ff', '#a5b4fc', '#6366f1', '#4338ca']
+    // Dark mode: Dark Grey -> Indigo Fade
+    const darkColors = ['#374151', '#312e81', '#4338ca', '#6366f1', '#818cf8']
 
     var option = {
         backgroundColor: 'transparent',
         visualMap: {
             show: false,
             min: 0,
-            max: Math.max(5, Math.max(...calendarData.map(d => d[1])) || 5),
+            max: Math.max(4, Math.max(...calendarData.map(d => d[1])) || 4),
             inRange: {
-                color: isDarkMode
-                    ? ['#374151', '#064e3b', '#065f46', '#047857', '#059669', '#10b981'] // Deeper greens for dark mode, with visible gray for empty
-                    : ['#f3f4f6', '#d1fae5', '#a7f3d0', '#6ee7b7', '#34d399', '#10b981'] // Fresher greens for light mode
+                color: isDarkMode ? darkColors : lightColors
             }
         },
         calendar: {
             range: [startDate, endDate],
-            cellSize: ['auto', 20], // Square cells
+            cellSize: ['auto', 16], // Slightly smaller, tighter cells
             left: 'center',
-            top: 30,
-            bottom: 10,
+            top: 25,
+            bottom: 0,
             width: '95%',
-            height: 180, // Increased height for larger cells
-            yearLabel: {
-                show: false 
-            },
+            height: 'auto',
+            yearLabel: { show: false },
             monthLabel: {
                 show: true,
                 fontSize: 12,
-                color: isDarkMode ? '#9ca3af' : '#64748b',
+                color: isDarkMode ? '#9ca3af' : '#6b7280', // gray-400 : gray-500
                 nameMap: 'en',
-                margin: 10
+                margin: 8,
+                fontWeight: 500
             },
             dayLabel: {
                 show: true,
                 firstDay: 1, // Start on Monday
-                nameMap: ['Sun', '', '', 'Wed', '', '', 'Sat'],
+                nameMap: ['Sun', '', 'Tue', '', 'Thu', '', 'Sat'],
                 fontSize: 10,
-                color: isDarkMode ? '#9ca3af' : '#94a3b8'
+                color: isDarkMode ? '#6b7280' : '#9ca3af', // Subtle day labels
+                margin: 5
             },
             itemStyle: {
-                borderWidth: 4, // Thicker border for more gap
-                borderColor: isDarkMode ? 'rgba(31, 41, 55, 0)' : 'rgba(255, 255, 255, 0)', // Transparent border
-                borderRadius: 4 // More rounded
+                borderWidth: 3, // Gap between cells
+                borderColor: 'transparent', // Make gap transparent to show background
+                borderRadius: 3 // Rounded corners for modern look
             },
-            splitLine: {
-                show: false
-            }
+            splitLine: { show: false }
         },
         series: {
             type: 'heatmap',
@@ -187,27 +216,34 @@ function initCalendar() {
             data: calendarData,
             emphasis: {
                 itemStyle: {
-                    shadowBlur: 10,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    shadowBlur: 5,
+                    shadowColor: 'rgba(0, 0, 0, 0.2)',
+                    borderColor: isDarkMode ? '#fff' : '#000',
+                    borderWidth: 1
                 }
             }
         },
         tooltip: {
             trigger: 'item',
-            padding: [8, 12],
-            backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-            borderColor: isDarkMode ? '#4b5563' : '#e5e7eb',
+            padding: [10, 14],
+            backgroundColor: isDarkMode ? 'rgba(17, 24, 39, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+            borderColor: isDarkMode ? '#374151' : '#e5e7eb',
+            borderWidth: 1,
             textStyle: {
-                color: isDarkMode ? '#f3f4f6' : '#1f2937'
+                color: isDarkMode ? '#f3f4f6' : '#1f2937',
+                fontFamily: 'sans-serif'
             },
             formatter: function(params) {
                 const date = new Date(params.data[0]);
                 const count = params.data[1];
-                const dateStr = date.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+                const dateStr = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
                 
-                return `<div class="font-medium text-sm">
-                          <div class="mb-1">${dateStr}</div>
-                          <div><span class="font-bold">${count}</span> article${count !== 1 ? 's' : ''}</div>
+                return `<div class="flex flex-col gap-1">
+                          <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">${dateStr}</span>
+                          <span class="text-sm font-bold flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full ${count > 0 ? 'bg-indigo-500' : 'bg-gray-300'}"></span>
+                            ${count} article${count !== 1 ? 's' : ''}
+                          </span>
                         </div>`;
             }
         }
@@ -230,7 +266,7 @@ const handleResize = () => {
         if (chartDom) {
             chartInstance.resize({
                 width: chartDom.clientWidth,
-                height: 220
+                height: 200
             })
         }
     }
@@ -255,166 +291,8 @@ onUnmounted(() => {
         chartInstance.dispose()
     }
 })
-
 </script>
 
 <style scoped>
-.legend-label {
-    font-size: 0.75rem;
-    color: #6b7280;
-    font-weight: 500;
-}
-
-.dark .legend-label {
-    color: #9ca3af;
-}
-
-.legend-dots {
-    display: flex;
-    gap: 2px;
-    margin: 0 8px;
-}
-
-.legend-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
-    transition: all 0.15s ease;
-}
-
-.legend-dot.level-0 {
-    background-color: #ecfdf5;
-    border: 1px solid #d1fae5;
-}
-
-.legend-dot.level-1 {
-    background-color: #d1fae5;
-}
-
-.legend-dot.level-2 {
-    background-color: #a7f3d0;
-}
-
-.legend-dot.level-3 {
-    background-color: #6ee7b7;
-}
-
-.legend-dot.level-4 {
-    background-color: #34d399;
-}
-
-.dark .legend-dot.level-0 {
-    background-color: #374151;
-    border-color: rgba(75, 85, 99, 0.5);
-}
-
-.dark .legend-dot.level-1 {
-    background-color: #064e3b;
-}
-
-.dark .legend-dot.level-2 {
-    background-color: #065f46;
-}
-
-.dark .legend-dot.level-3 {
-    background-color: #047857;
-}
-
-.dark .legend-dot.level-4 {
-    background-color: #059669;
-}
-
-/* Modern tooltip */
-:global(.apple-tooltip) {
-    padding: 12px 16px !important;
-    border-radius: 12px !important;
-    backdrop-filter: blur(32px) saturate(180%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12),
-                0 1px 2px rgba(0, 0, 0, 0.08) !important;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
-    transform: translateY(-2px) !important;
-    animation: tooltipSlideIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-@keyframes tooltipSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(4px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(-2px) scale(1);
-    }
-}
-
-:global(.apple-tooltip.light) {
-    background: linear-gradient(145deg,
-        rgba(255, 255, 255, 0.98) 0%,
-        rgba(248, 250, 252, 0.98) 100%) !important;
-    color: #1f2937 !important;
-}
-
-:global(.apple-tooltip.dark) {
-    background: linear-gradient(145deg,
-        rgba(17, 24, 39, 0.98) 0%,
-        rgba(31, 41, 55, 0.98) 100%) !important;
-    color: #f9fafb !important;
-    border-color: rgba(75, 85, 99, 0.4) !important;
-}
-
-:global(.tooltip-date) {
-    font-weight: 600 !important;
-    font-size: 13px !important;
-    margin-bottom: 4px !important;
-    background: linear-gradient(135deg, #065f46 0%, #10b981 100%) !important;
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
-}
-
-:global(.tooltip-count) {
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    opacity: 0.9 !important;
-}
-
-/* Modern responsive design */
-@media (max-width: 768px) {
-    .apple-calendar-container {
-        padding: 20px;
-        border-radius: 16px;
-    }
-
-    .calendar-chart {
-        height: 200px;
-        border-radius: 12px;
-        padding: 6px;
-    }
-
-    .legend-container {
-        gap: 6px;
-        padding: 6px 10px;
-        border-radius: 10px;
-    }
-
-    .legend-label {
-        font-size: 0.6875rem;
-    }
-
-    .legend-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 2px;
-    }
-
-    .calendar-title {
-        font-size: 1.125rem;
-    }
-
-    :global(.apple-tooltip) {
-        padding: 10px 14px !important;
-        border-radius: 10px !important;
-    }
-}
+/* No extra styles needed, using Tailwind utility classes */
 </style>
