@@ -54,6 +54,7 @@
 <script setup>
 import * as echarts from 'echarts'
 import { watch, computed, onMounted, onUnmounted } from 'vue'
+import { useDark } from '@vueuse/core'
 
 // 对外暴露的属性值
 const props = defineProps({
@@ -61,6 +62,11 @@ const props = defineProps({
         type: Object, // 类型为对象
         default: null // 默认为 null
     }
+})
+
+// Dark mode state
+const isDark = useDark({
+    storageKey: 'vueuse-color-scheme'
 })
 
 // Calculate total views for display
@@ -99,6 +105,8 @@ function initLineChat() {
     const pvDates = props.value.pvDates
     const pvCounts = props.value.pvCounts
 
+    const isDarkMode = isDark.value
+
     option = {
         backgroundColor: 'transparent',
         grid: {
@@ -114,11 +122,11 @@ function initLineChat() {
             boundaryGap: false,
             axisLine: {
                 lineStyle: {
-                    color: document.documentElement.classList.contains('dark') ? '#4b5563' : '#e2e8f0',
+                    color: isDarkMode ? '#4b5563' : '#e2e8f0',
                 }
             },
             axisLabel: {
-                color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#64748b',
+                color: isDarkMode ? '#9ca3af' : '#64748b',
                 margin: 15,
             },
             axisTick: {
@@ -129,12 +137,12 @@ function initLineChat() {
             type: 'value',
             splitLine: {
                 lineStyle: {
-                    color: document.documentElement.classList.contains('dark') ? '#374151' : '#f1f5f9',
+                    color: isDarkMode ? '#374151' : '#f1f5f9',
                     type: 'dashed',
                 }
             },
             axisLabel: {
-                color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#64748b',
+                color: isDarkMode ? '#9ca3af' : '#64748b',
             }
         },
         series: [
@@ -176,10 +184,10 @@ function initLineChat() {
                     backgroundColor: '#6a7985'
                 }
             },
-            backgroundColor: document.documentElement.classList.contains('dark') ? 'rgba(31, 41, 55, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-            borderColor: document.documentElement.classList.contains('dark') ? '#4b5563' : '#e5e7eb',
+            backgroundColor: isDarkMode ? 'rgba(31, 41, 55, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+            borderColor: isDarkMode ? '#4b5563' : '#e5e7eb',
             textStyle: {
-                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#1f2937'
+                color: isDarkMode ? '#f3f4f6' : '#1f2937'
             },
             padding: [10, 15],
             extraCssText: 'box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border-radius: 8px;'
@@ -207,34 +215,15 @@ watch(() => props.value, (newValue) => {
 }, { deep: true })
 
 // Watch for dark mode changes and re-render chart
-watch(() => document.documentElement.classList.contains('dark'), () => {
+watch(isDark, () => {
     if (props.value && props.value.pvDates && props.value.pvCounts) {
-        setTimeout(initLineChat, 100) // Small delay to ensure DOM updates
+        setTimeout(initLineChat, 50) // Re-render chart on dark mode change
     }
-}, { immediate: false })
+})
 
 // Add resize listener when component mounts
 onMounted(() => {
     window.addEventListener('resize', handleResize)
-
-    // Watch for dark mode class changes on document element
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                if (props.value && props.value.pvDates && props.value.pvCounts) {
-                    setTimeout(initLineChat, 50) // Re-render chart on dark mode change
-                }
-            }
-        })
-    })
-
-    observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class']
-    })
-
-    // Store observer for cleanup
-    window.chartObserver = observer
 })
 
 // Clean up when component unmounts
@@ -242,9 +231,6 @@ onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
     if (chartInstance) {
         chartInstance.dispose()
-    }
-    if (window.chartObserver) {
-        window.chartObserver.disconnect()
     }
 })
 </script>

@@ -51,6 +51,7 @@
 import * as echarts from 'echarts'
 import { computed, watch, onMounted, onUnmounted } from 'vue'
 import { format, subMonths, addMonths } from 'date-fns'
+import { useDark } from '@vueuse/core'
 
 // Exposed property values
 const props = defineProps({
@@ -58,6 +59,11 @@ const props = defineProps({
         type: Object, // Type is object
         default: null // Default is null
     }
+})
+
+// Dark mode state
+const isDark = useDark({
+    storageKey: 'vueuse-color-scheme'
 })
 
 // Current date
@@ -126,8 +132,8 @@ function initCalendar() {
     var myChart = echarts.init(chartDom);
     chartInstance = myChart; // Store the instance
 
-    // Detect dark mode
-    const isDarkMode = document.documentElement.classList.contains('dark');
+    // Use reactive dark mode state
+    const isDarkMode = isDark.value;
 
     var option = {
         backgroundColor: 'transparent',
@@ -211,14 +217,10 @@ function initCalendar() {
 }
 
 // Watch for dark mode changes and re-render calendar
-const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            if (props.value) {
-                setTimeout(initCalendar, 50) // Re-render calendar on dark mode change
-            }
-        }
-    })
+watch(isDark, () => {
+    if (props.value) {
+        setTimeout(initCalendar, 50) // Re-render calendar on dark mode change
+    }
 })
 
 // Resize chart when window resizes
@@ -244,12 +246,6 @@ watch(() => props.value, () => {
 onMounted(() => {
     // Add resize listener
     window.addEventListener('resize', handleResize)
-
-    // Watch for dark mode class changes on document element
-    observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class']
-    })
 })
 
 onUnmounted(() => {
@@ -257,9 +253,6 @@ onUnmounted(() => {
     window.removeEventListener('resize', handleResize)
     if (chartInstance) {
         chartInstance.dispose()
-    }
-    if (observer) {
-        observer.disconnect()
     }
 })
 

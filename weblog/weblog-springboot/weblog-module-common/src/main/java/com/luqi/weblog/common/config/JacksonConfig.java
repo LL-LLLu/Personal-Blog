@@ -40,8 +40,8 @@ public class JacksonConfig {
         JavaTimeModule javaTimeModule = new JavaTimeModule();
 
         // 支持 LocalDateTime、LocalDate、LocalTime
-        // javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        // javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
@@ -49,8 +49,8 @@ public class JacksonConfig {
         
         objectMapper.registerModule(javaTimeModule);
 
-        // 设置时区为 UTC
-        objectMapper.setTimeZone(TimeZone.getTimeZone("UTC"));
+        // 设置时区为 America/Chicago
+        objectMapper.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
         // 禁用将日期序列化为时间戳
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
