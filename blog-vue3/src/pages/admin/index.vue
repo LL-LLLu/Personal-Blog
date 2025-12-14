@@ -282,12 +282,12 @@
       </div>
 
       <!-- 文章发布热点图 -->
-      <div class="col-span-4">
+      <div class="col-span-4 hidden md:block">
         <ArticlePublishCalendar :value="articlePublishInfo" />
       </div>
 
       <!-- 文章日 PV 访问量折线图 -->
-      <div class="col-span-4">
+      <div class="col-span-4 hidden md:block">
         <ArticlePVLineChat :value="articlePVInfo" />
       </div>
     </div>
