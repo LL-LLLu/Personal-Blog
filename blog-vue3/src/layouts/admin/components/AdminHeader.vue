@@ -281,6 +281,8 @@ const formDialogRef = ref(null)
 const handleCommand = (command) => {
     // Update password
     if (command == 'updatePassword') {
+        // Ensure username is current from store
+        form.username = userStore.userInfo.username || ''
         // Reset password fields before opening dialog
         form.password = ''
         form.rePassword = ''
@@ -341,60 +343,76 @@ const rules = {
     rePassword: [
         {
             required: true,
-            message: 'Confirm Password is not null',
+            message: 'Confirm Password cannot be empty',
             trigger: 'blur',
         },
     ]
 }
 
-const onSubmit = () => {
+const onSubmit = async () => {
+    console.log('onSubmit called')
+    console.log('formRef.value:', formRef.value)
+    console.log('form data:', form)
+
     // Check if formRef exists
     if (!formRef.value) {
+        console.error('formRef.value is null!')
         showMessage('Form reference not found', 'error')
         return
     }
 
-    // First validate form fields
-    formRef.value.validate((valid) => {
+    try {
+        // First validate form fields using Promise-based validation
+        const valid = await formRef.value.validate()
+        console.log('Validation result:', valid)
+
         if (!valid) {
             console.log('Verification not pass')
-            return false
+            return
         }
 
-        if (form.password != form.rePassword) {
+        if (form.password !== form.rePassword) {
             showMessage('Two passwords are not the same!', 'warning')
             return
         }
 
         formDialogRef.value.showBtnLoading()
+
         // Call change password API
-        updateAdminPassword({
+        const res = await updateAdminPassword({
             username: form.username,
             password: form.password
-        }).then((res) => {
-            console.log('Password update response:', res)
-            // Check if successful
-            if (res.success == true) {
-                showMessage('Password has been successfully reset, please login again!')
-                // Logout
-                userStore.logout()
+        })
 
-                // Hide dialog
-                formDialogRef.value.close()
+        console.log('Password update response:', res)
 
-                // Navigate to login page
-                router.push('/login')
-            } else {
-                // Get error message from server
-                let message = res.message || 'Password update failed'
-                // Show message
-                showMessage(message, 'error')
-            }
-        }).catch((err) => {
-            console.error('Password update error:', err)
+        // Check if successful
+        if (res.success === true) {
+            showMessage('Password has been successfully reset, please login again!')
+            // Logout
+            userStore.logout()
+            // Hide dialog
+            formDialogRef.value.close()
+            // Navigate to login page
+            router.push('/login')
+        } else {
+            // Get error message from server
+            let message = res.message || 'Password update failed'
+            // Show message
+            showMessage(message, 'error')
+        }
+    } catch (err) {
+        console.error('Error in onSubmit:', err)
+        // Validation errors are thrown as exceptions - don't show error for validation failures
+        // Element Plus validation rejects with false or the failed fields
+        if (err !== false && !Array.isArray(err)) {
             showMessage('Password update failed. Please try again.', 'error')
-        }).finally(() => formDialogRef.value.closeBtnLoading())
-    })
+        }
+    } finally {
+        if (formDialogRef.value) {
+            formDialogRef.value.closeBtnLoading()
+        }
+    }
 }
 
 </script>
