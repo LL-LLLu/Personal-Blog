@@ -137,7 +137,7 @@ function initCalendar() {
             max: Math.max(5, Math.max(...calendarData.map(d => d[1])) || 5),
             inRange: {
                 color: isDarkMode
-                    ? ['#1f2937', '#064e3b', '#065f46', '#047857', '#059669', '#10b981'] // Deeper greens for dark mode
+                    ? ['#374151', '#064e3b', '#065f46', '#047857', '#059669', '#10b981'] // Deeper greens for dark mode, with visible gray for empty
                     : ['#f3f4f6', '#d1fae5', '#a7f3d0', '#6ee7b7', '#34d399', '#10b981'] // Fresher greens for light mode
             }
         },
@@ -311,8 +311,8 @@ onUnmounted(() => {
 }
 
 .dark .legend-dot.level-0 {
-    background-color: #111827;
-    border-color: #064e3b;
+    background-color: #374151;
+    border-color: rgba(75, 85, 99, 0.5);
 }
 
 .dark .legend-dot.level-1 {
