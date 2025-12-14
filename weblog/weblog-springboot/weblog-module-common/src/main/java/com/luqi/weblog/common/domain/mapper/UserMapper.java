@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.luqi.weblog.common.domain.dos.UserDO;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author: 犬小哈
@@ -22,10 +22,10 @@ public interface UserMapper extends BaseMapper<UserDO> {
 
     default int updatePasswordByUsername(String username, String password) {
         LambdaUpdateWrapper<UserDO> wrapper = new LambdaUpdateWrapper<>();
-        // 设置要更新的字段
+        // Set fields to update
         wrapper.set(UserDO::getPassword, password);
-        wrapper.set(UserDO::getUpdateTime, LocalDateTime.now());
-        // 更新条件
+        wrapper.set(UserDO::getUpdateTime, new Date());
+        // Update condition
         wrapper.eq(UserDO::getUsername, username);
 
         return update(null, wrapper);
