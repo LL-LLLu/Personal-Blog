@@ -350,62 +350,101 @@ const rules = {
 }
 
 const onSubmit = () => {
-    console.log('AdminHeader onSubmit called!')
-    
-    // Check if formRef is available
-    if (!formRef.value) {
-        console.error('Form reference is missing.')
-        return
-    }
-
-    // First validate form fields
+    // 先验证 form 表单字段
     formRef.value.validate((valid) => {
         if (!valid) {
-            console.log('Form validation failed')
-            showMessage('Please check your input.', 'warning')
+            console.log('表单验证不通过')
             return false
         }
 
         if (form.password != form.rePassword) {
-            showMessage('Two passwords do not match!', 'warning')
+            showMessage('两次密码输入不一致，请检查！', 'warning')
             return
         }
 
-        if (formDialogRef.value) {
-            formDialogRef.value.showBtnLoading()
-        }
-
-        // Call change password API
+        formDialogRef.value.showBtnLoading()
+        // 调用修改用户密码接口
         updateAdminPassword(form).then((res) => {
             console.log(res)
-            // Check if successful
+            // 判断是否成功
             if (res.success == true) {
-                showMessage('Password reset successfully, please login again!')
-                // Logout
+                showMessage('密码重置成功，请重新登录！')
+                // 退出登录
                 userStore.logout()
 
-                // Hide dialog
-                if (formDialogRef.value) {
-                    formDialogRef.value.close()
-                }
+                // 隐藏对话框
+                formDialogRef.value.close()
 
-                // Navigate to login page
+                // 跳转登录页
                 router.push('/login')
             } else {
-                // Get error message from server
+                // 获取服务端返回的错误消息
                 let message = res.message
-                // Show message
+                // 提示消息
                 showMessage(message, 'error')
             }
-        }).catch((error) => {
-            console.error('Update password failed:', error)
-        }).finally(() => {
-            if (formDialogRef.value) {
-                formDialogRef.value.closeBtnLoading()
-            }
-        })
+        }).finally(() => formDialogRef.value.closeBtnLoading())
     })
 }
+
+
+// const onSubmit = () => {
+//     console.log('AdminHeader onSubmit called!')
+    
+//     // Check if formRef is available
+//     if (!formRef.value) {
+//         console.error('Form reference is missing.')
+//         return
+//     }
+
+//     // First validate form fields
+//     formRef.value.validate((valid) => {
+//         if (!valid) {
+//             console.log('Form validation failed')
+//             showMessage('Please check your input.', 'warning')
+//             return false
+//         }
+
+//         if (form.password != form.rePassword) {
+//             showMessage('Two passwords do not match!', 'warning')
+//             return
+//         }
+
+//         if (formDialogRef.value) {
+//             formDialogRef.value.showBtnLoading()
+//         }
+
+//         // Call change password API
+//         updateAdminPassword(form).then((res) => {
+//             console.log(res)
+//             // Check if successful
+//             if (res.success == true) {
+//                 showMessage('Password reset successfully, please login again!')
+//                 // Logout
+//                 userStore.logout()
+
+//                 // Hide dialog
+//                 if (formDialogRef.value) {
+//                     formDialogRef.value.close()
+//                 }
+
+//                 // Navigate to login page
+//                 router.push('/login')
+//             } else {
+//                 // Get error message from server
+//                 let message = res.message
+//                 // Show message
+//                 showMessage(message, 'error')
+//             }
+//         }).catch((error) => {
+//             console.error('Update password failed:', error)
+//         }).finally(() => {
+//             if (formDialogRef.value) {
+//                 formDialogRef.value.closeBtnLoading()
+//             }
+//         })
+//     })
+// }
 
 </script>
 
