@@ -97,10 +97,13 @@ services:
       - backend
     ports:
       - "80:80"
+      - "443:443"    # HTTPS port
       - "5173:80"  # Alternative port for development
     volumes:
       - ../blog-vue3/dist:/usr/share/nginx/html:ro
       - ./nginx/frontend.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     networks:
       - weblog-network
     healthcheck:
@@ -108,6 +111,17 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+
+  # Certbot for SSL Certificates
+  certbot:
+    image: certbot/certbot
+    container_name: weblog-certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    # No command by default, we run it manually
+    networks:
+      - weblog-network
 
 networks:
   weblog-network:
