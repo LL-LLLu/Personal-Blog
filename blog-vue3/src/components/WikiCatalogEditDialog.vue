@@ -1,13 +1,14 @@
 <template>
   <el-dialog
-      v-model="dialogVisible"
-      :title="title"
-      :width="width"
-      :destroy-on-close="destroyOnClose"
-       :draggable="true" :close-on-click-modal="false"
-          :close-on-press-escape="false"
-      :class="{ 'dark-mode-dialog': isDark }"
-    >
+    v-model="dialogVisible"
+    :title="title"
+    :width="width"
+    :destroy-on-close="destroyOnClose"
+    :draggable="true"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :class="{ 'dark-mode-dialog': isDark }"
+  >
     <!-- Add Catalog Button -->
     <div class="mb-5">
       <el-button
@@ -81,7 +82,11 @@
             class="hover:bg-gray-200 rounded py-2 px-2"
             @click.stop
           >
-                                    <el-dropdown trigger="click" @command="handleCommand">              <span class="el-dropdown-link flex items-center">
+            <el-dropdown
+              trigger="click"
+              @command="handleCommand"
+            >
+              <span class="el-dropdown-link flex items-center">
                 <svg
                   class="icon w-5 h-5 outline-none"
                   viewBox="0 0 1024 1024"
@@ -158,8 +163,8 @@
 
         <!-- Level 2 Catalog -->
         <ul
-          :id="'accordion-flush-body-' + catalog.id"
           v-if="catalog.children && catalog.children.length > 0"
+          :id="'accordion-flush-body-' + catalog.id"
         >
           <VueDraggable
             ref="el"

@@ -9,7 +9,9 @@
         :rules="rules"
       >
         <el-form-item>
-          <h2 class="font-bold text-base mb-1">Basic Settings</h2>
+          <h2 class="font-bold text-base mb-1">
+            Basic Settings
+          </h2>
         </el-form-item>
 
         <el-form-item
@@ -92,7 +94,9 @@
         <el-divider />
 
         <el-form-item>
-          <h2 class="font-bold text-base mb-1">Third-party Platform Settings</h2>
+          <h2 class="font-bold text-base mb-1">
+            Third-party Platform Settings
+          </h2>
         </el-form-item>
 
         <!-- Enable GitHub access -->
@@ -183,7 +187,9 @@
         <el-divider />
 
         <el-form-item>
-          <h2 class="font-bold text-base mb-1">Comment Settings</h2>
+          <h2 class="font-bold text-base mb-1">
+            Comment Settings
+          </h2>
         </el-form-item>
         <el-form-item label="Sensitive Word Filter">
           <el-switch
@@ -194,8 +200,19 @@
             @change="sensiWordSwitchChange"
           />
           <div class="flex items-center ml-3">
-            <el-icon class="mr-2" color="#909399"><InfoFilled /></el-icon>
-            <el-text class="mx-1" type="info" size="small">When enabled, the system automatically filters sensitive words in every comment</el-text>
+            <el-icon
+              class="mr-2"
+              color="#909399"
+            >
+              <InfoFilled />
+            </el-icon>
+            <el-text
+              class="mx-1"
+              type="info"
+              size="small"
+            >
+              When enabled, the system automatically filters sensitive words in every comment
+            </el-text>
           </div>
         </el-form-item>
         <el-form-item label="Enable Review">
@@ -207,15 +224,41 @@
             @change="examineSwitchChange"
           />
           <div class="flex items-center ml-3">
-            <el-icon class="mr-2" color="#909399"><InfoFilled /></el-icon>
-            <el-text class="mx-1" type="info" size="small">When enabled, comments need to be approved by the admin before being displayed</el-text>
+            <el-icon
+              class="mr-2"
+              color="#909399"
+            >
+              <InfoFilled />
+            </el-icon>
+            <el-text
+              class="mx-1"
+              type="info"
+              size="small"
+            >
+              When enabled, comments need to be approved by the admin before being displayed
+            </el-text>
           </div>
         </el-form-item>
         <el-form-item label="Admin Email">
-          <el-input v-model="form.mail" clearable placeholder="Enter admin email address" />
+          <el-input
+            v-model="form.mail"
+            clearable
+            placeholder="Enter admin email address"
+          />
           <div class="flex items-center">
-            <el-icon class="mr-2" color="#909399"><InfoFilled /></el-icon>
-            <el-text class="mx-1" type="info" size="small">Used to send email notifications to the admin when new comments are posted</el-text>
+            <el-icon
+              class="mr-2"
+              color="#909399"
+            >
+              <InfoFilled />
+            </el-icon>
+            <el-text
+              class="mx-1"
+              type="info"
+              size="small"
+            >
+              Used to send email notifications to the admin when new comments are posted
+            </el-text>
           </div>
         </el-form-item>
 

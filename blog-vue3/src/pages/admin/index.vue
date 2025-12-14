@@ -282,12 +282,12 @@
       </div>
 
       <!-- 文章发布热点图 -->
-      <div class="col-span-4 md:col-span-2">
+      <div class="col-span-4">
         <ArticlePublishCalendar :value="articlePublishInfo" />
       </div>
 
       <!-- 文章日 PV 访问量折线图 -->
-      <div class="col-span-4 md:col-span-2">
+      <div class="col-span-4">
         <ArticlePVLineChat :value="articlePVInfo" />
       </div>
     </div>
@@ -385,14 +385,6 @@ const manualRefresh = async () => {
 onMounted(() => {
     // Fetch all data initially
     refreshAllStatistics()
-    
-    // Set up auto-refresh every 30 seconds (30000ms)
-    // You can adjust this interval based on your needs
-    refreshInterval = setInterval(() => {
-        fetchPVStatistics() // Refresh PV statistics more frequently
-        fetchBaseStatistics() // Also refresh base statistics
-        lastUpdatedTime.value = new Date().toLocaleTimeString() // Update timestamp
-    }, 30000) // 30 seconds
 })
 
 // Clean up interval on component unmount

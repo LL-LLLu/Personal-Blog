@@ -1,28 +1,46 @@
 <template>
-    <!-- text-sm/[30px] 表示文字小号，行高为 30px -->
-    <div v-if="titles && titles.length > 0"
-        class="sticky text-sm/[30px] w-full mb-3 transition-all"
-        :class="[currScrollY > 0 ? 'top-0' : 'top-[5.5rem]']"
+  <!-- text-sm/[30px] 表示文字小号，行高为 30px -->
+  <div
+    v-if="titles && titles.length > 0"
+    class="sticky text-sm/[30px] w-full mb-3 transition-all"
+    :class="[currScrollY > 0 ? 'top-0' : 'top-[5.5rem]']"
+  >
+    <!-- 目录标题 -->
+    <h2 class="flex items-center mb-2 font-bold text-gray-900 uppercase dark:text-gray-400">
+      文章目录
+    </h2>
+    <div
+      class="toc-wrapper"
+      :class="[isDark ? 'dark' : '']"
+    >
+      <ul class="toc">
+        <!-- 二级标题 -->
+        <li
+          v-for="(h2, index) in titles"
+          :key="index"
         >
-        <!-- 目录标题 -->
-        <h2 class="flex items-center mb-2 font-bold text-gray-900 uppercase dark:text-gray-400">
-            文章目录
-        </h2>
-        <div class="toc-wrapper" :class="[isDark ? 'dark' : '']">
-            <ul class="toc">
-                <!-- 二级标题 -->
-                <li v-for="(h2, index) in titles" :key="index">
-                    <span @click="scrollToView(h2.offsetTop)" class="pl-5 hover:text-sky-600" :class="[h2.index == activeHeadingIndex ? 'active py-1 text-sky-600 border-l-2 border-sky-600 font-bold' : 'text-gray-500 font-normal']">{{ h2.text }}</span>
-                    <!-- 三级标题 -->
-                    <ul v-if="h2.children && h2.children.length > 0">
-                        <li v-for="(h3, index2) in h2.children" :key="index2">
-                            <span @click="scrollToView(h3.offsetTop)" class="pl-10 hover:text-sky-600" :class="[h3.index == activeHeadingIndex ? 'active py-1 text-sky-600 border-l-2 border-sky-600 font-bold' : 'text-gray-500 font-normal']">{{ h3.text }}</span>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+          <span
+            class="pl-5 hover:text-sky-600"
+            :class="[h2.index == activeHeadingIndex ? 'active py-1 text-sky-600 border-l-2 border-sky-600 font-bold' : 'text-gray-500 font-normal']"
+            @click="scrollToView(h2.offsetTop)"
+          >{{ h2.text }}</span>
+          <!-- 三级标题 -->
+          <ul v-if="h2.children && h2.children.length > 0">
+            <li
+              v-for="(h3, index2) in h2.children"
+              :key="index2"
+            >
+              <span
+                class="pl-10 hover:text-sky-600"
+                :class="[h3.index == activeHeadingIndex ? 'active py-1 text-sky-600 border-l-2 border-sky-600 font-bold' : 'text-gray-500 font-normal']"
+                @click="scrollToView(h3.offsetTop)"
+              >{{ h3.text }}</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
+  </div>
 </template>
 
 <script setup>

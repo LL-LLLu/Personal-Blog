@@ -158,8 +158,8 @@
   <FormDialog
     ref="formDialogRef"
     title="Change Password"
-    destroyOnClose
-    @onSubmit="onSubmit"
+    destroy-on-close
+    @on-submit="onSubmit"
   >
     <el-form
       ref="formRef"
