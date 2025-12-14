@@ -62,10 +62,7 @@ const close = () => dialogVisible.value = false
 
 // 对外暴露一个 submit 方法
 const emit  = defineEmits(['submit'])
-const submit = () => {
-    console.log('FormDialog: Submit button clicked, emitting submit event')
-    emit('submit')
-}
+const submit = () => emit('submit')
 
 // 对外暴露方法
 defineExpose({

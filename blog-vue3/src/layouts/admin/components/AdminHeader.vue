@@ -158,7 +158,7 @@
     <FormDialog
       ref="formDialogRef"
       title="Change Password"
-      destroy-on-close
+      destroyOnClose
       @submit="onSubmit"
     >
       <el-form
@@ -275,7 +275,7 @@ const handleMenuWidth = () => {
 const handleRefresh = () => location.reload()
 
 // Dialog reference
-const formDialogRef = ref(null)
+const formDialogRef = ref(false)
 
 // Dropdown menu event handler
 const handleCommand = (command) => {
@@ -349,77 +349,42 @@ const rules = {
     ]
 }
 
-const onSubmit = async () => {
-    console.log('=== onSubmit called ===')
-    console.log('formRef.value:', formRef.value)
-    console.log('form data:', JSON.stringify(form))
-    console.log('username:', form.username)
-    console.log('password:', form.password)
-    console.log('rePassword:', form.rePassword)
-
-    // Check if formRef exists
-    if (!formRef.value) {
-        console.error('formRef.value is null!')
-        showMessage('Form reference not found', 'error')
-        return
-    }
-
-    try {
-        // First validate form fields using Promise-based validation
-        const valid = await formRef.value.validate()
-        console.log('Validation result:', valid)
-
+const onSubmit = () => {
+    // First validate form fields
+    formRef.value.validate((valid) => {
         if (!valid) {
-            console.log('Verification not pass')
-            return
+            console.log('Form validation failed')
+            return false
         }
 
-        if (form.password !== form.rePassword) {
-            showMessage('Two passwords are not the same!', 'warning')
+        if (form.password != form.rePassword) {
+            showMessage('Two passwords do not match!', 'warning')
             return
         }
 
         formDialogRef.value.showBtnLoading()
-
-        console.log('=== Calling API ===')
-        console.log('Sending data:', { username: form.username, password: form.password })
-
         // Call change password API
-        const res = await updateAdminPassword({
-            username: form.username,
-            password: form.password
-        })
+        updateAdminPassword(form).then((res) => {
+            console.log(res)
+            // Check if successful
+            if (res.success == true) {
+                showMessage('Password reset successfully, please login again!')
+                // Logout
+                userStore.logout()
 
-        console.log('=== API Response ===')
-        console.log('Response:', JSON.stringify(res))
+                // Hide dialog
+                formDialogRef.value.close()
 
-        // Check if successful
-        if (res.success === true) {
-            showMessage('Password has been successfully reset, please login again!')
-            // Logout
-            userStore.logout()
-            // Hide dialog
-            formDialogRef.value.close()
-            // Navigate to login page
-            router.push('/login')
-        } else {
-            // Get error message from server
-            let message = res.message || 'Password update failed'
-            // Show message
-            showMessage(message, 'error')
-        }
-    } catch (err) {
-        console.error('Error in onSubmit:', err)
-        // Validation errors are thrown as exceptions - don't show error for validation failures
-        // Element Plus validation rejects with false or the failed fields
-        if (err !== false && !Array.isArray(err)) {
-            showMessage('Password update failed. Please try again.', 'error')
-        }
-    } finally {
-        if (formDialogRef.value) {
-            formDialogRef.value.closeBtnLoading()
-        }
-    }
+                // Navigate to login page
+                router.push('/login')
+            } else {
+                // Get error message from server
+                let message = res.message
+                // Show message
+                showMessage(message, 'error')
+            }
+        }).finally(() => formDialogRef.value.closeBtnLoading())
+    })
 }
 
 </script>
