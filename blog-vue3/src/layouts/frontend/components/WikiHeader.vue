@@ -1172,6 +1172,7 @@ onMounted(() => {
 
 // Watch isDrawerExpand variable
 watch(isDrawerExpand, (newText, oldText) => {
+    if (!wikiDrawer.value) return
     if (newText) {
         // Show drawer
         wikiDrawer.value.show()
@@ -1185,7 +1186,11 @@ watch(isDrawerExpand, (newText, oldText) => {
 watch(() => props.catalogs, (newVal) => {
     if (newVal && newVal.length > 0) {
         nextTick(() => {
-            initAccordions()
+            try {
+                initAccordions()
+            } catch (e) {
+                console.error('Error initializing accordions:', e)
+            }
         })
     }
 })

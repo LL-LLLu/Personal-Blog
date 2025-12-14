@@ -257,8 +257,12 @@ import {
 
 onMounted(() => {
     nextTick(() => {
-        initAccordions()
-        initTooltips()
+        try {
+            initAccordions()
+            initTooltips()
+        } catch (e) {
+            console.error('Error initializing Flowbite components:', e)
+        }
     })
 })
 
@@ -267,12 +271,18 @@ const router = useRouter()
 
 const catalogs = ref([])
 
-// 获取当前知识库的目录数据
+// Get current wiki catalog data
 getWikiCatalogs(route.params.wikiId).then(res => {
     if (res.success) {
         catalogs.value = res.data
-        // 获取数据成功后，初始化 Accordions 组件
-        nextTick(() => initAccordions())
+        // Initialize Accordions component after data loads
+        nextTick(() => {
+            try {
+                initAccordions()
+            } catch (e) {
+                console.error('Error initializing accordions:', e)
+            }
+        })
     }
 })
 

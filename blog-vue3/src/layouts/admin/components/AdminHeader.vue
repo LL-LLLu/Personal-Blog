@@ -274,13 +274,16 @@ const handleMenuWidth = () => {
 // Refresh page
 const handleRefresh = () => location.reload()
 
-// Dialog display status
-const formDialogRef = ref(false)
+// Dialog reference
+const formDialogRef = ref(null)
 
 // Dropdown menu event handler
 const handleCommand = (command) => {
     // Update password
     if (command == 'updatePassword') {
+        // Reset password fields before opening dialog
+        form.password = ''
+        form.rePassword = ''
         // Show change password dialog
         formDialogRef.value.open()
     } else if (command == 'logout') { // Logout
@@ -345,6 +348,12 @@ const rules = {
 }
 
 const onSubmit = () => {
+    // Check if formRef exists
+    if (!formRef.value) {
+        showMessage('Form reference not found', 'error')
+        return
+    }
+
     // First validate form fields
     formRef.value.validate((valid) => {
         if (!valid) {
@@ -352,15 +361,18 @@ const onSubmit = () => {
             return false
         }
 
-        if (form.password != form.rePassword) { 
+        if (form.password != form.rePassword) {
             showMessage('Two passwords are not the same!', 'warning')
             return
         }
 
         formDialogRef.value.showBtnLoading()
         // Call change password API
-        updateAdminPassword(form).then((res) => {
-            console.log(res)
+        updateAdminPassword({
+            username: form.username,
+            password: form.password
+        }).then((res) => {
+            console.log('Password update response:', res)
             // Check if successful
             if (res.success == true) {
                 showMessage('Password has been successfully reset, please login again!')
@@ -374,10 +386,13 @@ const onSubmit = () => {
                 router.push('/login')
             } else {
                 // Get error message from server
-                let message = res.message
+                let message = res.message || 'Password update failed'
                 // Show message
                 showMessage(message, 'error')
             }
+        }).catch((err) => {
+            console.error('Password update error:', err)
+            showMessage('Password update failed. Please try again.', 'error')
         }).finally(() => formDialogRef.value.closeBtnLoading())
     })
 }

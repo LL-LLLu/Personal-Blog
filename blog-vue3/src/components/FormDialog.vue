@@ -12,7 +12,7 @@
     <slot />
     <template #footer>
       <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="dialogVisible = false">Cancel</el-button>
         <el-button
           type="primary"
           :loading="btnLoading"
@@ -51,7 +51,7 @@ const props = defineProps({
     },
     confirmText: {
         type: String,
-        default: '提交'
+        default: 'Submit'
     }
 })
 

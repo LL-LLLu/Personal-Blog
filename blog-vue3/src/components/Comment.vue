@@ -365,8 +365,12 @@ const props = defineProps({
 const commentStore = useCommentStore()
 
 onMounted(() => {
-    initTooltips()
-    initPopovers()
+    try {
+        initTooltips()
+        initPopovers()
+    } catch (e) {
+        console.error('Error initializing Flowbite components:', e)
+    }
 })
 
 // 评论总数
@@ -473,10 +477,14 @@ const showReplyForm = (index, nickname, replyCommentId, parentCommentId) => {
     // 清空之前的回复内容
     replyContent.value = ''
 
-    // 重新初始化 Flowbite 组件以支持动态内容
+    // Re-initialize Flowbite components for dynamic content
     nextTick(() => {
-        initPopovers()
-        initTooltips()
+        try {
+            initPopovers()
+            initTooltips()
+        } catch (e) {
+            console.error('Error initializing Flowbite components:', e)
+        }
     })
 }
 
