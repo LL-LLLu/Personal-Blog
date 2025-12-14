@@ -153,8 +153,6 @@
         </el-dropdown>
       </div>
     </div>
-
-    </FormDialog>
   </el-affix>
   <!-- Change Password -->
   <FormDialog
@@ -282,6 +280,7 @@ const formDialogRef = ref(null)
 const handleCommand = (command) => {
     // Update password
     if (command == 'updatePassword') {
+        console.log('Opening Change Password Dialog. Current User Info:', userStore.userInfo)
         // Ensure username is current from store
         form.username = userStore.userInfo.username || ''
         // Reset password fields before opening dialog

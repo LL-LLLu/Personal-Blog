@@ -7,6 +7,7 @@
     :draggable="true"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
+    :append-to-body="appendToBody"
   >
     <!-- 插槽 -->
     <slot />
@@ -52,6 +53,10 @@ const props = defineProps({
     confirmText: {
         type: String,
         default: 'Submit'
+    },
+    appendToBody: {
+        type: Boolean,
+        default: true
     }
 })
 
