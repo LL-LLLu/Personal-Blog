@@ -17,11 +17,10 @@ pipeline {
 
         stage('Backend Tests') {
             agent {
-                docker { 
-                    image 'maven:3.8-openjdk-8' 
-                    args '-v /root/.m2:/root/.m2'
-                }
-            }
+                                docker {
+                                    image 'maven:3.8-openjdk-8' 
+                                    args '-v /root/.m2:/root/.m2 --entrypoint=""'
+                                }            }
             steps {
                 // Run tests ONLY. If this fails, the pipeline STOPS.
                 // We use -Dmaven.test.failure.ignore=false to ensure build fails on test failure
@@ -31,11 +30,10 @@ pipeline {
 
         stage('Build Backend') {
             agent {
-                docker { 
-                    image 'maven:3.8-openjdk-8' 
-                    args '-v /root/.m2:/root/.m2'
-                }
-            }
+                                docker {
+                                    image 'maven:3.8-openjdk-8' 
+                                    args '-v /root/.m2:/root/.m2 --entrypoint=""'
+                                }            }
             steps {
                 // Build the JAR (skip tests here since we just ran them)
                 sh 'mvn -f weblog/weblog-springboot/pom.xml clean package -DskipTests'

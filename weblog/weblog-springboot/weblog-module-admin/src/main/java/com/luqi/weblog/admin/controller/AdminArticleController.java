@@ -66,4 +66,12 @@ public class AdminArticleController {
         return articleService.updateArticle(updateArticleReqVO);
     }
 
+    @PostMapping("/isTop/update")
+    @ApiOperation(value = "Update article isTop")
+    @ApiOperationLog(description = "Update article isTop")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Response updateArticleIsTop(@RequestBody @Validated UpdateArticleIsTopReqVO updateArticleIsTopReqVO) {
+        return articleService.updateArticleIsTop(updateArticleIsTopReqVO);
+    }
+
 }

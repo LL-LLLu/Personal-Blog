@@ -35,4 +35,9 @@ public class FindIndexArticlePageListRspVO {
      * Article tags
      */
     private List<FindTagListRspVO> tags;
+
+    /**
+     * Is pinned
+     */
+    private Boolean isTop;
 }

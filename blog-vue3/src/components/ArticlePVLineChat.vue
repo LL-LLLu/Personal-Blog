@@ -1,45 +1,54 @@
 <template>
-    <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
-        <!-- Header with stats -->
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center space-x-2">
-                <div class="w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full animate-pulse"></div>
-                <h3 class="text-sm font-semibold text-slate-700 dark:text-white">Weekly Page Views</h3>
-            </div>
-            <div class="text-xs text-slate-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-2 py-1 rounded-full border dark:border-gray-600">
-                {{ totalViews }} views in last 7 days
-            </div>
-        </div>
-
-        <!-- Chart container with modern styling to match calendar -->
-        <div class="relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 p-6 rounded-xl shadow-sm">
-            <!-- Loading state overlay -->
-            <div v-if="!props.value || !props.value.pvDates" class="absolute inset-0 flex items-center justify-center bg-white dark:bg-gray-800 bg-opacity-95 z-10 rounded-xl backdrop-blur-sm">
-                <div class="flex flex-col items-center">
-                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                    <span class="text-sm text-gray-600 dark:text-gray-300 mt-3 font-medium">Loading chart data...</span>
-                </div>
-            </div>
-
-            <!-- Chart with matching height and proper alignment -->
-            <div class="w-full flex justify-center">
-                <div id="lineChat" class="rounded-lg overflow-hidden" style="width: 100%; height: 240px;"></div>
-            </div>
-
-            <!-- Enhanced trend indicator -->
-            <div class="flex items-center justify-between mt-6 text-sm text-gray-600 dark:text-gray-300">
-                <div class="flex items-center space-x-3">
-                    <div class="flex items-center space-x-2">
-                        <div class="w-4 h-4 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full shadow-sm"></div>
-                        <span class="font-medium">Page Views Trend</span>
-                    </div>
-                </div>
-                <div class="font-medium">
-                    <span>{{ averageViews }} avg daily views</span>
-                </div>
-            </div>
-        </div>
+  <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
+    <!-- Header with stats -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center space-x-2">
+        <div class="w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full animate-pulse" />
+        <h3 class="text-sm font-semibold text-slate-700 dark:text-white">
+          Weekly Page Views
+        </h3>
+      </div>
+      <div class="text-xs text-slate-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-2 py-1 rounded-full border dark:border-gray-600">
+        {{ totalViews }} views in last 7 days
+      </div>
     </div>
+
+    <!-- Chart container with modern styling to match calendar -->
+    <div class="relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 p-6 rounded-xl shadow-sm">
+      <!-- Loading state overlay -->
+      <div
+        v-if="!props.value || !props.value.pvDates"
+        class="absolute inset-0 flex items-center justify-center bg-white dark:bg-gray-800 bg-opacity-95 z-10 rounded-xl backdrop-blur-sm"
+      >
+        <div class="flex flex-col items-center">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
+          <span class="text-sm text-gray-600 dark:text-gray-300 mt-3 font-medium">Loading chart data...</span>
+        </div>
+      </div>
+
+      <!-- Chart with matching height and proper alignment -->
+      <div class="w-full flex justify-center">
+        <div
+          id="lineChat"
+          class="rounded-lg overflow-hidden"
+          style="width: 100%; height: 240px;"
+        />
+      </div>
+
+      <!-- Enhanced trend indicator -->
+      <div class="flex items-center justify-between mt-6 text-sm text-gray-600 dark:text-gray-300">
+        <div class="flex items-center space-x-3">
+          <div class="flex items-center space-x-2">
+            <div class="w-4 h-4 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full shadow-sm" />
+            <span class="font-medium">Page Views Trend</span>
+          </div>
+        </div>
+        <div class="font-medium">
+          <span>{{ averageViews }} avg daily views</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -81,7 +90,8 @@ function initLineChat() {
         chartInstance.dispose();
     }
     
-    var myChart = echarts.init(chartDom, null, { width: 600 });
+    // Initialize without fixed width to allow responsiveness
+    var myChart = echarts.init(chartDom);
     chartInstance = myChart; // Store the instance
     var option;
 
@@ -92,25 +102,24 @@ function initLineChat() {
     option = {
         backgroundColor: 'transparent',
         grid: {
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: 40,
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            top: '4%',
             containLabel: true
         },
         xAxis: {
             type: 'category',
             data: pvDates, // x 轴数据
+            boundaryGap: false,
             axisLine: {
                 lineStyle: {
                     color: document.documentElement.classList.contains('dark') ? '#4b5563' : '#e2e8f0',
-                    width: 2
                 }
             },
             axisLabel: {
-                color: document.documentElement.classList.contains('dark') ? '#d1d5db' : '#64748b',
-                fontSize: 12,
-                fontWeight: 500
+                color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#64748b',
+                margin: 15,
             },
             axisTick: {
                 show: false
@@ -122,19 +131,10 @@ function initLineChat() {
                 lineStyle: {
                     color: document.documentElement.classList.contains('dark') ? '#374151' : '#f1f5f9',
                     type: 'dashed',
-                    width: 1
                 }
             },
-            axisLine: {
-                show: false
-            },
             axisLabel: {
-                color: document.documentElement.classList.contains('dark') ? '#d1d5db' : '#64748b',
-                fontSize: 12,
-                fontWeight: 500
-            },
-            axisTick: {
-                show: false
+                color: document.documentElement.classList.contains('dark') ? '#9ca3af' : '#64748b',
             }
         },
         series: [
@@ -142,65 +142,47 @@ function initLineChat() {
                 data: pvCounts, // 设置 pv 访问量
                 type: 'line',
                 smooth: true,
+                showSymbol: false,
                 symbol: 'circle',
                 symbolSize: 8,
                 lineStyle: {
                     color: '#3b82f6',
                     width: 4,
                     shadowColor: 'rgba(59, 130, 246, 0.3)',
-                    shadowBlur: 8,
+                    shadowBlur: 10,
                     shadowOffsetY: 4
                 },
                 itemStyle: {
                     color: '#3b82f6',
                     borderColor: '#fff',
-                    borderWidth: 3,
-                    shadowColor: 'rgba(59, 130, 246, 0.5)',
-                    shadowBlur: 8
+                    borderWidth: 2,
                 },
                 areaStyle: {
-                    color: {
-                        type: 'linear',
-                        x: 0,
-                        y: 0,
-                        x2: 0,
-                        y2: 1,
-                        colorStops: [{
-                            offset: 0, color: 'rgba(59, 130, 246, 0.4)'
-                        }, {
-                            offset: 0.7, color: 'rgba(59, 130, 246, 0.1)'
-                        }, {
-                            offset: 1, color: 'rgba(59, 130, 246, 0.02)'
-                        }]
-                    }
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(59, 130, 246, 0.5)' },
+                        { offset: 1, color: 'rgba(59, 130, 246, 0.05)' }
+                    ])
                 },
                 emphasis: {
-                    itemStyle: {
-                        shadowColor: 'rgba(59, 130, 246, 0.8)',
-                        shadowBlur: 15
-                    }
+                    focus: 'series'
                 }
             }
         ],
         tooltip: {
             trigger: 'axis',
-            formatter: function(params) {
-                const data = params[0]
-                return `<div class="p-3">
-                    <div class="font-semibold text-gray-900">${data.axisValue}</div>
-                    <div class="text-sm text-gray-600 mt-1">${data.data.toLocaleString()} page views</div>
-                </div>`
+            axisPointer: {
+                type: 'cross',
+                label: {
+                    backgroundColor: '#6a7985'
+                }
             },
-            backgroundColor: document.documentElement.classList.contains('dark') ? 'rgba(31, 41, 55, 0.98)' : 'rgba(255, 255, 255, 0.98)',
-            borderColor: document.documentElement.classList.contains('dark') ? '#4b5563' : '#e2e8f0',
-            borderWidth: 1,
-            borderRadius: 8,
+            backgroundColor: document.documentElement.classList.contains('dark') ? 'rgba(31, 41, 55, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+            borderColor: document.documentElement.classList.contains('dark') ? '#4b5563' : '#e5e7eb',
             textStyle: {
-                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#374151'
+                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#1f2937'
             },
-            shadowColor: 'rgba(0, 0, 0, 0.15)',
-            shadowBlur: 20,
-            shadowOffsetY: 8
+            padding: [10, 15],
+            extraCssText: 'box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border-radius: 8px;'
         }
     };
 

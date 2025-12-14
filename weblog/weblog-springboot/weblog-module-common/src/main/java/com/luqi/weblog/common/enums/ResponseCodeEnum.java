@@ -33,6 +33,11 @@ public enum ResponseCodeEnum implements BaseExceptionInterface {
     ARTICLE_NOT_FOUND("20010", "Article does not exist!"),
     CATEGORY_CAN_NOT_DELETE("20011", "This category contains articles. Please delete the corresponding articles before deleting the category!"),
     TAG_CAN_NOT_DELETE("20012", "This tag contains articles. Please delete the corresponding articles before deleting the tag!"),
+    WIKI_NOT_FOUND("20013", "This Wiki does not exist"),
+    COMMENT_CONTAIN_SENSITIVE_WORD("20015", "Comment contains sensitive words, please edit and resubmit"),
+    COMMENT_WAIT_EXAMINE("20016", "Comment submitted, waiting for admin approval"),
+    COMMENT_NOT_FOUND("20017", "Comment does not exist"),
+    COMMENT_STATUS_NOT_WAIT_EXAMINE("20018", "This comment is not in pending review status"),
     ;
 
     // Exception code for errors

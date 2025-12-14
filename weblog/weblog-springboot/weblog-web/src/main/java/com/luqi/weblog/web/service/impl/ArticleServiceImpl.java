@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import com.luqi.weblog.admin.event.ReadArticleEvent;
+import com.luqi.weblog.common.constant.Constants;
 import com.luqi.weblog.common.domain.dos.*;
 import com.luqi.weblog.common.domain.mapper.*;
 import com.luqi.weblog.common.enums.ResponseCodeEnum;
@@ -66,7 +67,7 @@ public class ArticleServiceImpl implements ArticleService {
         Long size = findIndexArticlePageListReqVO.getSize();
 
         // 第一步：分页查询文章主体记录
-        Page<ArticleDO> articleDOPage = articleMapper.selectPageList(current, size, null, null, null);
+        Page<ArticleDO> articleDOPage = articleMapper.selectPageList(current, size, null, null, null, null);
 
         // 返回的分页数据
         List<ArticleDO> articleDOS = articleDOPage.getRecords();
@@ -75,7 +76,11 @@ public class ArticleServiceImpl implements ArticleService {
         if (!CollectionUtils.isEmpty(articleDOS)) {
             // 文章 DO 转 VO
             vos = articleDOS.stream()
-                    .map(articleDO -> ArticleConvert.INSTANCE.convertDO2VO(articleDO))
+                    .map(articleDO -> {
+                        FindIndexArticlePageListRspVO vo = ArticleConvert.INSTANCE.convertDO2VO(articleDO);
+                        vo.setIsTop(articleDO.getWeight() > 0); // 是否置顶
+                        return vo;
+                    })
                     .collect(Collectors.toList());
 
             // 拿到所有文章的 ID 集合
@@ -172,11 +177,12 @@ public class ArticleServiceImpl implements ArticleService {
         // DO 转 VO
         FindArticleDetailRspVO vo = FindArticleDetailRspVO.builder()
                 .title(articleDO.getTitle())
-                .createTime(articleDO.getCreateTime())
+                .createTime(Constants.DATE_TIME_FORMATTER.format(articleDO.getCreateTime()))
                 .content(MarkdownHelper.convertMarkdown2Html(content))
                 .readNum(articleDO.getReadNum())
                 .totalWords(totalWords)
                 .readTime(MarkdownStatsUtil.calculateReadingTime(totalWords))
+                .updateTime(articleDO.getUpdateTime())
                 .build();
 
         // 查询所属分类

@@ -1,29 +1,44 @@
 <template>
-    <!-- Left: Tab navigation bar -->
-    <div class="fixed top-[64px] h-[44px] px-2 right-0 z-50 flex items-center bg-white dark:bg-gray-900 transition-all duration-300 shadow border-b border-gray-200 dark:border-gray-800" :style="{left: menuStore.menuWidth}">
-        <el-tabs v-model="activeTab" type="card" class="demo-tabs" @tab-remove="removeTab" @tab-change="tabChange" style="min-width: 10px;">
-            <el-tab-pane v-for="item in tabList" :key="item.path" :label="item.title" :name="item.path" :closable="item.path != '/admin/index'">
-            </el-tab-pane>
-        </el-tabs>
+  <!-- Left: Tab navigation bar -->
+  <div
+    class="fixed top-[64px] h-[44px] px-2 right-0 z-50 flex items-center bg-white dark:bg-gray-900 transition-all duration-300 shadow border-b border-gray-200 dark:border-gray-800"
+    :style="{left: menuStore.menuWidth}"
+  >
+    <el-tabs
+      v-model="activeTab"
+      type="card"
+      class="demo-tabs"
+      style="min-width: 10px;"
+      @tab-remove="removeTab"
+      @tab-change="tabChange"
+    >
+      <el-tab-pane
+        v-for="item in tabList"
+        :key="item.path"
+        :label="item.title"
+        :name="item.path"
+        :closable="item.path != '/admin/index'"
+      />
+    </el-tabs>
 
-        <!-- Right dropdown menu -->
-        <span class="ml-auto flex items-center justify-center h-[32px] w-[32px]">
-            <el-dropdown @command="handleCloseTab">
-                <span class="el-dropdown-link text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors">
-                    <el-icon>
-                        <arrow-down />
-                    </el-icon>
-                </span>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item command="closeOthers">Close Other</el-dropdown-item>
-                        <el-dropdown-item command="closeAll">Close All</el-dropdown-item>
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
+    <!-- Right dropdown menu -->
+    <span class="ml-auto flex items-center justify-center h-[32px] w-[32px]">
+      <el-dropdown @command="handleCloseTab">
+        <span class="el-dropdown-link text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition-colors">
+          <el-icon>
+            <arrow-down />
+          </el-icon>
         </span>
-    </div>
-    <div class="h-[44px]"></div>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="closeOthers">Close Other</el-dropdown-item>
+            <el-dropdown-item command="closeAll">Close All</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </span>
+  </div>
+  <div class="h-[44px]" />
 </template>
 
 <script setup>

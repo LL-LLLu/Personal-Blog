@@ -5,6 +5,8 @@ import CategoryArticleList from '@/pages/frontend/category-article-list.vue'
 import TagList from '@/pages/frontend/tag-list.vue'
 import TagArticleList from '@/pages/frontend/tag-article-list.vue'
 import ArticleDetail from '@/pages/frontend/article-detail.vue'
+import WikiDetail from '@/pages/frontend/wiki-detail.vue'
+import WikiList from '@/pages/frontend/wiki-list.vue'
 import NotFound from '@/pages/frontend/404.vue'
 import Login from '@/pages/admin/login.vue'
 import AdminIndex from '@/pages/admin/index.vue'
@@ -12,6 +14,8 @@ import AdminArticleList from '@/pages/admin/article-list.vue'
 import AdminCategoryList from '@/pages/admin/category-list.vue'
 import AdminTagList from '@/pages/admin/tag-list.vue'
 import AdminBlogSettings from '@/pages/admin/blog-settings.vue'
+import AdminWikiList from '@/pages/admin/wiki-list.vue'
+import AdminCommentList from '@/pages/admin/comment-list.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Admin from '@/layouts/admin/admin.vue'
 
@@ -67,6 +71,20 @@ const routes = [
         }
     },
     {
+        path: '/wiki/list', // Wiki list page
+        component: WikiList,
+        meta: {
+            title: 'Weblog Wiki List Page'
+        }
+    },
+    {
+        path: '/wiki/:wikiId', // Wiki detail page
+        component: WikiDetail,
+        meta: {
+            title: 'Weblog Wiki Detail Page'
+        }
+    },
+    {
         path: '/login', // Login page
         component: Login,
         meta: {
@@ -112,6 +130,20 @@ const routes = [
                 component: AdminTagList,
                 meta: {
                     title: 'Tag Management'
+                }
+            },
+            {
+                path: "/admin/wiki/list",
+                component: AdminWikiList,
+                meta: {
+                    title: 'Wiki Management'
+                }
+            },
+            {
+                path: "/admin/comment/list",
+                component: AdminCommentList,
+                meta: {
+                    title: 'Comment Management'
                 }
             },
             {

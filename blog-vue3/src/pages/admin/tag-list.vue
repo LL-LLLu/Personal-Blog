@@ -1,88 +1,186 @@
 <template>
-    <div>
-        <!-- Header pagination query conditions, shadow="never" specifies that the card component has no shadow -->
-        <el-card shadow="never" class="mb-5">
-            <!-- Flex layout, content vertically centered -->
-            <div class="flex items-center">
-                <el-text>Tag Name</el-text>
-                <div class="ml-3 w-52 mr-5"><el-input v-model="searchTagName" placeholder="Enter (fuzzy search)" /></div>
+  <div>
+    <!-- Header pagination query conditions, shadow="never" specifies that the card component has no shadow -->
+    <el-card
+      shadow="never"
+      class="mb-5"
+    >
+      <!-- Flex layout, content vertically centered -->
+      <div class="flex items-center">
+        <el-text>Tag Name</el-text>
+        <div class="ml-3 w-52 mr-5">
+          <el-input
+            v-model="searchTagName"
+            placeholder="Enter (fuzzy search)"
+          />
+        </div>
 
-                <el-text>Create Date</el-text>
-                <div class="ml-3 w-30 mr-5">
-                    <!-- Date selection component (range selection) -->
-                    <el-date-picker v-model="pickDate" type="daterange" range-separator="to" start-placeholder="Start date"
-                        end-placeholder="End date" size="default" :shortcuts="shortcuts" @change="datepickerChange" />
-                </div>
+        <el-text>Create Date</el-text>
+        <div class="ml-3 w-30 mr-5">
+          <!-- Date selection component (range selection) -->
+          <el-date-picker
+            v-model="pickDate"
+            type="daterange"
+            range-separator="to"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+            size="default"
+            :shortcuts="shortcuts"
+            @change="datepickerChange"
+          />
+        </div>
 
-                <el-button type="primary" class="ml-3" :icon="Search" @click="getTableData">Search</el-button>
-                <el-button class="ml-3" :icon="RefreshRight" @click="reset">Reset</el-button>
-            </div>
-        </el-card>
+        <el-button
+          type="primary"
+          class="ml-3"
+          :icon="Search"
+          @click="getTableData"
+        >
+          Search
+        </el-button>
+        <el-button
+          class="ml-3"
+          :icon="RefreshRight"
+          @click="reset"
+        >
+          Reset
+        </el-button>
+      </div>
+    </el-card>
 
-        <el-card shadow="never">
-            <!-- Add button -->
-            <div class="mb-5">
-                <el-button type="primary" @click="addCategoryBtnClick">
-                    <el-icon class="mr-1">
-                        <Plus />
-                    </el-icon>
-                    Add</el-button>
-            </div>
+    <el-card shadow="never">
+      <!-- Add button -->
+      <div class="mb-5">
+        <el-button
+          type="primary"
+          @click="addCategoryBtnClick"
+        >
+          <el-icon class="mr-1">
+            <Plus />
+          </el-icon>
+          Add
+        </el-button>
+      </div>
 
-            <!-- Pagination list -->
-            <el-table :data="tableData" border stripe style="width: 100%" v-loading="tableLoading">
-                <el-table-column prop="name" label="Tag Name" width="180">
-                    <template #default="scope">
-                        <el-tag class="ml-2" type="success">{{ scope.row.name }}</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="articlesTotal" label="Article Count" width="120" align="center">
-                    <template #default="scope">
-                        <el-tag type="info" size="small">{{ scope.row.articlesTotal || 0 }}</el-tag>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="createTime" label="Create Time" width="180" />
-                <el-table-column label="Actions">
-                    <template #default="scope">
-                        <el-button type="danger" size="small" @click="deleteTagSubmit(scope.row)">
-                            <el-icon class="mr-1">
-                                <Delete />
-                            </el-icon>
-                            Delete
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+      <!-- Pagination list -->
+      <el-table
+        v-loading="tableLoading"
+        :data="tableData"
+        border
+        stripe
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="name"
+          label="Tag Name"
+          width="180"
+        >
+          <template #default="scope">
+            <el-tag
+              class="ml-2"
+              type="success"
+            >
+              {{ scope.row.name }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="articlesTotal"
+          label="Article Count"
+          width="120"
+          align="center"
+        >
+          <template #default="scope">
+            <el-tag
+              type="info"
+              size="small"
+            >
+              {{ scope.row.articlesTotal || 0 }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="Create Time"
+          width="180"
+        />
+        <el-table-column label="Actions">
+          <template #default="scope">
+            <el-button
+              type="danger"
+              size="small"
+              @click="deleteTagSubmit(scope.row)"
+            >
+              <el-icon class="mr-1">
+                <Delete />
+              </el-icon>
+              Delete
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-            <!-- Pagination -->
-            <div class="mt-10 flex justify-center">
-                <el-pagination v-model:current-page="current" v-model:page-size="size" :page-sizes="[10, 20, 50]"
-                    :small="false" :background="true" layout="total, sizes, prev, pager, next, jumper" :total="total"
-                    @size-change="handleSizeChange" @current-change="getTableData" />
-            </div>
+      <!-- Pagination -->
+      <div class="mt-10 flex justify-center">
+        <el-pagination
+          v-model:current-page="current"
+          v-model:page-size="size"
+          :page-sizes="[10, 20, 50]"
+          :small="false"
+          :background="true"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="getTableData"
+        />
+      </div>
+    </el-card>
 
-        </el-card>
-
-        <!-- Add Tag -->
-        <FormDialog ref="formDialogRef" title="Add Article Tag" destroyOnClose @submit="onSubmit">
-            <el-form ref="formRef" :model="form">
-                <el-form-item prop="name">
-                    <el-tag v-for="tag in dynamicTags" :key="tag" class="mx-1" closable :disable-transitions="false"
-                        @close="handleClose(tag)">
-                        {{ tag }}
-                    </el-tag>
-                    <span class="w-20">
-                        <el-input v-if="inputVisible" ref="InputRef" v-model="inputValue" class="ml-1 w-20" size="small"
-                        @keyup.enter="handleInputConfirm" @blur="handleInputConfirm" />
-                    <el-button v-else class="button-new-tag ml-1" size="small" @click="showInput">
-                        + New Tag
-                    </el-button>
-                    </span>
-                </el-form-item>
-            </el-form>
-        </FormDialog>
-
-    </div>
+    <!-- Add Tag -->
+    <FormDialog
+      ref="formDialogRef"
+      title="Add Article Tag"
+      destroy-on-close
+      @submit="onSubmit"
+    >
+      <el-form
+        ref="formRef"
+        :model="form"
+      >
+        <el-form-item prop="name">
+          <el-tag
+            v-for="tag in dynamicTags"
+            :key="tag"
+            class="mx-1"
+            closable
+            :disable-transitions="false"
+            @close="handleClose(tag)"
+          >
+            {{ tag }}
+          </el-tag>
+          <span class="w-20">
+            <el-input
+              v-if="inputVisible"
+              ref="InputRef"
+              v-model="inputValue"
+              class="ml-1 w-20"
+              size="small"
+              @keyup.enter="handleInputConfirm"
+              @blur="handleInputConfirm"
+            />
+            <el-button
+              v-else
+              class="button-new-tag ml-1"
+              size="small"
+              @click="showInput"
+            >
+              + New Tag
+            </el-button>
+          </span>
+        </el-form-item>
+      </el-form>
+    </FormDialog>
+  </div>
 </template>
 
 <script setup>

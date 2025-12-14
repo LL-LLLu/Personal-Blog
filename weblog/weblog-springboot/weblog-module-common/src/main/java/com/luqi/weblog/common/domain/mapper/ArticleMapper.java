@@ -28,9 +28,10 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
      * @param title
      * @param startDate
      * @param endDate
+     * @param type
      * @return
      */
-    default Page<ArticleDO> selectPageList(Long current, Long size, String title, LocalDate startDate, LocalDate endDate) {
+    default Page<ArticleDO> selectPageList(Long current, Long size, String title, LocalDate startDate, LocalDate endDate, Integer type) {
         // 分页对象(查询第几页、每页多少数据)
         Page<ArticleDO> page = new Page<>(current, size);
 
@@ -39,6 +40,8 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
                 .like(StringUtils.isNotBlank(title), ArticleDO::getTitle, title) // like 模块查询
                 .ge(Objects.nonNull(startDate), ArticleDO::getCreateTime, startDate) // 大于等于 startDate
                 .le(Objects.nonNull(endDate), ArticleDO::getCreateTime, endDate)  // 小于等于 endDate
+                .eq(Objects.nonNull(type), ArticleDO::getType, type) // 文章类型
+                .orderByDesc(ArticleDO::getWeight) // 按权重倒序
                 .orderByDesc(ArticleDO::getCreateTime); // 按创建时间倒叙
 
         return selectPage(page, wrapper);
@@ -119,4 +122,25 @@ public interface ArticleMapper extends BaseMapper<ArticleDO> {
             "WHERE create_time >= #{startDate} AND create_time < #{endDate}\n" +
             "GROUP BY DATE(create_time)")
     List<ArticlePublishCountDO> selectDateArticlePublishCount(LocalDate startDate, LocalDate endDate);
+
+    /**
+     * 查询最大权重值记录
+     * @return
+     */
+    default ArticleDO selectMaxWeight() {
+        return selectOne(Wrappers.<ArticleDO>lambdaQuery()
+                .orderByDesc(ArticleDO::getWeight) // 按权重值降序排列
+                .last("LIMIT 1")); // 仅查询出一条
+    }
+
+    /**
+     * 批量更新文章
+     * @param articleDO
+     * @param ids
+     * @return
+     */
+    default int updateByIds(ArticleDO articleDO, List<Long> ids) {
+        return update(articleDO, Wrappers.<ArticleDO>lambdaUpdate()
+                .in(ArticleDO::getId, ids));
+    }
 }

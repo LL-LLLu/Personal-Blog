@@ -39,4 +39,14 @@ public class ArticleDO {
     private Boolean isDeleted;
 
     private Long readNum;
+
+    /**
+     * 权重，用于置顶
+     */
+    private Integer weight;
+
+    /**
+     * 文章类型 1：普通文章，2：收录于知识库
+     */
+    private Integer type;
 }

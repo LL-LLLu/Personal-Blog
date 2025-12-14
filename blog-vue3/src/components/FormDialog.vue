@@ -1,19 +1,29 @@
 <template>
-    <el-dialog v-model="dialogVisible" :title="title" :width="width"
+  <el-dialog
+    v-model="dialogVisible"
+    :title="title"
+    :width="width"
     :destroy-on-close="destroyOnClose"
-     :draggable="true" :close-on-click-modal="false"
-        :close-on-press-escape="false">
-        <!-- 插槽 -->
-        <slot></slot>
-        <template #footer>
-            <span class="dialog-footer">
-                <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="submit" :loading="btnLoading">
-                    {{ confirmText }}
-                </el-button>
-            </span>
-        </template>
-    </el-dialog>
+    :draggable="true"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :append-to-body="appendToBody"
+  >
+    <!-- 插槽 -->
+    <slot />
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">Cancel</el-button>
+        <el-button
+          type="primary"
+          :loading="btnLoading"
+          @click="submit"
+        >
+          {{ confirmText }}
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup>
@@ -42,7 +52,11 @@ const props = defineProps({
     },
     confirmText: {
         type: String,
-        default: '提交'
+        default: 'Submit'
+    },
+    appendToBody: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -52,8 +66,11 @@ const open = () => dialogVisible.value = true
 const close = () => dialogVisible.value = false
 
 // 对外暴露一个 submit 方法
-const emit  = defineEmits(['submit'])
-const submit = () => emit('submit')
+const emit  = defineEmits(['onSubmit'])
+const submit = () => {
+    console.log('FormDialog submit button clicked!')
+    emit('onSubmit')
+}
 
 // 对外暴露方法
 defineExpose({

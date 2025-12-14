@@ -228,19 +228,6 @@ sudo systemctl restart jenkins
    - Add build step → "Execute shell"
    - Command:
 ```bash
-# Build frontend
-cd blog-vue3
-npm install
-npm run build
-
-# Deploy directly (no SSH needed!)
-sudo rm -rf /docker/nginx/html/*
-sudo cp -r dist/* /docker/nginx/html/
-
-# Reload nginx
-sudo systemctl reload nginx
-
-echo "Frontend deployed successfully!"
 ```
 
 5. **Save** and click "Build Now" to test

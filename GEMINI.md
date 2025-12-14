@@ -79,6 +79,67 @@ The main entry point is in the `weblog-web` module. You can run the application 
 
 ---
 
+## Recent Actions & Implementation Log
+
+This section details the significant changes and implementations performed to add the **Wiki Module** and resolve deployment issues.
+
+### 1. Wiki Module Implementation
+
+#### **Backend (Spring Boot)**
+*   **Database Schema:** Created `t_wiki` and `t_wiki_catalog` tables. Updated `t_article` to include a `type` column (1: Normal, 2: Wiki).
+*   **API Implementation:**
+    *   Created `AdminWikiController` with endpoints for CRUD, Top, Publish, and Catalog management.
+    *   Created `AdminWikiService` and `AdminWikiServiceImpl` implementing the logic.
+    *   Created VOs: `AddWikiReqVO`, `UpdateWikiReqVO`, `FindWikiPageListReqVO`, `FindWikiCatalogListReqVO`, `UpdateWikiCatalogReqVO`.
+    *   Updated `ArticleMapper` to support filtering by `type` in `selectPageList`.
+    *   Updated `AdminArticleServiceImpl` to pass `type` parameter for filtering.
+    *   Updated `ArticleServiceImpl` and `ArchiveServiceImpl` (Public API) to ignore `type` (pass `null`) to maintain existing behavior.
+
+#### **Frontend (Vue 3)**
+*   **Wiki List Page:** Created `src/pages/admin/wiki-list.vue` with search, pagination, and action buttons (Edit, Edit Catalog, Delete, Top, Publish).
+*   **Routing:** Added `/admin/wiki/list` route in `src/router/index.js`.
+*   **Menu:** Added "Wiki Management" to `src/layouts/admin/components/AdminMenu.vue`.
+*   **API Client:** Created `src/api/admin/wiki.js` encapsulating all backend Wiki endpoints.
+*   **Catalog Editor (`WikiCatalogEditDialog.vue`):**
+    *   Implemented a complex dialog for managing the Wiki structure.
+    *   **Features:**
+        *   Add/Remove Level 1 Catalogs.
+        *   Add/Remove Level 2 Catalogs (Articles).
+        *   Rename catalogs inline (using `el-input` toggle).
+        *   **Drag-and-Drop Sorting:** Integrated `vue-draggable-plus` to reorder Level 2 items.
+        *   **Manual Sorting:** Implemented "Move Up" / "Move Down" for Level 1 items.
+        *   **Article Selection:** Integrated a nested `FormDialog` to search and select existing articles to add to the Wiki.
+    *   **Real Data Integration:** Connected to `getWikiCatalogs` and `updateWikiCatalogs` APIs for loading and saving changes.
+
+#### **Wiki Catalog Implementation Details**
+*   **Database:** New table `t_wiki_catalog` stores the hierarchical structure (Level 1: Chapter, Level 2: Article).
+*   **Backend Logic:**
+    *   **Full Sync Approach:** The `updateWikiCatalogs` method simplifies reordering by deleting all existing catalogs for a wiki and re-inserting the entire tree structure provided by the frontend.
+    *   **Article Type Management:** Automatically manages the `type` field of articles. When an article is added to a catalog, its type updates to `2` (Wiki). If removed (or the catalog is deleted), it reverts to `1` (Normal).
+*   **Frontend UI (`WikiCatalogEditDialog.vue`):**
+    *   **Tree Structure:** Visualized using a custom Accordion-style list with Tailwind CSS.
+    *   **Inline Editing:** Titles for both Level 1 and Level 2 items can be renamed directly in the list (click "Rename" -> input toggles).
+    *   **Drag & Drop:** Integrated `vue-draggable-plus` to allow dragging Level 2 articles to reorder them within a chapter.
+    *   **Manual Sorting:** Added "Move Up" / "Move Down" buttons for Level 1 chapters, conditionally rendered based on list position.
+    *   **Article Selector:** A nested search dialog allows finding existing "Normal" articles and converting them into Wiki articles by adding them to the catalog.
+    *   **Auto-Save:** Actions like moving, renaming, or deleting trigger an immediate save (`updateWikiCatalogsData`) to the backend to ensure data consistency.
+
+### 2. Deployment & Troubleshooting
+
+#### **Jenkins Pipeline**
+*   **Docker Agent Issue:** Fixed `Jenkinsfile` to use `args '-v /root/.m2:/root/.m2 --entrypoint=""'` for the Maven container to prevent entrypoint conflicts.
+*   **Test Failures:**
+    *   Fixed Backend Tests by adding the missing `type` column to the H2 test schema `schema.sql`.
+    *   Fixed Frontend Lint errors (duplicate imports, SVG parsing issues) in `WikiCatalogEditDialog.vue`.
+
+#### **Production Environment (AWS)**
+*   **502 Bad Gateway:** Diagnosed and fixed backend crash caused by missing `type` column and `t_wiki` tables in the production MySQL database.
+*   **Database Migration:** Manually executed SQL migrations (`ALTER TABLE` and `CREATE TABLE`) on the running MySQL container.
+*   **MinIO Uploads:** Fixed image upload failure where the backend returned an internal IP (`1.2.3.4`). Updated `.env` with the correct AWS Public IP and forced container recreation.
+*   **Docker Compose:** Resolved `KeyError: 'ContainerConfig'` issues with old `docker-compose` version by performing a full `docker-compose down && docker-compose up -d`.
+
+---
+
 ## Docker Deployment & Troubleshooting Guide
 
 This section outlines common issues encountered during Docker deployment and provides solutions.

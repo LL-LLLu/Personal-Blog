@@ -1,210 +1,487 @@
 <template>
-    <div>
-        <!-- Header pagination query conditions, shadow="never" specifies that the card component has no shadow -->
-        <el-card shadow="never" class="mb-5">
-            <!-- Flex layout, content vertically centered -->
-            <div class="flex items-center">
-                <el-text>Article Title</el-text>
-                <div class="ml-3 w-52 mr-5"><el-input v-model="searchArticleTitle" placeholder="Enter (fuzzy search)" /></div>
+  <div>
+    <!-- Header pagination query conditions, shadow="never" specifies that the card component has no shadow -->
+    <el-card
+      shadow="never"
+      class="mb-5"
+    >
+      <!-- Flex layout, content vertically centered -->
+      <div class="flex items-center">
+        <el-text>Article Title</el-text>
+        <div class="ml-3 w-52 mr-5">
+          <el-input
+            v-model="searchArticleTitle"
+            placeholder="Enter (fuzzy search)"
+          />
+        </div>
 
-                <el-text>Create Date</el-text>
-                <div class="ml-3 w-30 mr-5">
-                    <!-- Date selection component (range selection) -->
-                    <el-date-picker v-model="pickDate" type="daterange" range-separator="to" start-placeholder="Start date"
-                        end-placeholder="End date" size="default" :shortcuts="shortcuts" @change="datepickerChange" />
-                </div>
+        <el-text>Create Date</el-text>
+        <div class="ml-3 w-30 mr-5">
+          <!-- Date selection component (range selection) -->
+          <el-date-picker
+            v-model="pickDate"
+            type="daterange"
+            range-separator="to"
+            start-placeholder="Start date"
+            end-placeholder="End date"
+            size="default"
+            :shortcuts="shortcuts"
+            @change="datepickerChange"
+          />
+        </div>
 
-                <el-button type="primary" class="ml-3" :icon="Search" @click="getTableData">Search</el-button>
-                <el-button class="ml-3" :icon="RefreshRight" @click="reset">Reset</el-button>
+        <el-button
+          type="primary"
+          class="ml-3"
+          :icon="Search"
+          @click="getTableData"
+        >
+          Search
+        </el-button>
+        <el-button
+          class="ml-3"
+          :icon="RefreshRight"
+          @click="reset"
+        >
+          Reset
+        </el-button>
+      </div>
+    </el-card>
+
+    <el-card shadow="never">
+      <!-- Write article button -->
+      <div class="mb-5">
+        <el-button
+          type="primary"
+          @click="isArticlePublishEditorShow = true"
+        >
+          <el-icon class="mr-1">
+            <EditPen />
+          </el-icon>
+          Write Article
+        </el-button>
+      </div>
+
+      <!-- Pagination list -->
+      <el-table
+        v-loading="tableLoading"
+        :data="tableData"
+        border
+        stripe
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="id"
+          label="ID"
+          width="50"
+        />
+        <el-table-column
+          prop="title"
+          label="Title"
+          width="380"
+        />
+        <el-table-column
+          prop="cover"
+          label="Cover"
+          width="180"
+        >
+          <template #default="scope">
+            <el-image
+              style="width: 100px;"
+              :src="scope.row.cover"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="Publish Time"
+          width="180"
+        />
+        <el-table-column
+          prop="isTop"
+          label="Pinned"
+          width="100"
+        >
+          <template #default="scope">
+            <el-switch
+              v-model="scope.row.isTop"
+              inline-prompt
+              :active-icon="Check"
+              :inactive-icon="Close"
+              @change="handleIsTopChange(scope.row)"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="Action">
+          <template #default="scope">
+            <el-button
+              size="small"
+              @click="showArticleUpdateEditor(scope.row)"
+            >
+              <el-icon class="mr-1">
+                <Edit />
+              </el-icon>
+              Edit
+            </el-button>
+            <el-button
+              size="small"
+              @click="goArticleDetailPage(scope.row.id)"
+            >
+              <el-icon class="mr-1">
+                <View />
+              </el-icon>
+              Preview
+            </el-button>
+            <el-button
+              type="danger"
+              size="small"
+              @click="deleteArticleSubmit(scope.row)"
+            >
+              <el-icon class="mr-1">
+                <Delete />
+              </el-icon>
+              Delete
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <!-- Pagination -->
+      <div class="mt-10 flex justify-center">
+        <el-pagination
+          v-model:current-page="current"
+          v-model:page-size="size"
+          :page-sizes="[10, 20, 50]"
+          :small="false"
+          :background="true"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="getTableData"
+        />
+      </div>
+    </el-card>
+
+    <!-- Write blog -->
+    <el-dialog
+      v-model="isArticlePublishEditorShow"
+      :fullscreen="true"
+      :show-close="false"
+      :close-on-press-escape="false"
+    >
+      <template #header="{ close, titleId, titleClass }">
+        <!-- Affix component, fixed to the top -->
+        <el-affix
+          :offset="20"
+          style="width: 100%;"
+        >
+          <!-- Specify flex layout, height 10, background color white -->
+          <div class="flex h-10 bg-white dark:bg-gray-900">
+            <!-- Bold font -->
+            <h4 class="font-bold dark:text-white">
+              Write Article
+            </h4>
+            <!-- Right-aligned -->
+            <div class="ml-auto flex">
+              <el-button @click="isArticlePublishEditorShow = false">
+                Cancel
+              </el-button>
+              <el-button
+                type="primary"
+                @click="publishArticleSubmit"
+              >
+                <el-icon class="mr-1">
+                  <Promotion />
+                </el-icon>
+                Publish
+              </el-button>
             </div>
-        </el-card>
+          </div>
+        </el-affix>
+      </template>
+      <!-- label-position="top" specifies that the label element is on top -->
+      <el-form
+        ref="publishArticleFormRef"
+        :model="form"
+        label-position="top"
+        size="large"
+        :rules="rules"
+      >
+        <el-form-item
+          label="Title"
+          prop="title"
+        >
+          <el-input
+            v-model="form.title"
+            autocomplete="off"
+            size="large"
+            maxlength="40"
+            show-word-limit
+            clearable
+          />
+        </el-form-item>
+        <el-form-item
+          label="Content"
+          prop="content"
+        >
+          <!-- Markdown editor -->
+          <MdEditor
+            v-model="form.content"
+            :theme="isDark ? 'dark' : 'light'"
+            language="en-US"
+            editor-id="publishArticleEditor"
+            @on-upload-img="onUploadImg"
+          />
+        </el-form-item>
+        <el-form-item
+          label="Cover"
+          prop="cover"
+        >
+          <el-upload
+            class="avatar-uploader"
+            action="#"
+            :on-change="handleCoverChange"
+            :auto-upload="false"
+            :show-file-list="false"
+          >
+            <img
+              v-if="form.cover"
+              :src="form.cover"
+              class="avatar"
+            >
+            <el-icon
+              v-else
+              class="avatar-uploader-icon"
+            >
+              <Plus />
+            </el-icon>
+          </el-upload>
+        </el-form-item>
+        <el-form-item
+          label="Summary"
+          prop="summary"
+        >
+          <!-- :rows="3" specifies that the textarea displays 3 rows by default -->
+          <el-input
+            v-model="form.summary"
+            :rows="3"
+            type="textarea"
+            placeholder="Please enter article summary"
+          />
+        </el-form-item>
+        <el-form-item
+          label="Category"
+          prop="categoryId"
+        >
+          <el-select
+            v-model="form.categoryId"
+            clearable
+            placeholder="---Please select---"
+            size="large"
+          >
+            <el-option
+              v-for="item in categories"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="Tags"
+          prop="tags"
+        >
+          <span class="w-60">
+            <!-- Tag selection -->
+            <el-select
+              v-model="form.tags"
+              multiple
+              filterable
+              remote
+              reserve-keyword
+              placeholder="Please enter article tags"
+              remote-show-suffix
+              allow-create
+              default-first-option
+              :remote-method="remoteMethod"
+              :loading="tagSelectLoading"
+              size="large"
+            >
+              <el-option
+                v-for="item in tags"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </span>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
 
-        <el-card shadow="never">
-            <!-- Write article button -->
-            <div class="mb-5">
-                <el-button type="primary" @click="isArticlePublishEditorShow = true">
-                    <el-icon class="mr-1">
-                        <EditPen />
-                    </el-icon>
-                    Write Article</el-button>
+    <!-- Edit blog -->
+    <el-dialog
+      v-model="isArticleUpdateEditorShow"
+      :fullscreen="true"
+      :show-close="false"
+      :close-on-press-escape="false"
+    >
+      <template #header="{ close, titleId, titleClass }">
+        <!-- Affix component, fixed to the top -->
+        <el-affix
+          :offset="20"
+          style="width: 100%;"
+        >
+          <!-- Specify flex layout, height 10, background color white -->
+          <div class="flex h-10 bg-white dark:bg-gray-900">
+            <!-- Bold font -->
+            <h4 class="font-bold dark:text-white">
+              Edit Article
+            </h4>
+            <!-- Right-aligned -->
+            <div class="ml-auto flex">
+              <el-button @click="isArticleUpdateEditorShow = false">
+                Cancel
+              </el-button>
+              <el-button
+                type="primary"
+                @click="updateSubmit"
+              >
+                <el-icon class="mr-1">
+                  <Promotion />
+                </el-icon>
+                Save
+              </el-button>
             </div>
-
-            <!-- Pagination list -->
-            <el-table :data="tableData" border stripe style="width: 100%" v-loading="tableLoading">
-                <el-table-column prop="id" label="ID" width="50" />
-                <el-table-column prop="title" label="Title" width="380" />
-                <el-table-column prop="cover" label="Cover" width="180">
-                    <template #default="scope">
-                        <el-image style="width: 100px;" :src="scope.row.cover" />
-                    </template>
-                </el-table-column>
-                <el-table-column prop="createTime" label="Publish Time" width="180" />
-                <el-table-column label="Action">
-                    <template #default="scope">
-                        <el-button size="small" @click="showArticleUpdateEditor(scope.row)">
-                            <el-icon class="mr-1">
-                                <Edit />
-                            </el-icon>
-                            Edit</el-button>
-                        <el-button size="small" @click="goArticleDetailPage(scope.row.id)">
-                            <el-icon class="mr-1">
-                                <View />
-                            </el-icon>
-                            Preview</el-button>
-                        <el-button type="danger" size="small" @click="deleteArticleSubmit(scope.row)">
-                            <el-icon class="mr-1">
-                                <Delete />
-                            </el-icon>
-                            Delete
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-
-            <!-- Pagination -->
-            <div class="mt-10 flex justify-center">
-                <el-pagination v-model:current-page="current" v-model:page-size="size" :page-sizes="[10, 20, 50]"
-                    :small="false" :background="true" layout="total, sizes, prev, pager, next, jumper" :total="total"
-                    @size-change="handleSizeChange" @current-change="getTableData" />
-            </div>
-
-        </el-card>
-
-        <!-- Write blog -->
-        <el-dialog v-model="isArticlePublishEditorShow" :fullscreen="true" :show-close="false"
-            :close-on-press-escape="false">
-            <template #header="{ close, titleId, titleClass }">
-                <!-- Affix component, fixed to the top -->
-                <el-affix :offset="20" style="width: 100%;">
-                    <!-- Specify flex layout, height 10, background color white -->
-                    <div class="flex h-10 bg-white dark:bg-gray-900">
-                        <!-- Bold font -->
-                        <h4 class="font-bold dark:text-white">Write Article</h4>
-                        <!-- Right-aligned -->
-                        <div class="ml-auto flex">
-                            <el-button @click="isArticlePublishEditorShow = false">Cancel</el-button>
-                            <el-button type="primary" @click="publishArticleSubmit">
-                                <el-icon class="mr-1">
-                                    <Promotion />
-                                </el-icon>
-                                Publish
-                            </el-button>
-                        </div>
-                    </div>
-                </el-affix>
-            </template>
-            <!-- label-position="top" specifies that the label element is on top -->
-            <el-form :model="form" ref="publishArticleFormRef" label-position="top" size="large" :rules="rules">
-                <el-form-item label="Title" prop="title">
-                    <el-input v-model="form.title" autocomplete="off" size="large" maxlength="40" show-word-limit
-                        clearable />
-                </el-form-item>
-                <el-form-item label="Content" prop="content">
-                    <!-- Markdown editor -->
-                    <MdEditor v-model="form.content" :theme="isDark ? 'dark' : 'light'" language="en-US" @onUploadImg="onUploadImg" editorId="publishArticleEditor"/>
-                </el-form-item>
-                <el-form-item label="Cover" prop="cover">
-                    <el-upload class="avatar-uploader" action="#" :on-change="handleCoverChange" :auto-upload="false"
-                        :show-file-list="false">
-                        <img v-if="form.cover" :src="form.cover" class="avatar" />
-                        <el-icon v-else class="avatar-uploader-icon">
-                            <Plus />
-                        </el-icon>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item label="Summary" prop="summary">
-                    <!-- :rows="3" specifies that the textarea displays 3 rows by default -->
-                    <el-input v-model="form.summary" :rows="3" type="textarea" placeholder="Please enter article summary" />
-                </el-form-item>
-                <el-form-item label="Category" prop="categoryId">
-                    <el-select v-model="form.categoryId" clearable placeholder="---Please select---" size="large">
-                        <el-option v-for="item in categories" :key="item.value" :label="item.label" :value="item.value" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="Tags" prop="tags">
-                    <span class="w-60">
-                        <!-- Tag selection -->
-                        <el-select v-model="form.tags" multiple filterable remote reserve-keyword placeholder="Please enter article tags"
-                            remote-show-suffix allow-create default-first-option :remote-method="remoteMethod"
-                            :loading="tagSelectLoading" size="large">
-                            <el-option v-for="item in tags" :key="item.value" :label="item.label" :value="item.value" />
-                        </el-select>
-                    </span>
-                </el-form-item>
-            </el-form>
-        </el-dialog>
-
-        <!-- Edit blog -->
-        <el-dialog v-model="isArticleUpdateEditorShow" :fullscreen="true" :show-close="false"
-            :close-on-press-escape="false">
-            <template #header="{ close, titleId, titleClass }">
-                <!-- Affix component, fixed to the top -->
-                <el-affix :offset="20" style="width: 100%;">
-                    <!-- Specify flex layout, height 10, background color white -->
-                    <div class="flex h-10 bg-white dark:bg-gray-900">
-                        <!-- Bold font -->
-                        <h4 class="font-bold dark:text-white">Edit Article</h4>
-                        <!-- Right-aligned -->
-                        <div class="ml-auto flex">
-                            <el-button @click="isArticleUpdateEditorShow = false">Cancel</el-button>
-                            <el-button type="primary" @click="updateSubmit">
-                                <el-icon class="mr-1">
-                                    <Promotion />
-                                </el-icon>
-                                Save
-                            </el-button>
-                        </div>
-                    </div>
-                </el-affix>
-            </template>
-            <!-- label-position="top" specifies that the label element is on top -->
-            <el-form :model="updateArticleForm" ref="updateArticleFormRef" label-position="top" size="large" :rules="rules">
-                <el-form-item label="Title" prop="title">
-                    <el-input v-model="updateArticleForm.title" autocomplete="off" size="large" maxlength="40"
-                        show-word-limit clearable />
-                </el-form-item>
-                <el-form-item label="Content" prop="content">
-                    <!-- Markdown editor -->
-                    <MdEditor language="en-US" :theme="isDark ? 'dark' : 'light'" v-model="updateArticleForm.content" @onUploadImg="onUploadImg"
-                        editorId="updateArticleEditor" />
-                </el-form-item>
-                <el-form-item label="Cover" prop="cover">
-                    <el-upload class="avatar-uploader" action="#" :on-change="handleUpdateCoverChange" :auto-upload="false"
-                        :show-file-list="false">
-                        <img v-if="updateArticleForm.cover" :src="updateArticleForm.cover" class="avatar" />
-                        <el-icon v-else class="avatar-uploader-icon">
-                            <Plus />
-                        </el-icon>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item label="Summary" prop="summary">
-                    <!-- :rows="3" specifies that the textarea displays 3 rows by default -->
-                    <el-input v-model="updateArticleForm.summary" :rows="3" type="textarea" placeholder="Please enter article summary" />
-                </el-form-item>
-                <el-form-item label="Category" prop="categoryId">
-                    <el-select v-model="updateArticleForm.categoryId" clearable placeholder="---Please select---" size="large">
-                        <el-option v-for="item in categories" :key="item.value" :label="item.label" :value="item.value" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="Tags" prop="tags">
-                    <span class="w-60">
-                        <!-- Tag selection -->
-                        <el-select v-model="updateArticleForm.tags" multiple filterable remote reserve-keyword
-                            placeholder="Please enter article tags" remote-show-suffix allow-create default-first-option
-                            :remote-method="remoteMethod" :loading="tagSelectLoading" size="large">
-                            <el-option v-for="item in tags" :key="item.value" :label="item.label" :value="item.value" />
-                        </el-select>
-                    </span>
-                </el-form-item>
-            </el-form>
-        </el-dialog>
-    </div>
+          </div>
+        </el-affix>
+      </template>
+      <!-- label-position="top" specifies that the label element is on top -->
+      <el-form
+        ref="updateArticleFormRef"
+        :model="updateArticleForm"
+        label-position="top"
+        size="large"
+        :rules="rules"
+      >
+        <el-form-item
+          label="Title"
+          prop="title"
+        >
+          <el-input
+            v-model="updateArticleForm.title"
+            autocomplete="off"
+            size="large"
+            maxlength="40"
+            show-word-limit
+            clearable
+          />
+        </el-form-item>
+        <el-form-item
+          label="Content"
+          prop="content"
+        >
+          <!-- Markdown editor -->
+          <MdEditor
+            v-model="updateArticleForm.content"
+            language="en-US"
+            :theme="isDark ? 'dark' : 'light'"
+            editor-id="updateArticleEditor"
+            @on-upload-img="onUploadImg"
+          />
+        </el-form-item>
+        <el-form-item
+          label="Cover"
+          prop="cover"
+        >
+          <el-upload
+            class="avatar-uploader"
+            action="#"
+            :on-change="handleUpdateCoverChange"
+            :auto-upload="false"
+            :show-file-list="false"
+          >
+            <img
+              v-if="updateArticleForm.cover"
+              :src="updateArticleForm.cover"
+              class="avatar"
+            >
+            <el-icon
+              v-else
+              class="avatar-uploader-icon"
+            >
+              <Plus />
+            </el-icon>
+          </el-upload>
+        </el-form-item>
+        <el-form-item
+          label="Summary"
+          prop="summary"
+        >
+          <!-- :rows="3" specifies that the textarea displays 3 rows by default -->
+          <el-input
+            v-model="updateArticleForm.summary"
+            :rows="3"
+            type="textarea"
+            placeholder="Please enter article summary"
+          />
+        </el-form-item>
+        <el-form-item
+          label="Category"
+          prop="categoryId"
+        >
+          <el-select
+            v-model="updateArticleForm.categoryId"
+            clearable
+            placeholder="---Please select---"
+            size="large"
+          >
+            <el-option
+              v-for="item in categories"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          label="Tags"
+          prop="tags"
+        >
+          <span class="w-60">
+            <!-- Tag selection -->
+            <el-select
+              v-model="updateArticleForm.tags"
+              multiple
+              filterable
+              remote
+              reserve-keyword
+              placeholder="Please enter article tags"
+              remote-show-suffix
+              allow-create
+              default-first-option
+              :remote-method="remoteMethod"
+              :loading="tagSelectLoading"
+              size="large"
+            >
+              <el-option
+                v-for="item in tags"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </span>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { Search, RefreshRight } from '@element-plus/icons-vue'
-import { getArticlePageList, deleteArticle, publishArticle, getArticleDetail, updateArticle } from '@/api/admin/article'
+import { Search, RefreshRight, Check, Close } from '@element-plus/icons-vue'
+import { getArticlePageList, deleteArticle, publishArticle, getArticleDetail, updateArticle, updateArticleIsTop } from '@/api/admin/article'
 import { uploadFile } from '@/api/admin/file'
 import { getCategorySelectList } from '@/api/admin/category'
 import { searchTags, getTagSelectList } from '@/api/admin/tag'
@@ -319,6 +596,24 @@ const handleSizeChange = (chooseSize) => {
     console.log('Selected page size: ' + chooseSize)
     size.value = chooseSize
     getTableData()
+}
+
+// Handle pin status change
+const handleIsTopChange = (row) => {
+    updateArticleIsTop({id: row.id, isTop: row.isTop}).then((res) => {
+        // Re-request pagination interface to render list data
+        getTableData()
+
+        if (res.success == false) {
+            // Get error message returned from server
+            let message = res.message
+            // Show error message
+            showMessage(message, 'error')
+            return
+        }
+
+        showMessage(row.isTop ? 'Pinned successfully' : "Unpinned")
+    })
 }
 
 // Delete article

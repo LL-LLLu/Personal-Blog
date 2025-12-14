@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: false
+  
+  # Disable Flyway/Liquibase if used (optional)
+  # flyway:
+  #   enabled: false
+
+# Mock MinIO (or disable beans needing it) if necessary
+minio:
+  endpoint: http://localhost:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucketName: weblog
+
+logging:
+  level:
+    root: INFO
