@@ -101,23 +101,23 @@ const menus = [
 </script>
 
 <style>
+/* Light mode styles */
 .el-menu {
-    background-color: rgb(30 41 59 / 1);
+    background-color: #fff;
     border-right: 0;
 }
 
 .el-sub-menu__title {
-    color: #fff;
+    color: #333;
 }
 
 .el-sub-menu__title:hover {
-    background-color: #ffffff10;
+    background-color: #f5f5f5;
 }
 
-
 .el-menu-item.is-active {
-    background-color: #409eff10;
-    color: #fff;
+    background-color: #ecf5ff;
+    color: #409eff;
 }
 
 .el-menu-item.is-active:before {
@@ -131,10 +131,36 @@ const menus = [
 }
 
 .el-menu-item {
-    color: #fff;
+    color: #333;
 }
 
 .el-menu-item:hover {
+    background-color: #f5f5f5;
+}
+
+/* Dark mode styles */
+html.dark .el-menu {
+    background-color: rgb(17 24 39 / 1); /* gray-900 */
+}
+
+html.dark .el-sub-menu__title {
+    color: #fff;
+}
+
+html.dark .el-sub-menu__title:hover {
+    background-color: #ffffff10;
+}
+
+html.dark .el-menu-item.is-active {
+    background-color: #409eff20;
+    color: #fff;
+}
+
+html.dark .el-menu-item {
+    color: #d1d5db; /* gray-300 */
+}
+
+html.dark .el-menu-item:hover {
     background-color: #ffffff10;
 }
 
