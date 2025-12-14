@@ -34,3 +34,6 @@ weblog/lucene-index/ # Generic ignore for a lucene-index folder
 # System Files
 Thumbs.db
 
+# https certs
+docker/certbot/
+docker/nginx/ssl/
