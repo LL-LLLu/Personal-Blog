@@ -210,7 +210,7 @@
       ref="formDialogRef"
       title="New Wiki"
       destroy-on-close
-      @submit="onSubmit"
+      @onSubmit="onSubmit"
     >
       <el-form
         ref="formRef"
@@ -282,7 +282,7 @@
       ref="editFormDialogRef"
       title="Edit Wiki"
       destroy-on-close
-      @submit="onEditWikiSubmit"
+      @onSubmit="onEditWikiSubmit"
     >
       <el-form
         ref="editFormRef"
@@ -533,6 +533,7 @@ const onEditWikiSubmit = () => {
     editFormRef.value.validate((valid) => {
         if (!valid) {
             console.log('Form validation failed')
+            showMessage('Please check your input.', 'warning')
             return false
         }
         
@@ -557,6 +558,9 @@ const onEditWikiSubmit = () => {
             editFormDialogRef.value.close()
             // Reload list data
             getTableData()
+        }).catch(error => {
+            console.error('Update wiki failed:', error)
+            showMessage('Update failed, please try again', 'error')
         }).finally(() => editFormDialogRef.value.closeBtnLoading()) // Hide loading
     })
 }
@@ -567,6 +571,7 @@ const onSubmit = () => {
     formRef.value.validate((valid) => {
         if (!valid) {
             console.log('Form validation failed')
+            showMessage('Please check your input.', 'warning')
             return false
         }
         
@@ -590,6 +595,9 @@ const onSubmit = () => {
             formDialogRef.value.close()
             // Reload list data
             getTableData()
+        }).catch(error => {
+            console.error('Add wiki failed:', error)
+            showMessage('Add failed, please try again', 'error')
         }).finally(() => formDialogRef.value.closeBtnLoading()) // Hide loading
     })
 }
