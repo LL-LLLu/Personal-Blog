@@ -351,10 +351,18 @@ const rules = {
 
 const onSubmit = () => {
     console.log('AdminHeader onSubmit called!')
+    
+    // Check if formRef is available
+    if (!formRef.value) {
+        console.error('Form reference is missing.')
+        return
+    }
+
     // First validate form fields
     formRef.value.validate((valid) => {
         if (!valid) {
             console.log('Form validation failed')
+            showMessage('Please check your input.', 'warning')
             return false
         }
 
@@ -363,7 +371,10 @@ const onSubmit = () => {
             return
         }
 
-        formDialogRef.value.showBtnLoading()
+        if (formDialogRef.value) {
+            formDialogRef.value.showBtnLoading()
+        }
+
         // Call change password API
         updateAdminPassword(form).then((res) => {
             console.log(res)
@@ -374,7 +385,9 @@ const onSubmit = () => {
                 userStore.logout()
 
                 // Hide dialog
-                formDialogRef.value.close()
+                if (formDialogRef.value) {
+                    formDialogRef.value.close()
+                }
 
                 // Navigate to login page
                 router.push('/login')
@@ -384,7 +397,13 @@ const onSubmit = () => {
                 // Show message
                 showMessage(message, 'error')
             }
-        }).finally(() => formDialogRef.value.closeBtnLoading())
+        }).catch((error) => {
+            console.error('Update password failed:', error)
+        }).finally(() => {
+            if (formDialogRef.value) {
+                formDialogRef.value.closeBtnLoading()
+            }
+        })
     })
 }
 
