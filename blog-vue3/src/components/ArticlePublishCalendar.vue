@@ -9,7 +9,7 @@
         </h3>
       </div>
       <div class="text-xs text-slate-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-2 py-1 rounded-full border dark:border-gray-600">
-        {{ totalArticles }} articles in last 2 months
+        {{ totalArticles }} articles in last 1 year
       </div>
     </div>
 
@@ -62,11 +62,11 @@ const props = defineProps({
 
 // Current date
 const currentDate = new Date();
-// Two months ago
-const twoMonthsAgo = subMonths(currentDate, 2)
+// 12 months ago (1 year)
+const oneYearAgo = subMonths(currentDate, 12)
 
 // Formatted start and end dates
-const startDate = format(twoMonthsAgo, 'yyyy-MM-dd')
+const startDate = format(oneYearAgo, 'yyyy-MM-dd')
 const endDate = format(currentDate, 'yyyy-MM-dd')
 
 // Calendar heatmap data
@@ -141,14 +141,14 @@ function initCalendar() {
         },
         calendar: {
             range: [startDate, endDate],
-            cellSize: ['auto', 13], // Slightly larger cells
+            cellSize: ['auto', 13], // Auto width will result in square-ish cells with 12 months data
             left: 'center',
             top: 30,
             bottom: 10,
-            width: '90%', // Use percentage width
+            width: '95%', // Use percentage width, slightly wider
             height: 160,
             yearLabel: {
-                show: false // Hide year label as it's implied or in header
+                show: false 
             },
             monthLabel: {
                 show: true,
@@ -160,7 +160,7 @@ function initCalendar() {
             dayLabel: {
                 show: true,
                 firstDay: 1, // Start on Monday
-                nameMap: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                nameMap: ['Sun', '', '', 'Wed', '', '', 'Sat'], // Show fewer labels for cleaner look
                 fontSize: 10,
                 color: isDarkMode ? '#9ca3af' : '#94a3b8'
             },
