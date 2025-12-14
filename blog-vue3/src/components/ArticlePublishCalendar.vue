@@ -9,7 +9,7 @@
         </h3>
       </div>
       <div class="text-xs text-slate-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-2 py-1 rounded-full border dark:border-gray-600">
-        {{ totalArticles }} articles in last 1 year
+        {{ totalArticles }} articles in last 4 months
       </div>
     </div>
 
@@ -50,7 +50,7 @@
 <script setup>
 import * as echarts from 'echarts'
 import { computed, watch, onMounted, onUnmounted } from 'vue'
-import { format, subMonths } from 'date-fns'
+import { format, subMonths, addMonths } from 'date-fns'
 
 // Exposed property values
 const props = defineProps({
@@ -62,12 +62,14 @@ const props = defineProps({
 
 // Current date
 const currentDate = new Date();
-// 12 months ago (1 year)
-const oneYearAgo = subMonths(currentDate, 12)
+// 3 months ago for start
+const startDateObj = subMonths(currentDate, 3)
+// 1 month ahead for end
+const endDateObj = addMonths(currentDate, 1)
 
 // Formatted start and end dates
-const startDate = format(oneYearAgo, 'yyyy-MM-dd')
-const endDate = format(currentDate, 'yyyy-MM-dd')
+const startDate = format(startDateObj, 'yyyy-MM-dd')
+const endDate = format(endDateObj, 'yyyy-MM-dd')
 
 // Calendar heatmap data
 const calendarData = []
@@ -141,12 +143,12 @@ function initCalendar() {
         },
         calendar: {
             range: [startDate, endDate],
-            cellSize: ['auto', 13], // Auto width will result in square-ish cells with 12 months data
+            cellSize: ['auto', 20], // Square cells
             left: 'center',
             top: 30,
             bottom: 10,
-            width: '95%', // Use percentage width, slightly wider
-            height: 160,
+            width: '95%',
+            height: 180, // Increased height for larger cells
             yearLabel: {
                 show: false 
             },
@@ -160,14 +162,14 @@ function initCalendar() {
             dayLabel: {
                 show: true,
                 firstDay: 1, // Start on Monday
-                nameMap: ['Sun', '', '', 'Wed', '', '', 'Sat'], // Show fewer labels for cleaner look
+                nameMap: ['Sun', '', '', 'Wed', '', '', 'Sat'],
                 fontSize: 10,
                 color: isDarkMode ? '#9ca3af' : '#94a3b8'
             },
             itemStyle: {
-                borderWidth: 2,
-                borderColor: isDarkMode ? '#1f2937' : '#fff', // Match container bg for gaps
-                borderRadius: 2
+                borderWidth: 4, // Thicker border for more gap
+                borderColor: isDarkMode ? 'rgba(31, 41, 55, 0)' : 'rgba(255, 255, 255, 0)', // Transparent border
+                borderRadius: 4 // More rounded
             },
             splitLine: {
                 show: false
