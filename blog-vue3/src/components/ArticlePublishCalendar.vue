@@ -165,9 +165,9 @@ function initCalendar() {
 
     // Modern color palette
     // Light mode: Grey -> Indigo Fade
-    const lightColors = ['#f3f4f6', '#e0e7ff', '#a5b4fc', '#6366f1', '#4338ca']
-    // Dark mode: Dark Grey -> Indigo Fade
-    const darkColors = ['#374151', '#312e81', '#4338ca', '#6366f1', '#818cf8']
+    const lightColors = ['#f3f4f6', '#c7d2fe', '#818cf8', '#6366f1', '#4f46e5']
+    // Dark mode: Dark Grey -> Brighter Indigo for visibility
+    const darkColors = ['#374151', '#4f46e5', '#6366f1', '#818cf8', '#a5b4fc']
 
     var option = {
         backgroundColor: 'transparent',
