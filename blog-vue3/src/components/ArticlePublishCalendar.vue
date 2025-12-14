@@ -58,7 +58,7 @@
 <script setup>
 import * as echarts from 'echarts'
 import { computed, watch, onMounted, onUnmounted } from 'vue'
-import { format, subMonths, addMonths } from 'date-fns'
+import { format, subMonths } from 'date-fns'
 import { useDark } from '@vueuse/core'
 
 // Exposed property values
@@ -114,7 +114,8 @@ const streakDays = computed(() => {
     const activeDates = new Set(dates.filter(d => props.value[d] > 0))
     
     let checkDate = new Date()
-    while (true) {
+    // Safety break to prevent infinite loops, check max 365 days
+    for (let i = 0; i < 365; i++) {
         const checkStr = format(checkDate, 'yyyy-MM-dd')
         if (activeDates.has(checkStr)) {
             streak++
