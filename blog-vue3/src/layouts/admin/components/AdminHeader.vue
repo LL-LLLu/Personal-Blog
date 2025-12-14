@@ -350,9 +350,12 @@ const rules = {
 }
 
 const onSubmit = async () => {
-    console.log('onSubmit called')
+    console.log('=== onSubmit called ===')
     console.log('formRef.value:', formRef.value)
-    console.log('form data:', form)
+    console.log('form data:', JSON.stringify(form))
+    console.log('username:', form.username)
+    console.log('password:', form.password)
+    console.log('rePassword:', form.rePassword)
 
     // Check if formRef exists
     if (!formRef.value) {
@@ -378,13 +381,17 @@ const onSubmit = async () => {
 
         formDialogRef.value.showBtnLoading()
 
+        console.log('=== Calling API ===')
+        console.log('Sending data:', { username: form.username, password: form.password })
+
         // Call change password API
         const res = await updateAdminPassword({
             username: form.username,
             password: form.password
         })
 
-        console.log('Password update response:', res)
+        console.log('=== API Response ===')
+        console.log('Response:', JSON.stringify(res))
 
         // Check if successful
         if (res.success === true) {
