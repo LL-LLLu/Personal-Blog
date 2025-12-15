@@ -42,9 +42,13 @@
         <div class="flex gap-1">
              <!-- Day of Week Labels -->
             <div class="flex flex-col gap-1 mr-2 text-[10px] text-gray-400 dark:text-gray-500 font-medium h-full justify-between py-1">
-                <span>Mon</span>
-                <span>Wed</span>
-                <span>Fri</span>
+                <span class="h-5 flex items-center">Mon</span> <!-- Aligns with first day cell -->
+                <span class="h-5 flex items-center"></span> <!-- Placeholder for Tue -->
+                <span class="h-5 flex items-center">Wed</span><!-- Aligns with middle day cell -->
+                <span class="h-5 flex items-center"></span> <!-- Placeholder for Thu -->
+                <span class="h-5 flex items-center">Fri</span><!-- Aligns with last visible day cell -->
+                <span class="h-5 flex items-center"></span> <!-- Placeholder for Sat -->
+                <span class="h-5 flex items-center"></span> <!-- Placeholder for Sun -->
             </div>
 
             <!-- The Grid -->
