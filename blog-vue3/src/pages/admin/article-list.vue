@@ -53,7 +53,7 @@
       <div class="mb-5">
         <el-button
           type="primary"
-          @click="isArticlePublishEditorShow = true"
+          @click="isArticlePublishEditorShow = true; fetchCategories()"
         >
           <el-icon class="mr-1">
             <EditPen />
@@ -738,10 +738,13 @@ const onUploadImg = async (files, callback) => {
 
 // Article categories
 const categories = ref([])
-getCategorySelectList().then((e) => {
-    console.log('Get category data')
-    categories.value = e.data
-})
+const fetchCategories = () => {
+    getCategorySelectList().then((e) => {
+        console.log('Get category data')
+        categories.value = e.data
+    })
+}
+fetchCategories()
 
 // Tag select Loading status, default not shown
 const tagSelectLoading = ref(false)
@@ -811,6 +814,8 @@ const updateArticleFormRef = ref(null)
 const showArticleUpdateEditor = (row) => {
     // Show edit article dialog
     isArticleUpdateEditorShow.value = true
+    // Fetch categories to ensure list is up-to-date
+    fetchCategories()
     // Get article ID
     let articleId = row.id
     getArticleDetail(articleId).then((res) => {
