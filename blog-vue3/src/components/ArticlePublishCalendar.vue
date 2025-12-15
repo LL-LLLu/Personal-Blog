@@ -53,11 +53,11 @@
                     <div 
                         v-for="(day, dIndex) in week" 
                         :key="dIndex"
-                        class="w-3 h-3 rounded-[3px] transition-all duration-100 cursor-pointer relative group hover:ring-1 hover:ring-indigo-400 dark:hover:ring-indigo-300"
+                        class="w-5 h-5 rounded-[3px] transition-all duration-100 cursor-pointer relative group hover:ring-1 hover:ring-indigo-400 dark:hover:ring-indigo-300"
                         :class="getColorClass(day.count)"
                     >
                          <!-- Native Tooltip-like popover on hover using group-hover -->
-                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 gsroup-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20 whitespace-nowrap">
+                        <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20 whitespace-nowrap">
                             <div class="font-semibold">{{ day.dateStr }}</div>
                             <div class="text-gray-300">{{ day.count }} articles</div>
                             <!-- Arrow -->
@@ -73,11 +73,11 @@
     <!-- Legend -->
     <div class="flex items-center justify-end mt-4 space-x-2 text-xs text-gray-400 dark:text-gray-500">
         <span>Less</span>
-        <div class="w-3 h-3 rounded-[3px] bg-gray-100 dark:bg-gray-700/50"></div>
-        <div class="w-3 h-3 rounded-[3px] bg-indigo-200 dark:bg-indigo-900/60"></div>
-        <div class="w-3 h-3 rounded-[3px] bg-indigo-400 dark:bg-indigo-600"></div>
-        <div class="w-3 h-3 rounded-[3px] bg-indigo-600 dark:bg-indigo-400"></div>
-        <div class="w-3 h-3 rounded-[3px] bg-indigo-800 dark:bg-indigo-300"></div>
+        <div class="w-5 h-5 rounded-[3px] bg-gray-100 dark:bg-gray-700/50"></div>
+        <div class="w-5 h-5 rounded-[3px] bg-indigo-200 dark:bg-indigo-900/60"></div>
+        <div class="w-5 h-5 rounded-[3px] bg-indigo-400 dark:bg-indigo-600"></div>
+        <div class="w-5 h-5 rounded-[3px] bg-indigo-600 dark:bg-indigo-400"></div>
+        <div class="w-5 h-5 rounded-[3px] bg-indigo-800 dark:bg-indigo-300"></div>
         <span>More</span>
     </div>
   </div>
@@ -86,6 +86,7 @@
 <script setup>
 import { computed, ref, watch, onMounted } from 'vue'
 import { format, subMonths, startOfWeek, addDays, getDay, getMonth, startOfMonth, endOfMonth, differenceInCalendarWeeks } from 'date-fns'
+import { useDark } from '@vueuse/core'
 
 // Exposed property values
 const props = defineProps({
@@ -93,6 +94,11 @@ const props = defineProps({
         type: Object, // Type is object
         default: () => ({}) 
     }
+})
+
+// Dark mode state (retained from previous iteration for consistency)
+const isDark = useDark({
+    storageKey: 'vueuse-color-scheme'
 })
 
 // Computed statistics
@@ -127,17 +133,7 @@ const streakDays = computed(() => {
 
 // --- Calendar Logic ---
 
-// We want to show the last ~6 months, ending today.
-// Or nicely aligned to weeks.
-const today = new Date()
-const endDate = today
-// Go back 24 weeks (approx 6 months)
-const weeksToShow = 26 
-const startDate = addDays(startOfWeek(subMonths(today, 5), { weekStartsOn: 0 }), -((weeksToShow * 7) - differenceInCalendarWeeks(today, subMonths(today, 5)) * 7)) // Rough adjustment, let's just do fixed weeks
-// Actually, let's just start 26 weeks ago from the start of this week
-const gridStartDate = startOfWeek(addDays(today, -(weeksToShow * 7)), { weekStartsOn: 1 }) // Start on Monday?
-// Let's stick to Sunday start for consistency with most cals, or Monday? Code above had Monday labels. Let's do Monday (1)
-// Adjust gridStartDate to be a Monday
+// Adjust gridStartDate to be a Monday (1) approximately 180 days ago
 const realStartDate = startOfWeek(addDays(new Date(), -180), { weekStartsOn: 1 })
 
 
@@ -148,8 +144,6 @@ const calendarWeeks = computed(() => {
     const end = new Date() // Today
 
     // Generate full weeks until we pass today
-    // We want a fixed grid size roughly? Or just up to today?
-    // Let's fill up to the end of the current week to make it square-ish
     const gridEnd = addDays(startOfWeek(end, { weekStartsOn: 1 }), 6)
 
     while (iterDate <= gridEnd) {
@@ -174,13 +168,10 @@ const calendarWeeks = computed(() => {
 const monthLabels = computed(() => {
     const labels = []
     let currentMonth = -1
-    // Calculate width based on weeks belonging to a month
-    // Each week is w-3 (12px) + gap-1 (4px) = 16px approx width
-    const weekWidth = 16 
+    // Each week is w-5 (20px) + gap-1 (4px) = 24px approx width
+    const weekWidth = 24 
     
     calendarWeeks.value.forEach((week, index) => {
-        // Check the month of the first day of the week (or the majority?)
-        // Usually we label the month where the first day of the week falls, or just checking transitions
         const firstDay = week[0].date
         const m = getMonth(firstDay)
         
