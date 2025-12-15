@@ -140,7 +140,7 @@
       ref="formDialogRef"
       title="Add Article Category"
       destroy-on-close
-      @submit="onSubmit"
+      @on-submit="onSubmit"
     >
       <el-form
         ref="formRef"
