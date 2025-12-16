@@ -141,7 +141,7 @@
       ref="formDialogRef"
       title="Add Article Tag"
       destroy-on-close
-      @submit="onSubmit"
+      @on-submit="onSubmit"
     >
       <el-form
         ref="formRef"
@@ -304,29 +304,30 @@ const form = reactive({
 
 
 const onSubmit = () => {
-    // 先验证 form 表单字段
-    formRef.value.validate((valid) => {
-        // 显示提交按钮 loading
-        formDialogRef.value.showBtnLoading()
-        form.tags = dynamicTags.value
-        addTag(form).then((res) => {
-            if (res.success == true) {
-                showMessage('Added successfully')
-                // 将表单中标签数组置空
-                form.tags = []
-                dynamicTags.value = []
-                // 隐藏对话框
-                formDialogRef.value.close()
-                // 重新请求分页接口，渲染数据
-                getTableData()
-            } else {
-                // 获取服务端返回的错误消息
-                let message = res.message
-                // 提示错误消息
-                showMessage(message, 'error')
-            }
-        }).finally(() => formDialogRef.value.closeBtnLoading()) // 隐藏提交按钮 loading
-    })
+    // Validate manually that tags are not empty
+    if (dynamicTags.value.length === 0) {
+        showMessage('Please add at least one tag', 'warning')
+        return
+    }
+
+    // Show loading
+    formDialogRef.value.showBtnLoading()
+    form.tags = dynamicTags.value
+    addTag(form).then((res) => {
+        if (res.success == true) {
+            showMessage('Added successfully')
+            // Reset form
+            form.tags = []
+            dynamicTags.value = []
+            // Hide dialog
+            formDialogRef.value.close()
+            // Refresh table
+            getTableData()
+        } else {
+            let message = res.message
+            showMessage(message, 'error')
+        }
+    }).finally(() => formDialogRef.value.closeBtnLoading())
 }
 
 // 删除标签

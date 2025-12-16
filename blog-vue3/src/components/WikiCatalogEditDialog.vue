@@ -270,7 +270,7 @@
     ref="addCatalogDialogRef"
     title="Add Catalog"
     destroy-on-close
-    @submit="onAddCatalogSubmit"
+    @on-submit="onAddCatalogSubmit"
   >
     <el-form
       ref="addCatalogFormRef"
@@ -299,7 +299,7 @@
     width="80%"
     confirm-text="Add"
     destroy-on-close
-    @submit="onAddArticle2CatalogSubmit"
+    @on-submit="onAddArticle2CatalogSubmit"
   >
     <div>
       <!-- Header -->
