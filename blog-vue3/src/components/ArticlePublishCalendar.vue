@@ -31,7 +31,7 @@
 
     <!-- Calendar Grid Container -->
     <div class="w-full overflow-x-auto pb-2 scrollbar-hide">
-      <div class="min-w-max flex flex-col gap-1">
+      <div class="min-w-max flex flex-col gap-1 mx-auto">
         <!-- Month Labels -->
         <div class="flex text-xs text-gray-400 dark:text-gray-500 mb-2 pl-8">
             <div v-for="(month, index) in monthLabels" :key="index" :style="{ width: month.width + 'px' }">
