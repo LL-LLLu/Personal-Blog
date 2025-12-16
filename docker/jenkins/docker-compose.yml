@@ -6,6 +6,8 @@ services:
     container_name: weblog-jenkins
     restart: always
     user: root # Required to access the docker socket in this specific setup
+    environment:
+      JENKINS_OPTS: "--prefix=/jenkins"
     ports:
       - "8081:8080" # Running on 8081 to avoid conflict with your backend (8080)
       - "50000:50000"
@@ -17,7 +19,8 @@ services:
 
 networks:
   weblog-network:
-    driver: bridge
+    external: true
+    name: docker_weblog-network
 
 volumes:
   jenkins_home:

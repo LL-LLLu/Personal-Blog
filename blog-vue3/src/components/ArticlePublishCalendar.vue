@@ -52,8 +52,8 @@
             </div>
 
             <!-- The Grid -->
-            <div class="flex gap-1">
-                <div v-for="(week, wIndex) in calendarWeeks" :key="wIndex" class="flex flex-col gap-1">
+            <div class="flex gap-2">
+                <div v-for="(week, wIndex) in calendarWeeks" :key="wIndex" class="flex flex-col gap-2">
                     <div 
                         v-for="(day, dIndex) in week" 
                         :key="dIndex"
