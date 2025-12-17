@@ -168,36 +168,44 @@
       :fullscreen="true"
       :show-close="false"
       :close-on-press-escape="false"
+      class="no-header-padding"
     >
-      <template #header="{ close, titleId, titleClass }">
-        <!-- Affix component, fixed to the top -->
-        <el-affix
-          :offset="20"
-          style="width: 100%;"
-        >
-          <!-- Specify flex layout, height 10, background color white -->
-          <div class="flex h-10 bg-white dark:bg-gray-900">
-            <!-- Bold font -->
-            <h4 class="font-bold dark:text-white">
-              Write Article
-            </h4>
-            <!-- Right-aligned -->
-            <div class="ml-auto flex">
-              <el-button @click="isArticlePublishEditorShow = false">
-                Cancel
-              </el-button>
-              <el-button
-                type="primary"
-                @click="publishArticleSubmit"
-              >
-                <el-icon class="mr-1">
-                  <Promotion />
-                </el-icon>
-                Publish
-              </el-button>
-            </div>
+      <template #header>
+        <!-- Modern Fixed Header -->
+        <div class="fixed top-0 left-0 right-0 z-50 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 flex items-center justify-between shadow-sm">
+          <!-- Title -->
+          <div class="flex items-center space-x-3">
+             <div class="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+                <el-icon size="20"><EditPen /></el-icon>
+             </div>
+             <h4 class="text-lg font-semibold text-gray-900 dark:text-white tracking-tight">
+               Write Article
+             </h4>
           </div>
-        </el-affix>
+          
+          <!-- Action Buttons -->
+          <div class="flex items-center space-x-3">
+            <el-button 
+              @click="isArticlePublishEditorShow = false" 
+              plain
+              class="!border-gray-200 dark:!border-gray-700 dark:!bg-gray-800 dark:!text-gray-300 hover:!text-blue-600 dark:hover:!text-blue-400 transition-colors"
+            >
+              Cancel
+            </el-button>
+            <el-button
+              type="primary"
+              @click="publishArticleSubmit"
+              class="!bg-blue-600 hover:!bg-blue-700 !border-none !px-6"
+            >
+              <el-icon class="mr-2">
+                <Promotion />
+              </el-icon>
+              Publish
+            </el-button>
+          </div>
+        </div>
+        <!-- Spacer to prevent content overlap -->
+        <div class="h-16"></div>
       </template>
       <!-- label-position="top" specifies that the label element is on top -->
       <el-form
@@ -206,6 +214,7 @@
         label-position="top"
         size="large"
         :rules="rules"
+        class="pt-4"
       >
         <el-form-item
           label="Title"
@@ -325,36 +334,44 @@
       :fullscreen="true"
       :show-close="false"
       :close-on-press-escape="false"
+      class="no-header-padding"
     >
-      <template #header="{ close, titleId, titleClass }">
-        <!-- Affix component, fixed to the top -->
-        <el-affix
-          :offset="20"
-          style="width: 100%;"
-        >
-          <!-- Specify flex layout, height 10, background color white -->
-          <div class="flex h-10 bg-white dark:bg-gray-900">
-            <!-- Bold font -->
-            <h4 class="font-bold dark:text-white">
-              Edit Article
-            </h4>
-            <!-- Right-aligned -->
-            <div class="ml-auto flex">
-              <el-button @click="isArticleUpdateEditorShow = false">
-                Cancel
-              </el-button>
-              <el-button
-                type="primary"
-                @click="updateSubmit"
-              >
-                <el-icon class="mr-1">
-                  <Promotion />
-                </el-icon>
-                Save
-              </el-button>
-            </div>
+      <template #header>
+        <!-- Modern Fixed Header -->
+        <div class="fixed top-0 left-0 right-0 z-50 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 flex items-center justify-between shadow-sm">
+          <!-- Title -->
+          <div class="flex items-center space-x-3">
+             <div class="p-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg text-indigo-600 dark:text-indigo-400">
+                <el-icon size="20"><Edit /></el-icon>
+             </div>
+             <h4 class="text-lg font-semibold text-gray-900 dark:text-white tracking-tight">
+               Edit Article
+             </h4>
           </div>
-        </el-affix>
+          
+          <!-- Action Buttons -->
+          <div class="flex items-center space-x-3">
+            <el-button 
+              @click="isArticleUpdateEditorShow = false" 
+              plain
+              class="!border-gray-200 dark:!border-gray-700 dark:!bg-gray-800 dark:!text-gray-300 hover:!text-indigo-600 dark:hover:!text-indigo-400 transition-colors"
+            >
+              Cancel
+            </el-button>
+            <el-button
+              type="primary"
+              @click="updateSubmit"
+              class="!bg-indigo-600 hover:!bg-indigo-700 !border-none !px-6"
+            >
+              <el-icon class="mr-2">
+                <Promotion />
+              </el-icon>
+              Save Changes
+            </el-button>
+          </div>
+        </div>
+        <!-- Spacer to prevent content overlap -->
+        <div class="h-16"></div>
       </template>
       <!-- label-position="top" specifies that the label element is on top -->
       <el-form
@@ -363,6 +380,7 @@
         label-position="top"
         size="large"
         :rules="rules"
+        class="pt-4"
       >
         <el-form-item
           label="Title"
@@ -887,5 +905,15 @@ const updateSubmit = () => {
 <style>
 .md-editor-footer {
     height: 40px;
+}
+
+/* Custom class to remove default header padding for fullscreen dialogs */
+.no-header-padding .el-dialog__header {
+    padding: 0;
+    margin: 0;
+    display: block; /* Ensure header block is displayed to contain our fixed header */
+}
+.no-header-padding .el-dialog__body {
+    padding-top: 0; /* Content padding is handled by the spacer div */
 }
 </style>
