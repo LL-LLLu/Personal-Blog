@@ -51,7 +51,7 @@
                   v-if="wiki.isTop"
                   class="absolute inline-flex items-center justify-center w-14 h-7 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900"
                 >
-                  置顶
+                  Top
                 </div>
               </div>
             </div>
@@ -113,7 +113,7 @@ const goWikiDetail = (wikiId, firstArticleId) => {
 
 // 跳转文章详情页 (Adding this alias for clarity as requested in instructions, though goWikiDetail handles it)
 const goWikiArticleDetailPage = (wikiId, articleId) => {
-    console.log('跳转' + wikiId + ',' + articleId)
+    console.log('Jumping' + wikiId + ',' + articleId)
     router.push({path: '/wiki/' + wikiId, query: {articleId}})
 }
 </script>
