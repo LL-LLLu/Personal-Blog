@@ -99,8 +99,8 @@
           </h2>
         </el-form-item>
 
-        <!-- Enable GitHub access -->
-        <el-form-item label="Enable GitHub Access">
+        <!-- Enable Book Review access -->
+        <el-form-item label="Enable Book Review">
           <el-switch
             v-model="isGithubChecked"
             inline-prompt
@@ -111,17 +111,17 @@
         </el-form-item>
         <el-form-item
           v-if="isGithubChecked"
-          label="GitHub Homepage URL"
+          label="Book Review URL"
         >
           <el-input
             v-model="form.githubHomepage"
             clearable
-            placeholder="Enter GitHub homepage URL"
+            placeholder="Enter Book Review website URL"
           />
         </el-form-item>
 
-        <!-- Enable Gitee access -->
-        <el-form-item label="Enable Gitee Access">
+        <!-- Enable Purchase Tracker access -->
+        <el-form-item label="Enable Purchase Tracker">
           <el-switch
             v-model="isGiteeChecked"
             inline-prompt
@@ -132,17 +132,17 @@
         </el-form-item>
         <el-form-item
           v-if="isGiteeChecked"
-          label="Gitee Homepage URL"
+          label="Purchase Tracker URL"
         >
           <el-input
             v-model="form.giteeHomepage"
             clearable
-            placeholder="Enter Gitee homepage URL"
+            placeholder="Enter Purchase Tracker website URL"
           />
         </el-form-item>
 
-        <!-- Enable Zhihu access -->
-        <el-form-item label="Enable Zhihu Access">
+        <!-- Enable Trip Planner access -->
+        <el-form-item label="Enable Trip Planner">
           <el-switch
             v-model="isZhihuChecked"
             inline-prompt
@@ -153,17 +153,17 @@
         </el-form-item>
         <el-form-item
           v-if="isZhihuChecked"
-          label="Zhihu Homepage URL"
+          label="Trip Planner URL"
         >
           <el-input
             v-model="form.zhihuHomepage"
             clearable
-            placeholder="Enter Zhihu homepage URL"
+            placeholder="Enter Trip Planner website URL"
           />
         </el-form-item>
 
-        <!-- Enable CSDN access -->
-        <el-form-item label="Enable CSDN Access">
+        <!-- Enable Resume access -->
+        <el-form-item label="Enable Resume">
           <el-switch
             v-model="isCSDNChecked"
             inline-prompt
@@ -174,12 +174,12 @@
         </el-form-item>
         <el-form-item
           v-if="isCSDNChecked"
-          label="CSDN Homepage URL"
+          label="Resume URL"
         >
           <el-input
             v-model="form.csdnHomepage"
             clearable
-            placeholder="Enter CSDN homepage URL"
+            placeholder="Enter Resume website URL"
           />
         </el-form-item>
 
