@@ -388,6 +388,7 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useBlogSettingsStore } from '@/stores/blogsettings'
 import { getStatisticsInfo } from '@/api/frontend/statistics'
+import { initTooltips } from 'flowbite'
 import CountTo from '@/components/CountTo.vue'
 
 // Router
@@ -400,6 +401,12 @@ const blogSettingsStore = useBlogSettingsStore()
 const statisticsInfo = ref({})
 // Minimize/expand state
 const isMinimized = ref(false)
+
+// Initialize Flowbite tooltips when component mounts
+onMounted(() => {
+    initTooltips()
+})
+
 getStatisticsInfo().then(res => {
     if (res.success) {
         statisticsInfo.value = res.data
