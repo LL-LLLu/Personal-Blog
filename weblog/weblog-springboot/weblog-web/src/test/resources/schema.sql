@@ -119,6 +119,34 @@ CREATE TABLE `t_user_role` (
   PRIMARY KEY (`id`)
 );
 
+-- Visitor Location Statistics Table
+DROP TABLE IF EXISTS t_visitor_location;
+CREATE TABLE `t_visitor_location` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `province` varchar(60) NOT NULL DEFAULT '' COMMENT 'Province/State',
+  `city` varchar(60) NOT NULL DEFAULT '' COMMENT 'City',
+  `country` varchar(60) NOT NULL DEFAULT '' COMMENT 'Country',
+  `visit_count` bigint unsigned NOT NULL DEFAULT '1' COMMENT 'Visit count from this location',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'First visit time',
+  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Last update time',
+  PRIMARY KEY (`id`),
+  UNIQUE (`country`, `province`, `city`)
+);
+
+-- Visitor Log Table
+DROP TABLE IF EXISTS t_visitor_log;
+CREATE TABLE `t_visitor_log` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `ip_address` varchar(45) NOT NULL DEFAULT '' COMMENT 'Visitor IP address',
+  `country` varchar(60) NOT NULL DEFAULT '' COMMENT 'Country',
+  `province` varchar(60) NOT NULL DEFAULT '' COMMENT 'Province/State',
+  `city` varchar(60) NOT NULL DEFAULT '' COMMENT 'City',
+  `article_id` bigint unsigned DEFAULT NULL COMMENT 'Article ID visited',
+  `user_agent` varchar(500) DEFAULT '' COMMENT 'Browser user agent',
+  `visit_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Visit time',
+  PRIMARY KEY (`id`)
+);
+
 -- Insert default data
 INSERT INTO t_user (username, password) VALUES ('admin', '$2a$10$ps.oAyozZ.MZjGw9Nk3vJOEf8xSqM7pM5HOshUTfzRRQk9RxOw3ka');
 INSERT INTO t_user_role (username, role) VALUES ('admin', 'ADMIN');

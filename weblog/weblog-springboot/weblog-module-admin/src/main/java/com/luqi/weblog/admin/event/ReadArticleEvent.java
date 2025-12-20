@@ -18,8 +18,25 @@ public class ReadArticleEvent extends ApplicationEvent {
          */
         private Long articleId;
 
+        /**
+         * 访客 IP 地址
+         */
+        private String ipAddress;
+
+        /**
+         * 浏览器 User Agent
+         */
+        private String userAgent;
+
     public ReadArticleEvent(Object source, Long articleId) {
             super(source);
             this.articleId = articleId;
+    }
+
+    public ReadArticleEvent(Object source, Long articleId, String ipAddress, String userAgent) {
+            super(source);
+            this.articleId = articleId;
+            this.ipAddress = ipAddress;
+            this.userAgent = userAgent;
     }
 }

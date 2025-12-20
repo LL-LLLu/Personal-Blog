@@ -9,6 +9,7 @@ import com.luqi.weblog.common.domain.dos.*;
 import com.luqi.weblog.common.domain.mapper.*;
 import com.luqi.weblog.common.enums.ResponseCodeEnum;
 import com.luqi.weblog.common.exception.BizException;
+import com.luqi.weblog.common.utils.IpLocationUtil;
 import com.luqi.weblog.common.utils.PageResponse;
 import com.luqi.weblog.common.utils.Response;
 import com.luqi.weblog.web.convert.ArticleConvert;
@@ -23,7 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -222,8 +226,22 @@ public class ArticleServiceImpl implements ArticleService {
             vo.setNextArticle(nextArticleVO);
         }
 
+        // 获取访客 IP 和 User Agent
+        String ipAddress = null;
+        String userAgent = null;
+        try {
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            if (attributes != null) {
+                HttpServletRequest request = attributes.getRequest();
+                ipAddress = IpLocationUtil.getIpAddress(request);
+                userAgent = request.getHeader("User-Agent");
+            }
+        } catch (Exception e) {
+            log.warn("Failed to get visitor IP/UserAgent", e);
+        }
+
         // 发布文章阅读事件
-        eventPublisher.publishEvent(new ReadArticleEvent(this, articleId));
+        eventPublisher.publishEvent(new ReadArticleEvent(this, articleId, ipAddress, userAgent));
 
         return Response.success(vo);
     }
