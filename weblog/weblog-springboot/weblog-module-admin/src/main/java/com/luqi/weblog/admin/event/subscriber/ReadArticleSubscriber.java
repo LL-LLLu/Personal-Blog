@@ -100,9 +100,22 @@ public class ReadArticleSubscriber implements ApplicationListener<ReadArticleEve
         // 获取 IP 地理位置
         IpLocationUtil.Location location = IpLocationUtil.getLocation(ipAddress);
 
+        // Handle empty values - use "Unknown" for display
         String country = location.getCountry();
         String province = location.getProvince();
         String city = location.getCity();
+
+        // If all location fields are empty, set country to "Unknown"
+        if ((country == null || country.isEmpty()) &&
+            (province == null || province.isEmpty()) &&
+            (city == null || city.isEmpty())) {
+            country = "Unknown";
+        }
+
+        // Normalize empty strings to null for database consistency
+        country = (country != null && !country.isEmpty()) ? country : "Unknown";
+        province = (province != null && !province.isEmpty()) ? province : "";
+        city = (city != null && !city.isEmpty()) ? city : "";
 
         log.info("==> 访客位置: country={}, province={}, city={}, ip={}", country, province, city, ipAddress);
 

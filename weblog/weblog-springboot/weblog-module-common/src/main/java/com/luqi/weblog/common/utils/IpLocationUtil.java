@@ -137,28 +137,35 @@ public class IpLocationUtil {
 
     /**
      * Get real IP address from HTTP request
-     * Handles proxies and load balancers
+     * Handles proxies and load balancers (including AWS ELB/ALB)
      */
     public static String getIpAddress(HttpServletRequest request) {
         String ip = null;
 
         // Try to get IP from various headers (in order of preference)
+        // AWS ALB/ELB headers are included
         String[] headers = {
             "X-Forwarded-For",
             "X-Real-IP",
+            "CF-Connecting-IP",     // Cloudflare
+            "True-Client-IP",       // Cloudflare Enterprise
+            "X-Client-IP",
             "Proxy-Client-IP",
             "WL-Proxy-Client-IP",
             "HTTP_CLIENT_IP",
-            "HTTP_X_FORWARDED_FOR"
+            "HTTP_X_FORWARDED_FOR",
+            "X-Cluster-Client-IP"
         };
 
         for (String header : headers) {
             ip = request.getHeader(header);
+            log.debug("Header {} = {}", header, ip);
             if (isValidIp(ip)) {
-                // X-Forwarded-For may contain multiple IPs, take the first one
+                // X-Forwarded-For may contain multiple IPs, take the first one (original client)
                 if (ip.contains(",")) {
                     ip = ip.split(",")[0].trim();
                 }
+                log.info("Got IP from header {}: {}", header, ip);
                 break;
             }
         }
@@ -166,6 +173,7 @@ public class IpLocationUtil {
         // Fall back to remote address
         if (!isValidIp(ip)) {
             ip = request.getRemoteAddr();
+            log.info("Using remote address: {}", ip);
         }
 
         return ip;

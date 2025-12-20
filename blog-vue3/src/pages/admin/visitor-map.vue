@@ -355,11 +355,12 @@ const handleResize = () => {
 
 // Lifecycle
 onMounted(async () => {
-  // Load world map GeoJSON
+  // Load world map GeoJSON from local file
   try {
-    const response = await fetch('https://cdn.jsdelivr.net/npm/echarts@5/map/json/world.json')
+    const response = await fetch('/map/world.json')
     const worldJson = await response.json()
     echarts.registerMap('world', worldJson)
+    console.log('World map loaded successfully')
   } catch (error) {
     console.error('Failed to load world map:', error)
   }
