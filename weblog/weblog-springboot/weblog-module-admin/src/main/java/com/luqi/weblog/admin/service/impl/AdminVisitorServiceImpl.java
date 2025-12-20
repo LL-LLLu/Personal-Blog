@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -49,7 +50,7 @@ public class AdminVisitorServiceImpl implements AdminVisitorService {
         List<VisitorLocationDO> locations = visitorLocationMapper.selectAllOrderByVisitCount();
 
         if (CollectionUtils.isEmpty(locations)) {
-            return Response.success(List.of());
+            return Response.success(Collections.emptyList());
         }
 
         List<FindVisitorLocationRspVO> vos = locations.stream()
@@ -79,7 +80,7 @@ public class AdminVisitorServiceImpl implements AdminVisitorService {
         List<VisitorLogDO> logs = page.getRecords();
 
         if (CollectionUtils.isEmpty(logs)) {
-            return PageResponse.success(page, List.of());
+            return PageResponse.success(page, Collections.emptyList());
         }
 
         // Get article titles for the logs
