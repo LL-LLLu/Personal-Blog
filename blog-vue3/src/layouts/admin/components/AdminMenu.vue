@@ -97,6 +97,11 @@ const menus = [
         'icon': 'Setting',
         'path': '/admin/blog/settings',
     },
+    {
+        'name': 'Visitor Analytics',
+        'icon': 'Location',
+        'path': '/admin/visitor/map',
+    },
 ]
 </script>
 

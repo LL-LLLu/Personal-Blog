@@ -16,6 +16,7 @@ import AdminTagList from '@/pages/admin/tag-list.vue'
 import AdminBlogSettings from '@/pages/admin/blog-settings.vue'
 import AdminWikiList from '@/pages/admin/wiki-list.vue'
 import AdminCommentList from '@/pages/admin/comment-list.vue'
+import AdminVisitorMap from '@/pages/admin/visitor-map.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Admin from '@/layouts/admin/admin.vue'
 
@@ -151,6 +152,13 @@ const routes = [
                 component: AdminBlogSettings,
                 meta: {
                     title: 'Blog Settings'
+                }
+            },
+            {
+                path: "/admin/visitor/map",
+                component: AdminVisitorMap,
+                meta: {
+                    title: 'Visitor Analytics'
                 }
             },
         ]
