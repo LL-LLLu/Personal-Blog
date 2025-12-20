@@ -1,33 +1,36 @@
 package com.luqi.weblog.common.utils;
 
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.model.CityResponse;
+import com.maxmind.geoip2.record.City;
+import com.maxmind.geoip2.record.Country;
+import com.maxmind.geoip2.record.Subdivision;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.lionsoul.ip2region.xdb.Searcher;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.FileCopyUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
+import java.net.InetAddress;
 
 /**
  * IP Location Utility
- * Uses ip2region library to get geographic location from IP address
+ * Uses MaxMind GeoIP2 for comprehensive global IP geolocation
  */
 @Slf4j
 public class IpLocationUtil {
 
-    private static Searcher searcher;
+    private static DatabaseReader geoIpReader;
 
     static {
         try {
-            // Load ip2region.xdb from classpath resources
-            ClassPathResource resource = new ClassPathResource("ip2region/ip2region.xdb");
+            // Load GeoLite2-City.mmdb from classpath resources
+            ClassPathResource resource = new ClassPathResource("geoip2/GeoLite2-City.mmdb");
             InputStream inputStream = resource.getInputStream();
-            byte[] dbBytes = FileCopyUtils.copyToByteArray(inputStream);
-            searcher = Searcher.newWithBuffer(dbBytes);
-            log.info("ip2region database loaded successfully");
+            geoIpReader = new DatabaseReader.Builder(inputStream).build();
+            log.info("MaxMind GeoIP2 database loaded successfully");
         } catch (Exception e) {
-            log.error("Failed to load ip2region database", e);
+            log.error("Failed to load MaxMind GeoIP2 database", e);
         }
     }
 
@@ -37,34 +40,31 @@ public class IpLocationUtil {
     @Data
     public static class Location {
         private String country = "";
+        private String countryCode = "";
         private String region = "";
         private String province = "";
         private String city = "";
         private String isp = "";
+        private Double latitude;
+        private Double longitude;
 
         public Location() {}
 
-        public Location(String country, String region, String province, String city, String isp) {
+        public Location(String country, String countryCode, String province, String city) {
             this.country = country != null ? country : "";
-            this.region = region != null ? region : "";
+            this.countryCode = countryCode != null ? countryCode : "";
             this.province = province != null ? province : "";
             this.city = city != null ? city : "";
-            this.isp = isp != null ? isp : "";
         }
     }
 
     /**
-     * Get location information from IP address
+     * Get location information from IP address using MaxMind GeoIP2
      * @param ip IP address
      * @return Location object containing country, province, city, etc.
      */
     public static Location getLocation(String ip) {
         Location location = new Location();
-
-        if (searcher == null) {
-            log.warn("ip2region searcher not initialized");
-            return location;
-        }
 
         if (ip == null || ip.isEmpty() || isLocalIp(ip)) {
             location.setCountry("Local");
@@ -73,35 +73,59 @@ public class IpLocationUtil {
             return location;
         }
 
-        try {
-            // ip2region returns format: "国家|区域|省份|城市|ISP"
-            // Example: "中国|0|北京|北京市|电信"
-            String result = searcher.search(ip);
-            if (result != null && !result.isEmpty()) {
-                String[] parts = result.split("\\|");
-                if (parts.length >= 5) {
-                    location.setCountry(cleanValue(parts[0]));
-                    location.setRegion(cleanValue(parts[1]));
-                    location.setProvince(cleanValue(parts[2]));
-                    location.setCity(cleanValue(parts[3]));
-                    location.setIsp(cleanValue(parts[4]));
+        // Try MaxMind GeoIP2 first
+        if (geoIpReader != null) {
+            try {
+                InetAddress ipAddress = InetAddress.getByName(ip);
+                CityResponse response = geoIpReader.city(ipAddress);
+
+                // Get country info
+                Country country = response.getCountry();
+                if (country != null) {
+                    // Prefer English name, fall back to Chinese name
+                    String countryName = country.getName();
+                    if (countryName == null || countryName.isEmpty()) {
+                        countryName = country.getNames().get("zh-CN");
+                    }
+                    location.setCountry(countryName != null ? countryName : "");
+                    location.setCountryCode(country.getIsoCode() != null ? country.getIsoCode() : "");
                 }
+
+                // Get province/state info
+                if (!response.getSubdivisions().isEmpty()) {
+                    Subdivision subdivision = response.getMostSpecificSubdivision();
+                    String provinceName = subdivision.getName();
+                    if (provinceName == null || provinceName.isEmpty()) {
+                        provinceName = subdivision.getNames().get("zh-CN");
+                    }
+                    location.setProvince(provinceName != null ? provinceName : "");
+                }
+
+                // Get city info
+                City city = response.getCity();
+                if (city != null) {
+                    String cityName = city.getName();
+                    if (cityName == null || cityName.isEmpty()) {
+                        cityName = city.getNames().get("zh-CN");
+                    }
+                    location.setCity(cityName != null ? cityName : "");
+                }
+
+                // Get coordinates
+                if (response.getLocation() != null) {
+                    location.setLatitude(response.getLocation().getLatitude());
+                    location.setLongitude(response.getLocation().getLongitude());
+                }
+
+                log.debug("GeoIP2 lookup for {}: country={}, province={}, city={}",
+                        ip, location.getCountry(), location.getProvince(), location.getCity());
+
+            } catch (Exception e) {
+                log.warn("GeoIP2 lookup failed for IP: {}, error: {}", ip, e.getMessage());
             }
-        } catch (Exception e) {
-            log.error("Failed to get location for IP: {}", ip, e);
         }
 
         return location;
-    }
-
-    /**
-     * Clean value - replace "0" with empty string
-     */
-    private static String cleanValue(String value) {
-        if (value == null || "0".equals(value)) {
-            return "";
-        }
-        return value.trim();
     }
 
     /**

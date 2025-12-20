@@ -168,8 +168,10 @@ const logsPagination = ref({
 const mapChartRef = ref(null)
 let mapChart = null
 
-// Country name mapping for ECharts (Chinese to English for common countries)
+// Country name mapping for ECharts world map compatibility
+// Maps various formats to ECharts expected names
 const countryNameMap = {
+  // Chinese to English
   '中国': 'China',
   '美国': 'United States',
   '日本': 'Japan',
@@ -190,7 +192,13 @@ const countryNameMap = {
   '菲律宾': 'Philippines',
   '台湾': 'Taiwan',
   '香港': 'Hong Kong',
-  '澳门': 'Macao'
+  '澳门': 'Macao',
+  // MaxMind variations to ECharts names
+  'United States of America': 'United States',
+  'Republic of Korea': 'Korea',
+  'Russian Federation': 'Russia',
+  'Viet Nam': 'Vietnam',
+  'United Kingdom of Great Britain and Northern Ireland': 'United Kingdom'
 }
 
 // Initialize map chart

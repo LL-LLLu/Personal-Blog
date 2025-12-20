@@ -89,11 +89,18 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-        <!-- IP地址定位库 ip2region -->
+        <!-- IP地址定位库 ip2region (backup for Chinese IPs) -->
         <dependency>
             <groupId>org.lionsoul</groupId>
             <artifactId>ip2region</artifactId>
             <version>2.7.0</version>
+        </dependency>
+
+        <!-- MaxMind GeoIP2 for comprehensive global IP geolocation -->
+        <dependency>
+            <groupId>com.maxmind.geoip2</groupId>
+            <artifactId>geoip2</artifactId>
+            <version>4.2.0</version>
         </dependency>
 
     </dependencies>
