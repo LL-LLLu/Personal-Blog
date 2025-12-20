@@ -14,37 +14,34 @@
 
     <!-- Statistics Cards -->
     <div class="stats-grid">
-      <div class="stat-card stat-card-blue">
-        <div class="stat-icon">
-          <el-icon><Location /></el-icon>
-        </div>
-        <div class="stat-content">
-          <span class="stat-value">{{ summary.totalLocations || 0 }}</span>
+      <div class="stat-card">
+        <div class="stat-header">
           <span class="stat-label">Total Locations</span>
+          <div class="stat-icon stat-icon-blue">
+            <el-icon><Location /></el-icon>
+          </div>
         </div>
-        <div class="stat-decoration"></div>
+        <span class="stat-value">{{ summary.totalLocations || 0 }}</span>
       </div>
 
-      <div class="stat-card stat-card-emerald">
-        <div class="stat-icon">
-          <el-icon><View /></el-icon>
-        </div>
-        <div class="stat-content">
-          <span class="stat-value">{{ summary.totalVisits || 0 }}</span>
+      <div class="stat-card">
+        <div class="stat-header">
           <span class="stat-label">Total Visits</span>
+          <div class="stat-icon stat-icon-emerald">
+            <el-icon><View /></el-icon>
+          </div>
         </div>
-        <div class="stat-decoration"></div>
+        <span class="stat-value">{{ summary.totalVisits || 0 }}</span>
       </div>
 
-      <div class="stat-card stat-card-violet">
-        <div class="stat-icon">
-          <el-icon><Sunny /></el-icon>
-        </div>
-        <div class="stat-content">
-          <span class="stat-value">{{ summary.todayVisits || 0 }}</span>
+      <div class="stat-card">
+        <div class="stat-header">
           <span class="stat-label">Today's Visits</span>
+          <div class="stat-icon stat-icon-violet">
+            <el-icon><Sunny /></el-icon>
+          </div>
         </div>
-        <div class="stat-decoration"></div>
+        <span class="stat-value">{{ summary.todayVisits || 0 }}</span>
       </div>
     </div>
 
@@ -508,7 +505,7 @@ onUnmounted(() => {
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 16px;
   margin-bottom: 24px;
 }
 
@@ -519,74 +516,63 @@ onUnmounted(() => {
 }
 
 .stat-card {
-  position: relative;
-  padding: 24px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: white;
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  transition: border-color 0.2s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+  border-color: #d1d5db;
 }
 
-.stat-card-blue {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-}
-
-.stat-card-emerald {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-
-.stat-card-violet {
-  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
-}
-
-.stat-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.2);
+.stat-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  color: white;
-  flex-shrink: 0;
-}
-
-.stat-content {
-  display: flex;
-  flex-direction: column;
-  z-index: 1;
-}
-
-.stat-value {
-  font-size: 32px;
-  font-weight: 700;
-  color: white;
-  line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
 }
 
 .stat-label {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
   font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.stat-decoration {
-  position: absolute;
-  right: -20px;
-  bottom: -20px;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
+.stat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.stat-icon-blue {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.stat-icon-emerald {
+  background: #ecfdf5;
+  color: #10b981;
+}
+
+.stat-icon-violet {
+  background: #f5f3ff;
+  color: #8b5cf6;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Content Grid */
@@ -823,11 +809,46 @@ html.dark .page-subtitle {
   color: #94a3b8;
 }
 
+/* Dark mode - Stat Cards */
+html.dark .stat-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+html.dark .stat-card:hover {
+  border-color: #475569;
+}
+
+html.dark .stat-label {
+  color: #94a3b8;
+}
+
+html.dark .stat-value {
+  color: #f1f5f9;
+}
+
+html.dark .stat-icon-blue {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+html.dark .stat-icon-emerald {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+html.dark .stat-icon-violet {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+}
+
+/* Dark mode - Cards */
 html.dark .map-card,
 html.dark .countries-card,
 html.dark .table-card {
   background: #1e293b;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: none;
+  border: 1px solid #334155;
 }
 
 html.dark .card-header {
@@ -838,8 +859,9 @@ html.dark .card-title {
   color: #f1f5f9;
 }
 
+/* Dark mode - Countries List */
 html.dark .country-item:hover {
-  background-color: #334155;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 html.dark .country-name {
@@ -855,11 +877,20 @@ html.dark .country-bar {
   background: #334155;
 }
 
+html.dark .country-count {
+  color: #a78bfa;
+}
+
+html.dark .empty-state {
+  color: #64748b;
+}
+
+/* Dark mode - Tables */
 html.dark .modern-table {
   --el-table-bg-color: #1e293b;
   --el-table-tr-bg-color: #1e293b;
   --el-table-header-bg-color: #0f172a;
-  --el-table-row-hover-bg-color: #334155;
+  --el-table-row-hover-bg-color: rgba(255, 255, 255, 0.05);
   --el-table-border-color: #334155;
 }
 
@@ -871,9 +902,21 @@ html.dark .modern-table :deep(td) {
   color: #e2e8f0;
 }
 
+html.dark .location-icon {
+  color: #a78bfa;
+}
+
 html.dark .ip-cell {
   background: #334155;
   color: #e2e8f0;
+}
+
+html.dark .location-text {
+  color: #cbd5e1;
+}
+
+html.dark .article-link {
+  color: #a78bfa;
 }
 
 html.dark .pagination-wrapper {
