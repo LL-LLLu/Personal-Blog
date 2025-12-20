@@ -69,10 +69,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.luqi</groupId>
-            <artifactId>weblog-module-common</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
