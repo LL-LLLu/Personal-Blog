@@ -1,137 +1,166 @@
 <template>
-  <div>
+  <div class="visitor-analytics">
     <!-- Page Header -->
-    <div class="mb-6">
-      <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">
-        Visitor Analytics
-      </h1>
-      <p class="text-gray-500 dark:text-gray-400">
-        Track where your visitors are coming from around the world
-      </p>
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Visitor Analytics</h1>
+        <p class="page-subtitle">Track where your visitors are coming from around the world</p>
+      </div>
+      <el-button type="primary" :loading="loading" @click="refreshData" class="refresh-btn">
+        <el-icon class="mr-2"><Refresh /></el-icon>
+        Refresh Data
+      </el-button>
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      <el-card shadow="hover" class="stat-card">
-        <div class="flex items-center">
-          <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
-            <el-icon class="text-2xl text-blue-600 dark:text-blue-400"><Location /></el-icon>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm text-gray-500 dark:text-gray-400">Total Locations</p>
-            <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ summary.totalLocations || 0 }}</p>
-          </div>
+    <div class="stats-grid">
+      <div class="stat-card stat-card-blue">
+        <div class="stat-icon">
+          <el-icon><Location /></el-icon>
         </div>
-      </el-card>
+        <div class="stat-content">
+          <span class="stat-value">{{ summary.totalLocations || 0 }}</span>
+          <span class="stat-label">Total Locations</span>
+        </div>
+        <div class="stat-decoration"></div>
+      </div>
 
-      <el-card shadow="hover" class="stat-card">
-        <div class="flex items-center">
-          <div class="p-3 rounded-full bg-green-100 dark:bg-green-900">
-            <el-icon class="text-2xl text-green-600 dark:text-green-400"><View /></el-icon>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm text-gray-500 dark:text-gray-400">Total Visits</p>
-            <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ summary.totalVisits || 0 }}</p>
-          </div>
+      <div class="stat-card stat-card-emerald">
+        <div class="stat-icon">
+          <el-icon><View /></el-icon>
         </div>
-      </el-card>
+        <div class="stat-content">
+          <span class="stat-value">{{ summary.totalVisits || 0 }}</span>
+          <span class="stat-label">Total Visits</span>
+        </div>
+        <div class="stat-decoration"></div>
+      </div>
 
-      <el-card shadow="hover" class="stat-card">
-        <div class="flex items-center">
-          <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900">
-            <el-icon class="text-2xl text-purple-600 dark:text-purple-400"><Sunny /></el-icon>
-          </div>
-          <div class="ml-4">
-            <p class="text-sm text-gray-500 dark:text-gray-400">Today's Visits</p>
-            <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ summary.todayVisits || 0 }}</p>
-          </div>
+      <div class="stat-card stat-card-violet">
+        <div class="stat-icon">
+          <el-icon><Sunny /></el-icon>
         </div>
-      </el-card>
+        <div class="stat-content">
+          <span class="stat-value">{{ summary.todayVisits || 0 }}</span>
+          <span class="stat-label">Today's Visits</span>
+        </div>
+        <div class="stat-decoration"></div>
+      </div>
     </div>
 
     <!-- Main Content Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="content-grid">
       <!-- World Map -->
-      <el-card shadow="hover" class="lg:col-span-2">
-        <template #header>
-          <div class="flex items-center justify-between">
-            <span class="font-semibold text-gray-800 dark:text-white">Visitor World Map</span>
-            <el-button type="primary" size="small" :loading="loading" @click="refreshData">
-              <el-icon class="mr-1"><Refresh /></el-icon>
-              Refresh
-            </el-button>
-          </div>
-        </template>
-        <div ref="mapChartRef" class="w-full h-[400px]"></div>
-      </el-card>
+      <div class="map-card">
+        <div class="card-header">
+          <h3 class="card-title">
+            <span class="title-icon">🌍</span>
+            Global Visitor Distribution
+          </h3>
+        </div>
+        <div ref="mapChartRef" class="map-container"></div>
+      </div>
 
       <!-- Top Countries -->
-      <el-card shadow="hover">
-        <template #header>
-          <span class="font-semibold text-gray-800 dark:text-white">Top Countries</span>
-        </template>
-        <div v-if="summary.topCountries && summary.topCountries.length > 0">
+      <div class="countries-card">
+        <div class="card-header">
+          <h3 class="card-title">
+            <span class="title-icon">🏆</span>
+            Top Countries
+          </h3>
+        </div>
+        <div class="countries-list" v-if="summary.topCountries && summary.topCountries.length > 0">
           <div
             v-for="(country, index) in summary.topCountries"
             :key="index"
-            class="flex items-center justify-between py-3 border-b border-gray-100 dark:border-gray-700 last:border-0"
+            class="country-item"
           >
-            <div class="flex items-center">
-              <span class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-xs font-bold text-blue-600 dark:text-blue-400 mr-3">
-                {{ index + 1 }}
-              </span>
-              <span class="text-gray-700 dark:text-gray-300">{{ country.country || 'Unknown' }}</span>
+            <div class="country-rank" :class="getRankClass(index)">
+              {{ index + 1 }}
             </div>
-            <span class="font-semibold text-gray-800 dark:text-white">{{ country.count }}</span>
+            <div class="country-info">
+              <span class="country-name">{{ country.country || 'Unknown' }}</span>
+              <div class="country-bar">
+                <div
+                  class="country-bar-fill"
+                  :style="{ width: getBarWidth(country.count) }"
+                ></div>
+              </div>
+            </div>
+            <span class="country-count">{{ formatNumber(country.count) }}</span>
           </div>
         </div>
-        <div v-else class="text-center text-gray-400 py-8">
-          No visitor data yet
+        <div v-else class="empty-state">
+          <el-icon class="empty-icon"><Location /></el-icon>
+          <p>No visitor data yet</p>
         </div>
-      </el-card>
+      </div>
     </div>
 
     <!-- Location Details Table -->
-    <el-card shadow="hover" class="mt-6">
-      <template #header>
-        <span class="font-semibold text-gray-800 dark:text-white">Location Details</span>
-      </template>
-      <el-table :data="locations" style="width: 100%" v-loading="loading">
-        <el-table-column prop="locationName" label="Location" min-width="200" />
+    <div class="table-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="title-icon">📍</span>
+          Location Details
+        </h3>
+      </div>
+      <el-table :data="locations" class="modern-table" v-loading="loading">
+        <el-table-column prop="locationName" label="Location" min-width="200">
+          <template #default="{ row }">
+            <div class="location-cell">
+              <el-icon class="location-icon"><Location /></el-icon>
+              <span>{{ row.locationName }}</span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="country" label="Country" width="150" />
         <el-table-column prop="province" label="Province" width="150" />
         <el-table-column prop="city" label="City" width="150" />
         <el-table-column prop="visitCount" label="Visits" width="120" sortable>
           <template #default="{ row }">
-            <el-tag type="primary">{{ row.visitCount }}</el-tag>
+            <span class="visit-badge">{{ row.visitCount }}</span>
           </template>
         </el-table-column>
       </el-table>
-    </el-card>
+    </div>
 
     <!-- Recent Visitors Log -->
-    <el-card shadow="hover" class="mt-6">
-      <template #header>
-        <span class="font-semibold text-gray-800 dark:text-white">Recent Visitors</span>
-      </template>
-      <el-table :data="visitorLogs" style="width: 100%" v-loading="logsLoading">
-        <el-table-column prop="visitTime" label="Time" width="180" />
-        <el-table-column prop="ipAddress" label="IP Address" width="150" />
+    <div class="table-card">
+      <div class="card-header">
+        <h3 class="card-title">
+          <span class="title-icon">👥</span>
+          Recent Visitors
+        </h3>
+      </div>
+      <el-table :data="visitorLogs" class="modern-table" v-loading="logsLoading">
+        <el-table-column prop="visitTime" label="Time" width="180">
+          <template #default="{ row }">
+            <span class="time-cell">{{ row.visitTime }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="ipAddress" label="IP Address" width="150">
+          <template #default="{ row }">
+            <code class="ip-cell">{{ row.ipAddress }}</code>
+          </template>
+        </el-table-column>
         <el-table-column label="Location" min-width="200">
           <template #default="{ row }">
-            {{ [row.country, row.province, row.city].filter(Boolean).join(' - ') || 'Unknown' }}
+            <span class="location-text">
+              {{ [row.country, row.province, row.city].filter(Boolean).join(' → ') || 'Unknown' }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column prop="articleTitle" label="Article Visited" min-width="200">
           <template #default="{ row }">
-            <span v-if="row.articleTitle">{{ row.articleTitle }}</span>
-            <span v-else class="text-gray-400">-</span>
+            <span v-if="row.articleTitle" class="article-link">{{ row.articleTitle }}</span>
+            <span v-else class="no-article">—</span>
           </template>
         </el-table-column>
       </el-table>
 
       <!-- Pagination -->
-      <div class="flex justify-end mt-4">
+      <div class="pagination-wrapper">
         <el-pagination
           v-model:current-page="logsPagination.current"
           v-model:page-size="logsPagination.size"
@@ -140,14 +169,15 @@
           layout="total, sizes, prev, pager, next"
           @size-change="handleLogsSizeChange"
           @current-change="handleLogsPageChange"
+          background
         />
       </div>
-    </el-card>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue'
 import { Location, View, Sunny, Refresh } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { getVisitorLocationStats, getVisitorLogs, getVisitorSummary } from '@/api/admin/visitor'
@@ -168,10 +198,32 @@ const logsPagination = ref({
 const mapChartRef = ref(null)
 let mapChart = null
 
+// Computed
+const maxCountryCount = computed(() => {
+  if (!summary.value.topCountries?.length) return 1
+  return Math.max(...summary.value.topCountries.map(c => c.count))
+})
+
+// Helper functions
+const getRankClass = (index) => {
+  if (index === 0) return 'rank-gold'
+  if (index === 1) return 'rank-silver'
+  if (index === 2) return 'rank-bronze'
+  return 'rank-default'
+}
+
+const getBarWidth = (count) => {
+  return `${(count / maxCountryCount.value) * 100}%`
+}
+
+const formatNumber = (num) => {
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M'
+  if (num >= 1000) return (num / 1000).toFixed(1) + 'K'
+  return num
+}
+
 // Country name mapping for ECharts world map compatibility
-// Maps various formats to ECharts expected names
 const countryNameMap = {
-  // Chinese to English
   '中国': 'China',
   '美国': 'United States',
   '日本': 'Japan',
@@ -193,7 +245,6 @@ const countryNameMap = {
   '台湾': 'Taiwan',
   '香港': 'Hong Kong',
   '澳门': 'Macao',
-  // MaxMind variations to ECharts names
   'United States of America': 'United States',
   'Republic of Korea': 'Korea',
   'Russian Federation': 'Russia',
@@ -207,28 +258,42 @@ const initMapChart = () => {
 
   mapChart = echarts.init(mapChartRef.value)
 
-  // Prepare data for the map
   const mapData = prepareMapData()
 
   const option = {
+    backgroundColor: 'transparent',
     tooltip: {
       trigger: 'item',
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      borderColor: 'rgba(255, 255, 255, 0.1)',
+      borderWidth: 1,
+      padding: [12, 16],
+      textStyle: {
+        color: '#fff',
+        fontSize: 14
+      },
       formatter: (params) => {
         if (params.data) {
-          return `${params.name}<br/>Visits: ${params.data.value || 0}`
+          return `<div style="font-weight: 600; margin-bottom: 4px;">${params.name}</div>
+                  <div style="color: #a5b4fc;">Visits: <span style="color: #fff; font-weight: 600;">${params.data.value || 0}</span></div>`
         }
-        return params.name
+        return `<div style="font-weight: 600;">${params.name}</div>`
       }
     },
     visualMap: {
       min: 0,
       max: Math.max(...mapData.map(d => d.value), 100),
-      left: 'left',
-      top: 'bottom',
+      left: 20,
+      bottom: 20,
       text: ['High', 'Low'],
+      textStyle: {
+        color: '#64748b'
+      },
       calculable: true,
+      itemWidth: 12,
+      itemHeight: 120,
       inRange: {
-        color: ['#e0f3ff', '#3b82f6', '#1e40af']
+        color: ['#e0e7ff', '#a5b4fc', '#818cf8', '#6366f1', '#4f46e5']
       }
     },
     series: [
@@ -237,12 +302,35 @@ const initMapChart = () => {
         type: 'map',
         map: 'world',
         roam: true,
+        zoom: 1.2,
+        scaleLimit: {
+          min: 0.5,
+          max: 10
+        },
+        itemStyle: {
+          areaColor: '#f1f5f9',
+          borderColor: '#e2e8f0',
+          borderWidth: 0.5
+        },
         emphasis: {
           label: {
-            show: true
+            show: true,
+            color: '#1e293b',
+            fontWeight: 600
           },
           itemStyle: {
-            areaColor: '#fbbf24'
+            areaColor: '#fbbf24',
+            shadowColor: 'rgba(0, 0, 0, 0.2)',
+            shadowBlur: 10
+          }
+        },
+        select: {
+          label: {
+            show: true,
+            color: '#1e293b'
+          },
+          itemStyle: {
+            areaColor: '#6366f1'
           }
         },
         data: mapData
@@ -259,7 +347,6 @@ const prepareMapData = () => {
 
   locations.value.forEach(loc => {
     let country = loc.country || 'Unknown'
-    // Convert Chinese country names to English for ECharts world map
     if (countryNameMap[country]) {
       country = countryNameMap[country]
     }
@@ -295,7 +382,6 @@ const fetchLocations = async () => {
     const res = await getVisitorLocationStats()
     if (res.success) {
       locations.value = res.data || []
-      // Update map after data is loaded
       await nextTick()
       updateMapChart()
     }
@@ -363,7 +449,6 @@ const handleResize = () => {
 
 // Lifecycle
 onMounted(async () => {
-  // Load world map GeoJSON from local file
   try {
     const response = await fetch('/map/world.json')
     const worldJson = await response.json()
@@ -373,7 +458,6 @@ onMounted(async () => {
     console.error('Failed to load world map:', error)
   }
 
-  // Initialize chart and fetch data
   await nextTick()
   initMapChart()
   refreshData()
@@ -388,11 +472,411 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.visitor-analytics {
+  padding: 0;
+}
+
+/* Page Header */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.refresh-btn {
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-weight: 500;
+}
+
+/* Statistics Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .stat-card {
-  transition: transform 0.2s ease;
+  position: relative;
+  padding: 24px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+}
+
+.stat-card-blue {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.stat-card-emerald {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.stat-card-violet {
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+}
+
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+
+.stat-decoration {
+  position: absolute;
+  right: -20px;
+  bottom: -20px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Content Grid */
+.content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card Styles */
+.map-card,
+.countries-card,
+.table-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-icon {
+  font-size: 18px;
+}
+
+/* Map Container */
+.map-container {
+  width: 100%;
+  height: 450px;
+  padding: 16px;
+}
+
+/* Countries List */
+.countries-list {
+  padding: 8px 0;
+}
+
+.country-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  transition: background-color 0.15s ease;
+}
+
+.country-item:hover {
+  background-color: #f8fafc;
+}
+
+.country-rank {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.rank-gold {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: white;
+}
+
+.rank-silver {
+  background: linear-gradient(135deg, #94a3b8, #64748b);
+  color: white;
+}
+
+.rank-bronze {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  color: white;
+}
+
+.rank-default {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.country-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.country-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.country-bar {
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.country-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+.country-count {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6366f1;
+  min-width: 40px;
+  text-align: right;
+}
+
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+/* Table Styles */
+.table-card {
+  margin-bottom: 24px;
+}
+
+.modern-table {
+  --el-table-border-color: #f1f5f9;
+  --el-table-header-bg-color: #f8fafc;
+  --el-table-row-hover-bg-color: #f8fafc;
+}
+
+.modern-table :deep(th) {
+  font-weight: 600;
+  color: #475569;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modern-table :deep(td) {
+  color: #334155;
+  font-size: 14px;
+}
+
+.location-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.location-icon {
+  color: #6366f1;
+  font-size: 16px;
+}
+
+.visit-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.time-cell {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.ip-cell {
+  font-family: 'SF Mono', Monaco, 'Courier New', monospace;
+  font-size: 12px;
+  background: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #475569;
+}
+
+.location-text {
+  color: #334155;
+}
+
+.article-link {
+  color: #6366f1;
+  font-weight: 500;
+}
+
+.no-article {
+  color: #cbd5e1;
+}
+
+.pagination-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* Dark mode support */
+html.dark .page-title {
+  color: #f1f5f9;
+}
+
+html.dark .page-subtitle {
+  color: #94a3b8;
+}
+
+html.dark .map-card,
+html.dark .countries-card,
+html.dark .table-card {
+  background: #1e293b;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .card-header {
+  border-bottom-color: #334155;
+}
+
+html.dark .card-title {
+  color: #f1f5f9;
+}
+
+html.dark .country-item:hover {
+  background-color: #334155;
+}
+
+html.dark .country-name {
+  color: #f1f5f9;
+}
+
+html.dark .rank-default {
+  background: #334155;
+  color: #94a3b8;
+}
+
+html.dark .country-bar {
+  background: #334155;
+}
+
+html.dark .modern-table {
+  --el-table-bg-color: #1e293b;
+  --el-table-tr-bg-color: #1e293b;
+  --el-table-header-bg-color: #0f172a;
+  --el-table-row-hover-bg-color: #334155;
+  --el-table-border-color: #334155;
+}
+
+html.dark .modern-table :deep(th) {
+  color: #94a3b8;
+}
+
+html.dark .modern-table :deep(td) {
+  color: #e2e8f0;
+}
+
+html.dark .ip-cell {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+html.dark .pagination-wrapper {
+  border-top-color: #334155;
 }
 </style>
