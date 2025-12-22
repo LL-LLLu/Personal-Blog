@@ -1,8 +1,9 @@
 <template>
-  <Header />
+  <div class="min-h-screen flex flex-col">
+    <Header />
 
-  <!-- 主内容区域 -->
-  <main class="container max-w-screen-xl mx-auto p-4 flex items-center justify-center flex-col">
+    <!-- 主内容区域 -->
+    <main class="container max-w-screen-xl mx-auto p-4 flex items-center justify-center flex-col flex-grow">
     <svg
       height="400"
       node-id="1"
@@ -689,7 +690,8 @@
     </p>
   </main>
 
-  <Footer />
+    <Footer />
+  </div>
 </template>
 
 <script setup>

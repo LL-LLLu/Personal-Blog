@@ -1,8 +1,9 @@
 <template>
-  <Header />
+  <div class="min-h-screen flex flex-col">
+    <Header />
 
-  <!-- Main content area -->
-  <main class="container max-w-screen-xl mx-auto p-4">
+    <!-- Main content area -->
+    <main class="container max-w-screen-xl mx-auto p-4 flex-grow">
     <!-- Grid layout with 4 columns -->
     <div class="grid grid-cols-4 gap-7">
       <!-- Left main area, spans 3 columns -->
@@ -273,7 +274,8 @@
     </div>
   </div>
 
-  <Footer />
+    <Footer />
+  </div>
 </template>
 
 <script setup>

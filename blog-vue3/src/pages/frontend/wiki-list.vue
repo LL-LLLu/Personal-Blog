@@ -1,8 +1,9 @@
 <template>
-  <Header />
+  <div class="min-h-screen flex flex-col">
+    <Header />
 
-  <!-- 主内容区域 -->
-  <main class="container max-w-screen-xl mx-auto px-4 md:px-6 py-4">
+    <!-- 主内容区域 -->
+    <main class="container max-w-screen-xl mx-auto px-4 md:px-6 py-4 flex-grow">
     <!-- grid 表格布局，分为 12 列 -->
     <div class="grid grid-cols-12 gap-7">
       <!-- 左边栏 -->
@@ -75,10 +76,11 @@
     </div>
   </main>
 
-  <!-- 返回顶部 -->
-  <ScrollToTopButton />
+    <!-- 返回顶部 -->
+    <ScrollToTopButton />
 
-  <Footer />
+    <Footer />
+  </div>
 </template>
 
 <script setup>

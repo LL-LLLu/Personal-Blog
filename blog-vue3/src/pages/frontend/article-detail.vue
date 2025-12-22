@@ -1,8 +1,9 @@
 <template>
-  <Header />
+  <div class="min-h-screen flex flex-col">
+    <Header />
 
-  <!-- Article title, tags, Meta information -->
-  <div class="bg-white dark:bg-gray-900">
+    <!-- Article title, tags, Meta information -->
+    <div class="bg-white dark:bg-gray-900 flex-grow">
     <div class="max-w-screen-xl flex flex-col flex-wrap mx-auto px-4 md:px-6 pb-14 pt-10">
       <!-- Tag collection -->
       <div
@@ -434,7 +435,8 @@
     </div>
   </div>
 
-  <Footer />
+    <Footer />
+  </div>
 </template>
 <script setup>
 import Header from '@/layouts/frontend/components/Header.vue'
