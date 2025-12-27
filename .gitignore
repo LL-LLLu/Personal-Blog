@@ -37,3 +37,43 @@ Thumbs.db
 # https certs
 docker/certbot/
 docker/nginx/ssl/
+
+# Application Logs
+**/logs/
+*.log
+.crush/
+
+# IP Geolocation Database Files (large binary files, download at runtime)
+**/*.mmdb
+**/*.xdb
+**/geoip2/
+**/ip2region/
+
+# Package Lock Files (regenerated on install)
+package-lock.json
+**/package-lock.json
+yarn.lock
+**/yarn.lock
+pnpm-lock.yaml
+**/pnpm-lock.yaml
+
+# Maven Wrapper (optional, can be downloaded)
+.mvn/
+
+# Test Coverage Reports
+**/coverage/
+
+# Temporary Files
+*.tmp
+*.bak
+*.swp
+*~
+
+# OS Generated Files
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Deployment Scripts (managed on server)
+docker/*.sh
+docker/scripts/
